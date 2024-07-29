@@ -1,0 +1,122 @@
+
+
+.layout{
+
+  min-height: 100vh;
+
+  .overlay{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 0%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 100;
+    transition: opacity 200ms 200ms ease-out;
+    opacity: 0;
+  }
+
+  .nav{
+    position: fixed;
+    top:0;
+    height: 100vh;
+    width: 80%;
+    max-width: 340px;
+    z-index: 101;
+    transition: left 200ms 0ms ease-out;
+    left:-100%;
+    background-color: #222;
+
+    & > .header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+
+      & > .logo{
+        font-size: 2rem;
+      }
+
+      & > .plus{
+        padding: 0.3rem;
+        outline: 1px solid rgb(from var(--fg-color) r g b / 20%);
+        border-radius: 0.3rem;
+        &:hover{
+          outline: 1px solid rgb(from var(--fg-color) r g b / 50%);
+        }
+        &:active{
+          opacity: 0.7;
+        }
+      }
+    }
+
+
+    @media (min-width: 700px){
+      position: sticky;
+      align-self: start;
+      left: 0%;
+      z-index: 0;
+      width: 340px;
+    }
+  }
+
+  &.open{
+    & > .overlay{
+      width: 100%;
+      transition: opacity 200ms 0ms ease-out;
+      opacity: 1;
+      @media (min-width: 700px){
+        width: 0%;
+        opacity: 0;
+      }
+    }
+
+    & > .nav{
+      transition: left 200ms 200ms ease-out;
+      left: 0%;
+    }
+
+  }
+
+  .content{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+
+    .header{
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: 1rem;
+      gap: 1rem;
+      backdrop-filter: blur(10px);
+
+      & > .plus{
+        padding: 0.3rem;
+        outline: 1px solid rgb(from var(--fg-color) r g b / 20%);
+        border-radius: 0.3rem;
+        &:hover{
+          outline: 1px solid rgb(from var(--fg-color) r g b / 50%);
+        }
+        &:active{
+          opacity: 0.7;
+        }
+      }
+    }
+
+    @media (min-width: 700px){
+      grid-template-rows: 1fr;
+      & > .header {
+        display: none;
+      }
+    }
+  }
+
+  @media (min-width: 700px){
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
+
+
+}

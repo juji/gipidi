@@ -1,0 +1,122 @@
+
+.topbar{
+
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+
+  .title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    .titleInput{
+      all: unset;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+
+  .menu{
+    
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 1rem;
+
+    .menuContainer{
+      position: relative;
+
+      .menuButton{
+        opacity: 0.5;
+
+        &:hover{
+          opacity: 0.7;
+        }
+
+        &:active{
+          opacity: 0.5;
+        }
+      }
+
+
+      .menuContent{
+        position: absolute;
+        top: 100%;
+        right: 0;
+        border: 1px solid #424242;
+        background: var(--bg-color);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        display: none;
+        width: 400px;
+        max-width: calc(100vw - 2rem);
+
+        &.menuOpen{
+          display: block;  
+        }
+
+        .menuHeader{
+          color: #999;
+          font-size: smaller;
+          margin-bottom: 0.4rem;
+        }
+
+        .selectWrapper{
+          margin: 0.4rem 0;
+          position: relative;
+
+          .select{
+            all: unset;
+            display: block;
+            width: 100%;
+            border-radius: 0px;
+            cursor: pointer;
+          }
+
+          .chevronDown{
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            opacity: 0.5;
+            pointer-events: none;
+            transform: rotateX(0deg);
+            transition: transform 500ms;
+          }
+
+          &:hover{
+            .chevronDown{
+              opacity: 1;
+            }
+          }
+          
+          &:active{
+            .chevronDown{
+              transform: rotateX(180deg); 
+            }
+          }
+
+        }
+
+        .systemPrompt{
+          all: unset;
+          display: block;
+          width: calc(100% - 1rem);
+          padding: 0.5rem;
+          border-radius: 0.5rem;
+          background-color: #272727;
+
+          &:focus{
+            background-color: #333;
+          }
+        }
+
+      }
+    }
+  }
+
+}
