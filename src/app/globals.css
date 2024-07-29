@@ -1,7 +1,13 @@
 :root {
 
+
   --bg-color: #111;
   --fg-color: #d7d7d7;
+
+  --content-max-width: 800px;
+  --content-padding-lr: 1rem;
+  --content-padding: 0 var(--content-padding-lr);
+  --content-nav-width: 340px;
 
 }
 
@@ -19,6 +25,7 @@ body {
 
 *::-webkit-scrollbar{
   width: 5px;
+  height: 5px;
   background: transparent;
 }
 

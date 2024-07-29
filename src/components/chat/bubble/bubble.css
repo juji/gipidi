@@ -1,0 +1,43 @@
+
+.bubble-content{
+
+  & > * {
+    margin-bottom: 1rem;
+  }
+
+  & > :last-child{
+    margin-bottom: 0rem;
+  }
+
+  .highlighted-code{
+  
+    .highlighted-code-header{
+  
+      padding: 0.5rem 1rem;
+      font-size: smaller;
+      display: flex;
+      justify-content: flex-end;
+      background-color: #222;
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      border-bottom: 1px solid #444
+    }
+    
+    pre{
+      font-size: 0.9rem;
+      
+      code{
+        padding: 1rem;
+        overflow: auto;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        background-color: #242424 !important;
+      }
+    }
+  }
+
+  a{
+    text-decoration: underline;
+  }
+
+}

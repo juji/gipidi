@@ -4,8 +4,8 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
 
-  --max-width: 700px;
-  --padding: 0 1rem;
+  --max-width: var(--content-max-width);
+  --padding: var(--content-padding);
 
   .content{
     max-width: var(--max-width);
@@ -23,6 +23,13 @@
   .chat{
     z-index: 0;
     overflow: auto;
+
+    .content{
+      padding: 0 1rem;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-height: 100%;
+    }
   }
   
   .input{
