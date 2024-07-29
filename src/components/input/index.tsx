@@ -36,7 +36,7 @@ export function Inputform(){
       })}
       <textarea 
         className={styles.textarea}
-        placeholder="What you up to?"
+        placeholder="'sup?"
         value={content}
         required
         onInput={onChangeLocal}></textarea>

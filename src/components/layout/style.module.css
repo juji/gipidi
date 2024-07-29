@@ -26,6 +26,15 @@
     transition: left 200ms 0ms ease-out;
     left:-100%;
     background-color: #222;
+    
+    
+    @media(min-width: 800px){
+      max-width: var(--content-nav-width-sm);
+    }
+
+    @media(min-width: 900px){
+      max-width: var(--content-nav-width);
+    }
 
     & > .header{
       display: flex;
@@ -90,6 +99,10 @@
       padding: 1rem;
       gap: 1rem;
       backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 98;
+      background-color: rgb(from var(--bg-color) r g b / 50%);
 
       & > .plus{
         padding: 0.3rem;

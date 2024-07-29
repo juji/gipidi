@@ -105,4 +105,47 @@ export function Layout({ children }: PropsWithChildren){
 \`\`\`
 `
   },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'u',
+    content: `
+This one have an \`inline code\`
+    `
+  },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'b',
+    content: `
+This one have an image ![The alt text](https://images.jujiyangasli.com/i/ncat.webp "the caption")
+    `
+  },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'u',
+    content: `
+This is a list:
+- asdf
+- zxcv
+    `
+  },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'u',
+    content: `
+This is an ordered list:
+1. asdf
+2. zxcv
+    `
+  },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'b',
+    content: `
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are meh      |    $1 |
+`
+  }
 ]

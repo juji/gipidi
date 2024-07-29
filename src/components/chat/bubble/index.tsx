@@ -11,13 +11,17 @@ import cx from 'classix'
 import styles from './style.module.css'
 import './bubble.css'
 
-// const codeHook: HtmlHook = (html) => {
-//   return `<figure class="highlighted-code">
-// <div class="highlighted-code-header"><button class="btn-copy">Copy</button></div>
-//   ${html}
-// </figure>
-// `
-// }
+const copyAction = `(() => {
+  const pre = this.parentNode?.parentNode?.querySelector('pre');
+  if(pre){
+    navigator.clipboard.writeText(pre.innerText);
+    this.innerText = 'Copied';
+    setTimeout(() => {
+      this.innerText = 'Copy';
+    },1000);
+  }
+})()
+`.replace(/\n|\r/g,'').replace(/\s{2,}/g,' ')
 
 const convert = marked.use({
   async: true,
@@ -36,10 +40,31 @@ markedHighlight({
     // @ts-expect-error
     code(text: string, lang:string, escaped?:boolean ){
       return `<figure class="highlighted-code">
-<div class="highlighted-code-header"><button class="btn-copy">Copy</button></div>
+<div class="highlighted-code-header">
+<span>${lang}</span>
+<button 
+  onclick="${copyAction}"
+  class="btn-copy">Copy</button>
+</div>
 <pre><code class="hljs language-${lang}>${text}</code></pre>
 </figure>`
 
+    },
+    // @ts-expect-error
+    image(
+      href: string,
+      caption?: string,
+      alt?: string | null,
+    ){
+      console.log({
+        href, alt, caption
+      })
+      return `
+        <figure class="convo-image">
+          <img src="${href}" alt="${alt?.replace(/\"/g,'\\"')}" />
+          ${caption && `<figcaption>${caption}</figcaption>`}
+        </figure>
+      `
     }
   }
 }
@@ -58,50 +83,13 @@ function Bubble({
 
   const [ result, setResult ] = useState('')
   const ref = useRef<HTMLDivElement|null>(null)
+
   useEffect(() => {
-
-    const onExit: (() => void)[] = []
-
-    function onClickCopy(e: Event){
-      const btn = (e.currentTarget || e.target) as HTMLButtonElement
-      const pre = btn.parentNode?.parentNode?.querySelector('pre')
-      if(pre){
-        navigator.clipboard.writeText(pre.innerText);
-        btn.innerText = 'Copied'
-        setTimeout(() => {
-          btn.innerText = 'Copy'
-        },1000)
-      }
-    }
 
     Promise.resolve(convert(content))
     .then((res:string) => {
       setResult(res)
-
-      setTimeout(() => {
-
-        // copy button
-        ref.current?.querySelectorAll('button.btn-copy')
-        .forEach(btn => {
-          console.log(btn)
-          btn.addEventListener('click', onClickCopy)
-          onExit.push(() => {
-            btn && btn.removeEventListener('click', onClickCopy)
-          })
-        })
-
-        // adding target _blank
-        ref.current?.querySelectorAll('a[href]')
-        .forEach(link => {
-          link.setAttribute('target', '_blank')
-        })
-
-      },500)
     })
-
-    return () => {
-      onExit.forEach(fn => fn())
-    }
 
   },[])
 

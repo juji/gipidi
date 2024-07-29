@@ -8,6 +8,7 @@
   --content-padding-lr: 1rem;
   --content-padding: 0 var(--content-padding-lr);
   --content-nav-width: 340px;
+  --content-nav-width-sm: 240px;
 
 }
 

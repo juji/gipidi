@@ -13,9 +13,24 @@
       var(--aside-width) - 
       var(--aside-width) -
       1rem - 1rem - 1rem 
+      /* 
+        why is there three 1rem? 
+        two is for side padding,
+        one, i don't know
+      */
     );
   
   @media (min-width: 800px){
+    --max-width-cloud: calc(
+      min(100vw - var(--content-nav-width-sm),  var(--content-max-width)) -
+      var(--content-padding-lr) -
+      var(--aside-width) - 
+      var(--aside-width) -
+      1rem - 1rem - 1rem 
+    );
+  }
+
+  @media (min-width: 900px){
     --max-width-cloud: calc(
       min(100vw - var(--content-nav-width),  var(--content-max-width)) -
       var(--content-padding-lr) -

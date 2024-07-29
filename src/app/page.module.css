@@ -15,9 +15,19 @@
 
   .topbar{
     position: sticky;
-    top: 0;
-    z-index: 1;
+    top: 0px;
+    z-index: 99;
+    transition: top 200ms ease-out;
     backdrop-filter: blur(9px);
+    background-color: rgb(from var(--bg-color) r g b / 50%);
+
+    &.scrolledUp{
+      top: 65px;
+      
+      @media(min-width: 800px){
+        top: 0px;
+      }
+    }
   }
 
   .chat{
@@ -37,6 +47,7 @@
     position: sticky;
     bottom: 0;
     backdrop-filter: blur(9px);
+    background-color: rgb(from var(--bg-color) r g b / 50%);
   }
   
 
