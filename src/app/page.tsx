@@ -40,6 +40,13 @@ export default function Home() {
 
   },[ scrolledUp ])
 
+  const [ loaderOff, setLoaderOff ] = useState(false)
+  useEffect(() => {
+    setTimeout(() => {
+      setLoaderOff(true)
+    },500)
+  },[])
+
   return (
     <div className={styles.page}>
       <div className={cx( styles.topbar, scrolledUp && styles.scrolledUp )}>
@@ -48,6 +55,7 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.chat}>
+        <div className={cx(styles.loader, loaderOff && styles.off)}></div>
         <div className={styles.content}>
           <div></div>
           <div>
