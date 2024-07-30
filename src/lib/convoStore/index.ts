@@ -1,23 +1,29 @@
-import { createStore } from 'zustand/vanilla'
+import { create } from 'zustand'
 import { Convo, ConvoDetail } from '../convo/types'
+import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 import { setActiveConvo } from './setActiveConvo'
 import { updateActiveConvo } from './updateActiveConvo'
 import { updateConvo } from './updateConvo'
-import { immer } from 'zustand/middleware/immer'
+import { deleteConvo } from './deleteConvo'
 
 export type ConvoStore = {
   loading: boolean
   convos: Convo[]
   activeConvo: ConvoDetail|null
+  setActiveConvo: ( convo: Convo ) => void,
+  updateActiveConvo: ( detail: ConvoDetail ) => void,
+  updateConvo: ( convo: Convo ) => void,
+  deleteConvo: ( convo: Convo ) => void
 }
 
 export type Set = (
   nextStateOrUpdater: (state: ConvoStore) => void, 
-  shouldReplace?: boolean | undefined
+  shouldReplace?: boolean | undefined,
+  
 ) => void
 
-export const store = createStore<ConvoStore>()(
+export const useChatStore = create<ConvoStore>()(
   initialize(
     immer(
       (set) => ({
@@ -27,6 +33,7 @@ export const store = createStore<ConvoStore>()(
         setActiveConvo: setActiveConvo(set),
         updateActiveConvo: updateActiveConvo(set),
         updateConvo: updateConvo(set),
+        deleteConvo: deleteConvo(set)
       })
     )
   )

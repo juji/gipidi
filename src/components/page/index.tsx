@@ -12,6 +12,7 @@ export function Page({
 
   return <div className={styles.page}>
     <h1 className={styles.heading}>{title}</h1>
+    <hr />
     {children}
   </div>
 

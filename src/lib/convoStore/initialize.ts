@@ -1,7 +1,5 @@
-
-import { TABLES, DEFAULT_DELETED } from '../convo/connection'
 import { StateCreator } from 'zustand'
-import { Convo, ConvoDetail } from '../convo/types'
+import { ConvoDetail } from '../convo/types'
 import { getAllConvo } from '../convo/getAllConvo'
 import { getConvoDetail } from '../convo/getConvoDetail'
 import { ls } from '../local-storage'
@@ -16,6 +14,7 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
   // get last active convo
   // get last active convoDetail
   // set it on the store
+
   getAllConvo().then(async convos => {
 
     if(convos.length){

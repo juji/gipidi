@@ -6,10 +6,20 @@ import { Inputform } from "@/components/input";
 import { TopBar } from "@/components/topbar";
 import { useEffect, useState } from "react";
 import cx from "classix";
+import { useGPTStore } from '@/lib/gptStore';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
 
   const [scrolledUp, setScrolledUp] = useState(false)
+  const loading = useGPTStore(s => s.loading)
+  const providers = useGPTStore(s => s.providers)
+  const router = useRouter()
+
+  useEffect(() => {
+    if(!loading && !providers.length)
+      router.push('/settings?notify=Setup%20Your%20GPT%20Providers')
+  },[ loading, providers ])
 
   useEffect(() => {
 

@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './style.module.css'
+import { Convo } from '@/lib/convo/types'
+import { useChatStore } from '@/lib/convoStore'
 
+function Chat({ convo }:{ convo: Convo }){
 
-function Chat(){
+  const deleteConvo = useChatStore(s => s.deleteConvo)
 
   const [confirm, setConfirm] = useState(false)
   function remove(){
+    deleteConvo(convo)
     setConfirm(false)
   }
 
@@ -27,7 +31,7 @@ function Chat(){
     setConfirm(false)
   }}>
       <button className={styles.titleButton}>
-        asdf asdf asdf asdf asdf asdf sdf asdf asdf asdf asfsd asdf asd f
+        {convo.title}
       </button>
       <button 
         onClick={() => confirm ? remove() : setConfirm(true)}
@@ -42,23 +46,17 @@ function Chat(){
 
 export function ChatList(){
 
+  const loading = useChatStore(s => s.loading)
+  const convos = useChatStore(s => s.convos)
+
   return <div className={styles.chatList}>
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
-    <Chat />
+    {loading ? null : convos.length ? convos.map(v => {
+
+      return <Chat key={v.id} convo={v} />
+
+    }) : <div className={styles.empty}>
+      <p>No Conversation Yet...</p>
+    </div>}
   </div>
 
 }

@@ -4,7 +4,7 @@ export type Convo = {
   id: string
   title: string
   created: Date
-  updated: Date
+  updated?: Date
   deleted: Date
 }
 
@@ -12,7 +12,7 @@ export type ConvoDetail = {
   id: string
   data: ConvoData[]
   created: Date
-  updated: Date
+  updated?: Date
   deleted: Date
 }
 

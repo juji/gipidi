@@ -5,6 +5,11 @@
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 
+  .empty{
+    color: #777;
+    padding: 0.5rem 2rem;
+  }
+
   .chat{
 
     padding: 0.5rem 2rem;
