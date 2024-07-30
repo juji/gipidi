@@ -1,0 +1,56 @@
+import workerInjector from "@juji/jsstore/dist/worker_injector";
+import { Connection, DATA_TYPE, type IDataBase, type ITable } from '@juji/jsstore'
+
+export const TABLES = {
+  CONVO: 'convo',
+  CONVO_DETAIL: 'convoDetail',
+}
+
+
+export const DEFAULT_DELETED = new Date('1970-01-01T00:00:00:000Z')
+
+function getDatabase(){
+
+  const convo:ITable = {
+    name: TABLES.CONVO,
+    columns: {
+      id: { dataType: DATA_TYPE.Object, primaryKey: true },
+      created: { dataType: DATA_TYPE.DateTime },
+      updated: { dataType: DATA_TYPE.DateTime },
+      deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
+      title: { dataType: DATA_TYPE.String, enableSearch: true }
+    }
+  }
+
+  const convoDetail:ITable = {
+    name: TABLES.CONVO_DETAIL,
+    columns: {
+      id: { dataType: DATA_TYPE.Object, primaryKey: true },
+      created: { dataType: DATA_TYPE.DateTime },
+      updated: { dataType: DATA_TYPE.DateTime },
+      deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
+      data: { dataType: DATA_TYPE.Array },
+    }
+  }
+
+  const database: IDataBase = {
+    name: 'gipidi',
+    version: 1,
+    tables: [
+      convo,
+      convoDetail
+    ]
+  }
+
+  return database
+
+}
+
+export function createConnection(){
+  const connection = new Connection();
+  connection.addPlugin(workerInjector);
+  const dataBase = getDatabase();
+  connection.initDb(dataBase);
+  return connection
+}
+

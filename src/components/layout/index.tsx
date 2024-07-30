@@ -1,11 +1,12 @@
 'use client'
-import { type PropsWithChildren, useState } from 'react'
+import { type PropsWithChildren, useEffect, useState } from 'react'
 import styles from './style.module.css'
 import cx from 'classix'
 import { Montserrat } from "next/font/google";
 import { ChatSearch } from '../chat-search';
 import { ChatList } from '../chat-list';
 import { Footer } from '../footer';
+import { keyboardListeners } from '@/lib/keyboard-listeners';
 
 const openSans = Montserrat({
   weight: "600",
@@ -16,6 +17,12 @@ const openSans = Montserrat({
 export function Layout({ children }: PropsWithChildren){
 
   const [ open, setOpen ] = useState(false)
+
+  useEffect(() => {
+    keyboardListeners({
+      searchBarId: 'searchconvo'
+    })
+  },[])
 
   return <div className={cx(styles.layout, open && styles.open)}>
     <div className={styles.overlay} onClick={() => setOpen(false)}></div>

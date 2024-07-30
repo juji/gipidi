@@ -1,6 +1,6 @@
 
 export function searchBarFocus(searchBarId: string){
-  const input = document.querySelector(searchBarId)
+  const input = document.getElementById(searchBarId)
   if(input) (input as HTMLInputElement).focus()
 }
 

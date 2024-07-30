@@ -18,6 +18,7 @@ export function ChatSearch(){
     <div className={styles.chatSearch}>
       <input 
         className={styles.input}
+        id="searchconvo"
         placeholder="Search Convo"
         onInput={onInput} ref={ref} type="text" required name="search" />
       <button 
