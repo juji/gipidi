@@ -56,15 +56,24 @@ markedHighlight({
       caption?: string,
       alt?: string | null,
     ){
-      console.log({
-        href, alt, caption
-      })
+      // console.debug({href, alt, caption})
       return `
         <figure class="convo-image">
           <img src="${href}" alt="${alt?.replace(/\"/g,'\\"')}" />
           ${caption && `<figcaption>${caption}</figcaption>`}
         </figure>
       `
+    },
+    // @ts-expect-error
+    table(
+      header: string | null | undefined, content: string | null | undefined
+    ){
+      return `<div class="table-container">
+      <table>
+        ${header||''}
+        ${content||''}
+      </table>
+      </div>`
     }
   }
 }
