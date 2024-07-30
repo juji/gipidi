@@ -4,7 +4,7 @@ import { Chat } from "@/components/chat";
 import styles from "./page.module.css";
 import { Inputform } from "@/components/input";
 import { TopBar } from "@/components/topbar";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import cx from "classix";
 
 export default function Home() {

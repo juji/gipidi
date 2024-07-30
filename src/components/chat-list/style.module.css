@@ -1,0 +1,70 @@
+
+
+.chatList{
+
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  .chat{
+
+    padding: 0.5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    @media(min-width: 800px){
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    @media(min-width: 900px){
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  
+    .titleButton{
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      color: transparent;
+      background-image: linear-gradient(
+        to right, 
+        rgb(from var(--fg-color) r g b / 1) 0%,
+        rgb(from var(--fg-color) r g b / 1) 70%, 
+        rgb(from var(--fg-color) r g b / 0) 98%,
+        rgb(from var(--fg-color) r g b / 0)
+      );
+      background-size: 100%;
+      background-clip: text;
+    }
+  
+    .removeButton{
+      display: none;
+      opacity: 0.5;
+
+      &:hover{
+        color: rgb(255, 117, 117);
+        opacity: 1;
+      }
+
+      &:active{
+        opacity: 0.7;
+      }
+    }
+
+    &:hover{
+      grid-template-columns: 1fr auto;
+      .removeButton{
+        display: block;
+      }
+    }
+
+    @media (hover: none) {
+      grid-template-columns: 1fr auto;
+      .removeButton{
+        display: block;
+      }
+    }
+  
+  }
+
+}
