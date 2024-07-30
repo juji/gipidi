@@ -147,5 +147,49 @@ This is an ordered list:
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are meh      |    $1 |
 `
+  },
+  {
+    id: 'zxcv' + Math.random(),
+    type: 'u',
+    content: `
+This is text with it's headings:
+
+# Heading 1
+This is a paragraph
+
+## Heading 2
+This is a paragraph
+
+### Heading 3
+This is a paragraph
+
+#### Heading 4
+This is a paragraph
+
+##### Heading 5
+This is a paragraph
+
+###### Heading 6
+This is a paragraph
+`
+  },
+  {
+    id: 'asdf' + Math.random(),
+    type: 'b',
+    content: `> Blockquotes are very handy in email to emulate reply text.
+> This line is part of the same quote.
+
+Quote break.
+
+> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote.`
+  },
+  {
+    id: 'asdf' + Math.random(),
+    type: 'u',
+    content: `
+This is a linked image:
+
+[![highfive](https://content.codecademy.com/courses/learn-cpp/community-challenge/highfive.gif 'highfive')](https://codecademy.com)
+`
   }
 ]
