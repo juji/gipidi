@@ -1,7 +1,7 @@
 
 import { Connection } from '@juji/jsstore';
-import { createConnection, TABLES, DEFAULT_DELETED } from './connection'
-import type { ConvoDetail } from './types';
+import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
+import type { ConvoDetail } from '../types';
 
 export async function updateConvoDetail(
   detail: ConvoDetail,

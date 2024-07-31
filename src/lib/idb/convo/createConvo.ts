@@ -1,8 +1,8 @@
 
 import { Connection } from '@juji/jsstore';
-import { createConnection, TABLES, DEFAULT_DELETED } from './connection'
+import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
 import { nanoid } from 'nanoid'
-import { Convo, ConvoDetail } from './types';
+import { Convo, ConvoDetail } from '../types';
 
 export async function createConvo(
   connection?: Connection 

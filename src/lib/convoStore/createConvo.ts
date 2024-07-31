@@ -1,5 +1,5 @@
 
-import { createConvo as create } from '../convo/createConvo'
+import { createConvo as create } from '../idb/convo/createConvo'
 import type { Set } from './'
 
 export function createConvo(set: Set){

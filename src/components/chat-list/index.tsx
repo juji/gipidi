@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './style.module.css'
-import { Convo } from '@/lib/convo/types'
+import { Convo } from '@/lib/idb/types'
 import { useChatStore } from '@/lib/convoStore'
 
 function Chat({ convo }:{ convo: Convo }){

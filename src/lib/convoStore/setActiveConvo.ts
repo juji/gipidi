@@ -1,6 +1,6 @@
 
-import { Convo } from '../convo/types'
-import { getConvoDetail as getDetail } from '../convo/getConvoDetail'
+import { Convo } from '../idb/types'
+import { getConvoDetail as getDetail } from '../idb/convo/getConvoDetail'
 import { ls } from '../local-storage'
 import type { Set } from './'
 

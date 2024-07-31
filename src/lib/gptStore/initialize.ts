@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand'
-import { getAllProvider } from '../gpt/getAllProvider'
+import { getAllProvider } from '../idb/gpt/getAllProvider'
 
 export type IDbStorageType = <T>(f: StateCreator<T, [], any[]>) => StateCreator<T, [], any[]>
 

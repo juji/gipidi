@@ -4,6 +4,7 @@ import { Connection, DATA_TYPE, type IDataBase, type ITable } from '@juji/jsstor
 export const TABLES = {
   CONVO: 'convo',
   CONVO_DETAIL: 'convoDetail',
+  GPT_PROVIDER: 'gptProvider'
 }
 
 
@@ -35,12 +36,24 @@ function getDatabase(){
     }
   }
 
+  const gptProvider:ITable = {
+    name: TABLES.GPT_PROVIDER,
+    columns: {
+      id: { dataType: DATA_TYPE.String, primaryKey: true },
+      created: { dataType: DATA_TYPE.DateTime },
+      updated: { dataType: DATA_TYPE.DateTime },
+      deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
+      data: { dataType: DATA_TYPE.Array },
+    }
+  }
+
   const database: IDataBase = {
-    name: 'gipidi-convo',
+    name: 'gipidi',
     version: 1,
     tables: [
       convo,
-      convoDetail
+      convoDetail,
+      gptProvider
     ]
   }
 

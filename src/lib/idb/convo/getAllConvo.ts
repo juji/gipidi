@@ -1,13 +1,13 @@
 
 import { Connection } from '@juji/jsstore';
-import { createConnection, TABLES, DEFAULT_DELETED } from './connection'
-import type { GPTProvider } from './types';
+import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
+import type { Convo } from '../types';
 
-export async function getAllProvider( connection?: Connection ){
+export async function getAllConvo( connection?: Connection ){
 
   const conn = connection ? connection : createConnection()
-  var results = await conn.select<GPTProvider>({
-    from: TABLES.GPT,
+  var results = await conn.select<Convo>({
+    from: TABLES.CONVO,
     where: {
       deleted: DEFAULT_DELETED
     },

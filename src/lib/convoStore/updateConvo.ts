@@ -1,6 +1,6 @@
 
-import { Convo } from '../convo/types'
-import { updateConvo as update } from '../convo/updateConvo'
+import { Convo } from '../idb/types'
+import { updateConvo as update } from '../idb/convo/updateConvo'
 import type { Set } from './'
 
 export function updateConvo(set: Set){

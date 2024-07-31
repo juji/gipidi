@@ -1,6 +1,6 @@
 
-import { Convo } from '../convo/types'
-import { deleteConvo as delConvo } from '../convo/deleteConvo'
+import { Convo } from '../idb/types'
+import { deleteConvo as delConvo } from '../idb/convo/deleteConvo'
 import type { Set } from './'
 
 export function deleteConvo(set: Set){

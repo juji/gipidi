@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand'
-import { ConvoDetail } from '../convo/types'
-import { getAllConvo } from '../convo/getAllConvo'
-import { getConvoDetail } from '../convo/getConvoDetail'
+import { ConvoDetail } from '../idb/types'
+import { getAllConvo } from '../idb/convo/getAllConvo'
+import { getConvoDetail } from '../idb/convo/getConvoDetail'
 import { ls } from '../local-storage'
 
 export type IDbStorageType = <T>(f: StateCreator<T, [], any[]>) => StateCreator<T, [], any[]>

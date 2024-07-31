@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Convo, ConvoDetail } from '../convo/types'
+import { Convo, ConvoDetail } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 import { setActiveConvo } from './setActiveConvo'
