@@ -1,3 +1,5 @@
+'use client'
+
 import { create } from 'zustand'
 import { Convo, ConvoDetail } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
@@ -23,19 +25,25 @@ export type Set = (
   
 ) => void
 
-export const useChatStore = create<ConvoStore>()(
-  initialize(
-    immer(
-      (set) => ({
-        loading: true,
-        convos: [],
-        activeConvo: null,
-        setActiveConvo: setActiveConvo(set),
-        updateActiveConvo: updateActiveConvo(set),
-        updateConvo: updateConvo(set),
-        deleteConvo: deleteConvo(set)
-      })
+export const useConvo = createConvoStore()
+
+export function createConvoStore(){
+
+  return create<ConvoStore>()(
+    initialize(
+      immer(
+        (set) => ({
+          loading: true,
+          convos: [],
+          activeConvo: null,
+          setActiveConvo: setActiveConvo(set),
+          updateActiveConvo: updateActiveConvo(set),
+          updateConvo: updateConvo(set),
+          deleteConvo: deleteConvo(set)
+        })
+      )
     )
   )
-)
+
+}
 

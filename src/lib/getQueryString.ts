@@ -1,7 +1,7 @@
 
 
 // tauri uses non http protocol
-// so this is safer to use
+// i guess this is safer to use
 export function getQueryString( keys: string[] ){
 
   const params = new URLSearchParams(window.location.search.replace(/^\?/,''))

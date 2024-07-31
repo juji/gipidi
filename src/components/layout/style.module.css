@@ -40,10 +40,12 @@
     
     
     @media(min-width: 800px){
+      width: var(--content-nav-width-sm);
       max-width: var(--content-nav-width-sm);
     }
 
     @media(min-width: 900px){
+      width: var(--content-nav-width);
       max-width: var(--content-nav-width);
     }
 
