@@ -16,7 +16,7 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
   // set it on the store
 
   if(typeof window === 'undefined') return f(set, get, store);
-  console.log('initialize convoStore')
+  console.debug('initialize convoStore')
 
   getAllConvo().then(async convos => {
 

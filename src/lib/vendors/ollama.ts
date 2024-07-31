@@ -6,12 +6,12 @@ export function getClient( host: string ){
   return ollama
 }
 
-export async function list( client: Ollama ): Promise<GPTModel[]>{
+export async function models( client: Ollama ): Promise<GPTModel[]>{
   return await client.list().then(d => {
 
     return d.models.map(v => ({
       id: v.name,
-      name: v.name + ' ' + v.details.parameter_size
+      name: v.name + ' (' + v.details.parameter_size + ')'
     }))
 
   })

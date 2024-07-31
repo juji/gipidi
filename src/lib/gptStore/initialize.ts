@@ -7,7 +7,7 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
   type T = ReturnType<typeof f>
 
   if(typeof window === 'undefined') return f(set, get, store);
-  console.log('initialize gptStore')
+  console.debug('initialize gptStore')
 
   getAllProvider().then(async providers => {
 

@@ -1,6 +1,6 @@
 'use client'
 import { OllamaSetting } from "@/lib/idb/types"
-import { getClient, list } from "@/lib/vendors/ollama"
+import { getClient, models } from "@/lib/vendors/ollama"
 import { useEffect, useState } from "react"
 import styles from './style.module.css'
 import Link from "next/link"
@@ -41,7 +41,7 @@ export function OllamaSettings(){
     }
     setErr('')
 
-    list(getClient(url)).then(v => {
+    models(getClient(url)).then(v => {
       saveProvider('ollama', { url })
     }).catch(e => {
       removeProvider('ollama')

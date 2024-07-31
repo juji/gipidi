@@ -1,6 +1,6 @@
 'use client'
 import { GenericSetting } from "@/lib/idb/types"
-import { getClient, list } from "@/lib/vendors/groq"
+import { getClient, models } from "@/lib/vendors/groq"
 import { useEffect, useState } from "react"
 import styles from './style.module.css'
 import Link from "next/link"
@@ -42,7 +42,7 @@ export function GroqSettings(){
 
     setErr('')
 
-    list(getClient(apiKey)).then(v => {
+    models(getClient(apiKey)).then(v => {
       saveProvider('groq', { apiKey })
     }).catch(e => {
       removeProvider('groq')

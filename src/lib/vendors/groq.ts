@@ -6,7 +6,7 @@ export function getClient( apiKey: string ){
   return groq
 }
 
-export async function list( client: Groq ): Promise<GPTModel[]>{
+export async function models( client: Groq ): Promise<GPTModel[]>{
   return await client.models.list().then(models => {
 
     return models.data.map(v => ({

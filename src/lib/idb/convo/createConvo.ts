@@ -3,12 +3,21 @@ import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
 import { nanoid } from 'nanoid'
 import { Convo, ConvoDetail } from '../types';
+import { ls } from '@/lib/local-storage';
 
 export async function createConvo(
   connection?: Connection 
 ){
 
   const conn = connection || createConnection()
+
+  const defaultProvider = ls.getDefaultProvider()
+  const defaultModel = ls.getDefaultModel()
+
+  if(!defaultProvider)
+    throw new Error('defaultProvider is empty')
+  if(!defaultModel)
+    throw new Error('defaultModel is empty')
 
   const convo: Convo = {
     id: nanoid(),
@@ -21,6 +30,8 @@ export async function createConvo(
     id: convo.id,
     created: new Date(),
     data: [],
+    provider: defaultProvider,
+    model: defaultModel,
     deleted: DEFAULT_DELETED
   }
 

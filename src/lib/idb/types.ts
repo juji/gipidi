@@ -11,6 +11,8 @@ export type Convo = {
 export type ConvoDetail = {
   id: string
   data: ConvoData[]
+  provider: GPTProvider['id'],
+  model: string
   created: Date
   updated?: Date
   deleted: Date
