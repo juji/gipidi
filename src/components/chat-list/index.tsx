@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './style.module.css'
 import { Convo } from '@/lib/idb/types'
-import { useChatStore } from '@/lib/convoStore'
+import { useConvo } from '@/lib/convoStore'
 
 function Chat({ convo }:{ convo: Convo }){
 
-  const deleteConvo = useChatStore(s => s.deleteConvo)
+  const deleteConvo = useConvo(s => s.deleteConvo)
 
   const [confirm, setConfirm] = useState(false)
   function remove(){
@@ -46,8 +46,8 @@ function Chat({ convo }:{ convo: Convo }){
 
 export function ChatList(){
 
-  const loading = useChatStore(s => s.loading)
-  const convos = useChatStore(s => s.convos)
+  const loading = useConvo(s => s.loading)
+  const convos = useConvo(s => s.convos)
 
   return <div className={styles.chatList}>
     {loading ? null : convos.length ? convos.map(v => {

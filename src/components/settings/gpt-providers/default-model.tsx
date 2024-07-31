@@ -1,9 +1,10 @@
+'use client'
 import { ChangeEvent, useEffect, useState } from "react";
 import styles from './style.module.css'
-import { useGPTStore } from "@/lib/gptStore";
 import type { GenericSetting, GPTProvider, OllamaSetting } from "@/lib/idb/types";
 import type { GPTModel } from "@/lib/vendors/types";
 import { titleCase } from 'title-case'
+import { useGPT } from "@/lib/gptStore";
 
 import { 
   list as ollamaList,
@@ -22,7 +23,8 @@ export function DefaultModel(){
   const [ defaultModel, setDefaultModel ] = useState(ls.getDefaultModel()||'')
   const [ defaultProvider, setDefaultProvider ] = useState<GPTProvider['id']|''>(ls.getDefaultProvider()||'')
   const [ models, setModels ] = useState<GPTModel[]>([])
-  const providers = useGPTStore(s => s.providers)
+  const providers = useGPT(s => s.providers)
+  const loading = useGPT(s => s.loading)
 
   function changeDefaultProvider(e: ChangeEvent<HTMLSelectElement>){
     ls.saveDefaultProvider(e.target.value as GPTProvider['id'])
@@ -35,6 +37,7 @@ export function DefaultModel(){
   }
 
   useEffect(() => {
+    if(loading) return () => {}
     if(!defaultProvider) {
       setModels([])
       return () => {}
@@ -44,23 +47,21 @@ export function DefaultModel(){
     if(defaultProvider === 'ollama'){
 
       const setting = provider?.setting as OllamaSetting
-      ollamaList(getOllamaClient(setting.url)).then(l => {
+      setting && ollamaList(getOllamaClient(setting.url)).then(l => {
+        console.log('models', l)
         setModels(l)
-        ls.saveDefaultModel('')
-        setDefaultModel('')
       })
 
     }else if(defaultProvider === 'groq'){
 
       const setting = provider?.setting as GenericSetting
-        groqList(getGroqClient(setting.apiKey)).then(l => {
-          setModels(l)
-          ls.saveDefaultModel('')
-          setDefaultModel('')
-        })
+      setting && groqList(getGroqClient(setting.apiKey)).then(l => {
+        console.log('models', l)
+        setModels(l)
+      })
     }
     
-  },[ defaultProvider ])
+  },[ defaultProvider, loading ])
 
   return <>
     <h6 className={styles.heading}>

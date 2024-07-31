@@ -1,3 +1,5 @@
+'use client'
+
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { GPTProvider } from '../idb/types'
@@ -17,16 +19,21 @@ export type Set = (
   shouldReplace?: boolean | undefined,
 ) => void
 
-export const useGPTStore = create<GPTStore>()(
-  initialize(
-    immer(
-      (set) => ({
-        loading: true,
-        providers: [],
-        saveProvider: saveProvider(set),
-        removeProvider: removeProvider(set)
-      })
+export const useGPT = createGPTStore()
+
+export function createGPTStore(){
+  return create<GPTStore>()(
+    initialize(
+      immer(
+        (set) => ({
+          loading: true,
+          providers: [],
+          saveProvider: saveProvider(set),
+          removeProvider: removeProvider(set)
+        })
+      )
     )
   )
-)
+}
+
 
