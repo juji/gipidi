@@ -1,12 +1,18 @@
 'use client'
 
-import { FormEvent, Fragment, useMemo, useState } from 'react'
+import { FormEvent, Fragment, useMemo, useRef, useState, KeyboardEvent } from 'react'
 import styles from './style.module.css'
 import cx from 'classix'
+import { useConvo } from '@/lib/convoStore'
 
 export function Inputform(){
 
   const [content, setContent] = useState('')
+  const activeConvo = useConvo(s => s.activeConvo)
+  const createConvo = useConvo(s => s.createConvo)
+  const addUserText = useConvo(s => s.addUserText)
+  const isStreaming = useConvo(s => s.isStreaming)
+
   const splitContent = useMemo(() => {
     return content ? content.split('\n') : ['s']
   },[ content ])
@@ -16,18 +22,36 @@ export function Inputform(){
     setContent(target.value)
   }
 
-  function onSubmit(s:string){
-
+  function onSubmit( content:string ){
+    if(!activeConvo){
+      createConvo( content )
+    }else{
+      addUserText( content )
+    }
   }
 
   function onSubmitLocal(e: FormEvent){
     e.preventDefault()
+    if(isStreaming) return;
     if(!content) return;
     onSubmit(content)
     setContent('')
   }
 
-  return <form className={styles.form} onSubmit={onSubmitLocal}>
+  const form = useRef<HTMLFormElement|null>(null)
+  function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>){
+    if(
+      (e.metaKey || e.ctrlKey) &&
+      e.key === 'Enter'
+    ){
+      if(isStreaming) return;
+      if(!content) return;
+      onSubmit(content)
+      setContent('')
+    }
+  }
+
+  return <form className={styles.form} onSubmit={onSubmitLocal} ref={form}>
     <div className={styles.input}>
       {splitContent.map((v,i,a) => {
         return <Fragment key={i}>
@@ -39,6 +63,7 @@ export function Inputform(){
         placeholder="'sup?"
         value={content}
         required
+        onKeyDown={onKeyDown}
         onInput={onChangeLocal}></textarea>
     </div>
     <button type="submit" className={cx(styles.submit, content && styles.hasContent)}>

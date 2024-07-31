@@ -12,7 +12,7 @@ import { GPTProvider } from '@/lib/idb/types'
 export function TopBar(){
 
   const [ menu, setMenu ] = useState(false)
-  const [ title, setTitle ] = useState('untitled')
+  const [ title, setTitle ] = useState('')
 
   const [ provider, setProvider ] = useState<GPTProvider['id']|null>(null)
   const [ model, setModel ] = useState<string|null>(null)
@@ -25,8 +25,11 @@ export function TopBar(){
   const loading = useGPT(s => s.loading)
 
   const activeConvo = useConvo(s => s.activeConvo)
+  const convos = useConvo(s => s.convos)
   const setCurrentModel = useConvo(s => s.setCurrentModel)
   const setCurrentProvider = useConvo(s => s.setCurrentProvider)
+  const setCurrentSystemPrompt = useConvo(s => s.setCurrentSystemPrompt)
+  const setCurrentTitle = useConvo(s => s.setCurrentTitle)
 
   useEffect(() => {
     setProvider(ls.getDefaultProvider())
@@ -42,9 +45,21 @@ export function TopBar(){
   }, [ model ])
 
   useEffect(() => {
+    setCurrentSystemPrompt(systemPrompt)
+  },[ systemPrompt ])
+
+  useEffect(() => {
+    setCurrentTitle(title)
+  },[ title ])
+
+  useEffect(() => {
     if(activeConvo) {
       setProvider(activeConvo.provider)
       setModel(activeConvo.model)
+      const convo = convos.find(v => v.id === activeConvo.id)
+      convo && setTitle(convo.title)
+    }else{
+      setTitle('')
     }
   },[ activeConvo ])
 
@@ -74,6 +89,7 @@ export function TopBar(){
     <div className={styles.title}>
       <input className={styles.titleInput} type="text" 
         value={title}
+        placeholder="untitled"
         onChange={(e) => setTitle(e.target.value)}
       />
     </div>

@@ -12,6 +12,7 @@ export type ConvoDetail = {
   id: string
   data: ConvoData[]
   provider: GPTProvider['id'],
+  systemPrompt: string,
   model: string
   created: Date
   updated?: Date
@@ -21,7 +22,7 @@ export type ConvoDetail = {
 export type ConvoData = {
   id: string
   lastUpdate: Date,
-  type: 'user' | 'gpt' | 'system',
+  role: 'user' | 'assistant' | 'system',
   content: string
 }
 

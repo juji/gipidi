@@ -20,8 +20,6 @@ function getDatabase(){
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
       title: { dataType: DATA_TYPE.String, enableSearch: true },
-      vendor: { dataType: DATA_TYPE.String },
-      model: { dataType: DATA_TYPE.String },
     }
   }
 
@@ -34,7 +32,8 @@ function getDatabase(){
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
       data: { dataType: DATA_TYPE.Array },
       provider: { dataType: DATA_TYPE.String },
-      model: { dataType: DATA_TYPE.String }
+      model: { dataType: DATA_TYPE.String },
+      systemPrompt: { dataType: DATA_TYPE.String },
     }
   }
 

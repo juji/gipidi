@@ -2,36 +2,46 @@
 import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
 import { nanoid } from 'nanoid'
-import { Convo, ConvoDetail } from '../types';
-import { ls } from '@/lib/local-storage';
+import { Convo, ConvoDetail, GPTProvider, ConvoData } from '../types';
 
 export async function createConvo(
+  initialContent: string,
+  provider: GPTProvider['id'],
+  model : string,
+  systemPrompt?: string,
+  currentTitle?: string,
   connection?: Connection 
 ){
 
   const conn = connection || createConnection()
 
-  const defaultProvider = ls.getDefaultProvider()
-  const defaultModel = ls.getDefaultModel()
-
-  if(!defaultProvider)
-    throw new Error('defaultProvider is empty')
-  if(!defaultModel)
-    throw new Error('defaultModel is empty')
-
   const convo: Convo = {
     id: nanoid(),
     created: new Date(),
-    title: '',
+    title: currentTitle || '',
     deleted: DEFAULT_DELETED
   }
 
   const convoDetail: ConvoDetail = {
     id: convo.id,
     created: new Date(),
-    data: [],
-    provider: defaultProvider,
-    model: defaultModel,
+    data: [
+      ...systemPrompt ? [{
+        id: nanoid(),
+        lastUpdate: new Date(),
+        role: 'system' as ConvoData['role'],
+        content: systemPrompt
+      }] : [],
+      {
+        id: nanoid(),
+        lastUpdate: new Date(),
+        role: 'user' as ConvoData['role'],
+        content: initialContent
+      }
+    ],
+    provider,
+    model,
+    systemPrompt: systemPrompt || '',
     deleted: DEFAULT_DELETED
   }
 

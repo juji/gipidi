@@ -31,7 +31,7 @@ function Chat({ convo }:{ convo: Convo }){
     setConfirm(false)
   }}>
       <button className={styles.titleButton}>
-        {convo.title}
+        {convo.title||<span className={styles.untitled}>Untitled</span>}
       </button>
       <button 
         onClick={() => confirm ? remove() : setConfirm(true)}

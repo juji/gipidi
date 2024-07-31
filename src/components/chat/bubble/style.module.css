@@ -5,6 +5,8 @@
   padding: 1rem 0;
   display: grid;
   gap: 1rem;
+  scroll-margin-top: 62px;
+  position: relative;
 
   --aside-width: 34px;
   --max-width-cloud: calc(
@@ -80,5 +82,14 @@
       1fr
       var(--aside-width);
   }
+
+  .interObserver{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 1px;
+  }
+
 
 }

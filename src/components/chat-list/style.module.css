@@ -40,6 +40,11 @@
       );
       background-size: 100%;
       background-clip: text;
+      text-align: left;
+
+      .untitled{
+        color: #777;
+      }
     }
   
     .removeButton{

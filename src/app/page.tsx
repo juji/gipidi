@@ -1,20 +1,21 @@
 'use client'
 
-import { Chat } from "@/components/chat";
 import styles from "./page.module.css";
-import { Inputform } from "@/components/input";
-import { TopBar } from "@/components/topbar";
 import { useEffect, useState } from "react";
 import cx from "classix";
 import { ls } from "@/lib/local-storage";
 import { useGPT } from '@/lib/gptStore'
+
+import { Inputform } from "@/components/input";
+import { TopBar } from "@/components/topbar";
+import { Chat } from "@/components/chat";
+
 
 export default function Home() {
 
   const [scrolledUp, setScrolledUp] = useState(false)
   const loading = useGPT(s => s.loading)
   const providers = useGPT(s => s.providers)
-
 
   useEffect(() => {
     if(loading) return () => {}
@@ -59,7 +60,7 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       setLoaderOff(true)
-    },500)
+    },1000)
   },[])
 
   return (
