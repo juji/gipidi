@@ -30,22 +30,29 @@ export async function models( client: Groq ): Promise<GPTModel[]>{
 export const chat: ChatFn<Groq> = async function( 
   client: Groq, 
   convoDetail: ConvoDetail,
-  onResponse: (str: string, end?: boolean) => void  
+  onResponse: (str: string, end?: boolean) => void,
+  onError: (e: any)   => void
 ){
 
-  const resp = await client.chat.completions.create({
-    model: convoDetail.model,
-    messages: convoDetail.data.map(v => {
-      return {
-        role: v.role,
-        content: v.content
-      }
-    }),
-    stream: true
-  })
+  try{
 
-  for await (const chunk of resp) onResponse(chunk.choices[0].delta.content || '')
-  onResponse('', true)
+    const resp = await client.chat.completions.create({
+      model: convoDetail.model,
+      messages: convoDetail.data.map(v => {
+        return {
+          role: v.role,
+          content: v.content
+        }
+      }),
+      stream: true
+    })
+  
+    for await (const chunk of resp) onResponse(chunk.choices[0].delta.content || '')
+    onResponse('', true)
+
+  }catch(e){
+    onError(e)
+  }
 
 }
 
@@ -55,6 +62,8 @@ export async function createTitle( client: Groq, convoDetail: ConvoDetail ){
 You are an excellent summarizer.
 The following data is a JSON formatted conversation between a user and an assistant.
 You are expected to create a short title to describe the conversation.
+
+Prevent from using the word "user" and "assistant" in the resulting title.
 
 Reply with JSON, using the following JSON schema:
 {"title":"string"}

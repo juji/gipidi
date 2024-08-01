@@ -9,7 +9,8 @@ export type GPTModel = {
 export type ChatFn<T = void> = (
   client: T, 
   convoDetail: ConvoDetail,
-  onResponse: (str: string, end?: boolean) => void  
+  onResponse: (str: string, end?: boolean) => void  ,
+  onError: (e: any) => void
 ) => Promise<void>
 
 export type GetClientFromProvider<T = void> = (

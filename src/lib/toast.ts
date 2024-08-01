@@ -6,7 +6,7 @@ export function showError(str: string){
   Toastify({
 
     text: str,
-    duration: 3000,
+    duration: 9000,
     close: false,
     gravity: "top", // `top` or `bottom`
     position: "right", // `left`, `center` or `right`

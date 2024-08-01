@@ -9,6 +9,7 @@ import { useGPT } from '@/lib/gptStore'
 import { Inputform } from "@/components/input";
 import { TopBar } from "@/components/topbar";
 import { Chat } from "@/components/chat";
+import { useConvo } from "@/lib/convoStore";
 
 
 export default function Home() {
@@ -16,7 +17,10 @@ export default function Home() {
   const [scrolledUp, setScrolledUp] = useState(false)
   const loading = useGPT(s => s.loading)
   const providers = useGPT(s => s.providers)
+  const activeConvo = useConvo(s => s.activeConvo)
 
+  // check if initial settings are done
+  // and redirect
   useEffect(() => {
     if(loading) return () => {}
     if( 
@@ -27,6 +31,7 @@ export default function Home() {
       window.location.href = '/settings?notify=Setup%20Your%20GPT%20Providers%20and%20Default%20Model'
   },[ loading, providers ])
 
+  // show header on scroll up
   useEffect(() => {
 
     let initScroll = window.scrollY
@@ -34,17 +39,14 @@ export default function Home() {
     function onScroll(){
       
       currentScroll = window.scrollY
-      if(
-        currentScroll < initScroll &&
-        !scrolledUp
-      ){
+      if(currentScroll < initScroll && !scrolledUp){
         setScrolledUp(true)
-      }else if(
-        currentScroll > initScroll && 
-        scrolledUp
-      ){
+      }
+      
+      else if(currentScroll > initScroll &&  scrolledUp){
         setScrolledUp(false)
       }
+      
       initScroll = currentScroll
 
     }
@@ -56,12 +58,24 @@ export default function Home() {
 
   },[ scrolledUp ])
 
+  // loader, basically just a dark screen
   const [ loaderOff, setLoaderOff ] = useState(false)
   useEffect(() => {
+    setLoaderOff(false)
     setTimeout(() => {
       setLoaderOff(true)
+    },200)
+  },[ activeConvo?.id ])
+
+  // scroll down
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight - window.innerHeight,
+        left: 0,
+      })
     },500)
-  },[])
+  },[ activeConvo?.id ])
 
   return (
     <div className={styles.page}>

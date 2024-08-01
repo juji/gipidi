@@ -122,6 +122,11 @@
           }
         }
 
+        .systemPromptDisabled{
+          color: #999;
+          margin-top: 1rem;
+        }
+
         .noedit{
           margin-bottom: 1rem;
           text-align: center;

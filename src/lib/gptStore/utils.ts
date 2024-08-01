@@ -10,6 +10,11 @@ import {
   getClient as getGroqClient
 } from "@/lib/vendors/groq";
 
+import { 
+  models as geminiModels,
+  getClient as getGeminiClient
+} from "@/lib/vendors/gemini";
+
 export async function getModels( provider: GPTProvider ){
 
   if(provider && provider.id === 'ollama'){
@@ -23,6 +28,12 @@ export async function getModels( provider: GPTProvider ){
     const setting = provider?.setting as GenericSetting
     if(!setting) return null
     return await groqModels(getGroqClient(setting.apiKey))
+
+  }else if(provider && provider.id === 'gemini'){
+
+    const setting = provider?.setting as GenericSetting
+    if(!setting) return null
+    return await geminiModels(getGeminiClient(setting.apiKey))
 
   }else{
     return null

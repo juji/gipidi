@@ -11,6 +11,7 @@
     "build": "bunx tauri build"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.16.0",
     "@juji/jsstore": "^4.8.4",
     "@juji/preflight": "^1.0.1",
     "@shikijs/transformers": "^1.12.0",

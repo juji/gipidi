@@ -44,12 +44,17 @@
       z-index: 2;
       opacity: 1;
       transition: 
-        opacity 200ms ease-out,
-        width 0ms 200ms,
-        height 0ms 200ms
+        opacity 0ms 0ms ease-out,
+        width 0ms 0ms,
+        height 0ms 0ms
       ;
 
       &.off{
+        transition: 
+          opacity 200ms 200ms ease-out,
+          width 0ms 400ms,
+          height 0ms 400ms
+        ;
         opacity: 0;
         width: 0%;
         height: 0%;

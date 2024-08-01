@@ -8,15 +8,6 @@ import { useGptListener } from '@/lib/hooks/useGptListener'
 
 export function Chat(){
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight - window.innerHeight,
-        left: 0,
-      })
-    },500)
-  },[])
-
   const activeConvo = useConvo(s => s.activeConvo)
   useGptListener()
 

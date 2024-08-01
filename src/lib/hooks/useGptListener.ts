@@ -1,9 +1,10 @@
 import { useConvo } from "@/lib/convoStore"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef } from "react"
 
 import { ChatFn, GetClientFromProvider } from "@/lib/vendors/types"
 import { useGPT } from "@/lib/gptStore"
 import { GPTProvider } from "@/lib/idb/types"
+import { showError } from "../toast"
 
 export function useGptListener(){
 
@@ -52,6 +53,10 @@ export function useGptListener(){
         activeConvo,
         (str: string, end?: boolean) => {
           addGPTText(str, end)
+        },
+        (e) => {
+          console.error(e)
+          showError(e.message)
         }
       )
 

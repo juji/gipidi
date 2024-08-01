@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 
 
-export function useTypeWriter( initial?: string ){
+export function useTypeWriter( initial?: string, interval = 20 ){
 
   const [ text, setText ] = useState(initial||'')
   const [ result, setResult ] = useState('')
@@ -18,12 +18,16 @@ export function useTypeWriter( initial?: string ){
       }
       t.current = text.substring(0, t.current.length + 1) 
       setResult( t.current )
-    },20)
+    },interval)
 
     return () => {
       to && clearInterval(to)
     }
   },[ text ])
+
+  useEffect(() => {
+    initial && setText(initial)
+  },[ initial ])
 
   return { result, setText }
 

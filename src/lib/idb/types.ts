@@ -30,7 +30,7 @@ export type OllamaSetting = { url: string }
 export type GenericSetting = { apiKey: string }
 
 export type GPTProvider = {
-  id: 'ollama' | 'groq'
+  id: 'ollama' | 'groq' | 'gemini'
   setting: OllamaSetting | GenericSetting
   created: Date
   updated?: Date

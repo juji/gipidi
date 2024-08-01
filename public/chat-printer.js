@@ -31,15 +31,16 @@ const parser = marked.use(
   {
     renderer: {
       // @ts-expect-error
-      code(text, lang, escaped ){
+      code(text, lang, escaped){
+
         return `<figure class="highlighted-code">
           <div class="highlighted-code-header">
-          <span>${lang}</span>
+          <span>${lang||'plaintext'}</span>
           <button 
             onclick="${copyAction}"
             class="btn-copy">Copy</button>
           </div>
-          <pre><code class="hljs language-${lang}>${text}</code></pre>
+          <pre><code class="hljs language-${lang||'plaintext'}">${text}</code></pre>
           </figure>
         `
 

@@ -84,7 +84,7 @@ function Bubble({
     <div className={styles.cloud}>
       { result ? 
         <div className={cx(styles.content, 'bubble-content')} 
-        dangerouslySetInnerHTML={{ __html: result || '...'}} /> : 
+          dangerouslySetInnerHTML={{ __html: result || '...'}} /> : 
         <div className={cx(styles.content, 'bubble-content')}>
           <ColorRing
           visible={true}

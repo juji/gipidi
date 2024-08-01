@@ -21,7 +21,7 @@ export function DefaultModel(){
     setDefaultProvider(e.target.value as GPTProvider['id'])
   }
 
-  function changeDefaultModel(e: ChangeEvent<HTMLInputElement>){
+  function changeDefaultModel(e: ChangeEvent<HTMLSelectElement>){
     saveDefaultModel(e.target.value)
     setDefaultModel(e.target.value)
   }
@@ -61,7 +61,19 @@ export function DefaultModel(){
       </label>
       <label className={styles.label}>
         <span className={styles.info}>Model</span>
-        <input
+
+        <select
+          className={styles.select}
+          value={defaultModel}
+          onChange={changeDefaultModel}
+        >
+          <option value="">Select Model</option>
+          {models.map(v => {
+            return <option key={v.id} value={v.id}>{v.name}</option>
+          })}
+        </select>
+
+        {/* <input
           className={styles.input}
           type="text"
           list="modelsselection"
@@ -72,7 +84,7 @@ export function DefaultModel(){
           {models.map(v => {
             return <option key={v.id} value={v.id}>{v.name}</option>
           })}
-        </datalist>
+        </datalist> */}
       </label>
     </div>
   </>

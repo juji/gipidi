@@ -21,11 +21,8 @@ const openSans = Montserrat({
 export function Layout({ children }: PropsWithChildren){
 
   const [ open, setOpen ] = useState(false)
-  const router = useRouter()
   const pathname = usePathname()
   const isHome = useMemo(() => pathname === '/', [ pathname ])
-
-  console.log('pathname', pathname)
 
   useEffect(() => {
     keyboardListeners({
@@ -38,6 +35,7 @@ export function Layout({ children }: PropsWithChildren){
   function addNote(){
     if(isHome) window.location.reload()
     else window.location.pathname = '/'
+    setOpen(false)
   }
 
   return <div className={cx(styles.layout, open && styles.open)}>
@@ -52,7 +50,7 @@ export function Layout({ children }: PropsWithChildren){
           </button>
         </header>
         <ChatSearch />
-        <ChatList />
+        <ChatList closeSidebar={() => setOpen(false)} />
         <Footer />
       </nav>
       <div className={styles.content}>

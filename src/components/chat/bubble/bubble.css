@@ -69,9 +69,7 @@
   }
   
   code:not(.hljs){
-    padding: 3px 5px;
-    border: 1px solid rgb(from orange r g b / 60%);
-    border-radius: 5px;
+    color: var(--code-color);
   }
 
   a{

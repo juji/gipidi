@@ -5,7 +5,13 @@ import { useConvo } from '@/lib/convoStore'
 import { useGPT } from '@/lib/gptStore'
 import { usePathname, useRouter } from 'next/navigation'
 
-function Chat({ convo }:{ convo: Convo }){
+function Chat({ 
+  convo,
+  closeSidebar
+}:{ 
+  convo: Convo 
+  closeSidebar: () => void
+}){
 
   const deleteConvo = useConvo(s => s.deleteConvo)
   const loadConvo = useConvo(s => s.loadConvo)
@@ -34,6 +40,7 @@ function Chat({ convo }:{ convo: Convo }){
 
   function onClickTitle(){
     loadConvo(convo)
+    closeSidebar()
     if(pathname !== '/') router.push('/')
   }
 
@@ -55,7 +62,7 @@ function Chat({ convo }:{ convo: Convo }){
 
 }
 
-export function ChatList(){
+export function ChatList({ closeSidebar }:{ closeSidebar: () => void }){
 
   const loading = useConvo(s => s.loading)
   const convos = useConvo(s => s.convos)
@@ -63,7 +70,7 @@ export function ChatList(){
   return <div className={styles.chatList}>
     {loading ? null : convos.length ? convos.map(v => {
 
-      return <Chat key={v.id} convo={v} />
+      return <Chat key={v.id} convo={v} closeSidebar={closeSidebar} />
 
     }) : <div className={styles.empty}>
       <p>No Conversation Yet...</p>

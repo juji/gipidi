@@ -1,5 +1,5 @@
 'use client'
-import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import useOnClickOutside from 'use-onclickoutside'
 import cx from 'classix'
@@ -42,25 +42,23 @@ export function TopBar(){
       }))
   },[title, provider, model, systemPrompt])
 
-  useEffect(() => {
-    if(!activeConvo) return;
-    if(!title) return;
-    if(title === convo?.title) return;
-    setCurrentTitle(title)
-  },[ title, activeConvo ])
+
+  // title
+  function setTitleLocal( str: string ){
+    if(activeConvo) setCurrentTitle(str)
+    else setTitle(str)
+  }
 
   useEffect(() => {
-    if(!activeConvo) return;
-    if(!convo?.title) return;
-    if(title === convo?.title) return;
-    setTitle(convo?.title)
-  },[ convo?.title, activeConvo ])
+    if(!convo) return;
+    if(title === convo.title) return;
+    setTitle(convo.title)
+  },[ convo?.title ])
 
   useEffect(() => {
     if(activeConvo) {
       setProvider(activeConvo.provider)
       setModel(activeConvo.model)
-      const convo = convos.find(v => v.id === activeConvo.id)
       convo && setTitle(convo.title)
     }else{
       setTitle('')
@@ -69,6 +67,7 @@ export function TopBar(){
     }
   },[ activeConvo ])
 
+  // model selection
   useEffect(() => {
     if(loading) return () => {}
 
@@ -76,27 +75,46 @@ export function TopBar(){
     const p = providers.find(v => v.id === provider)
     p && getModels(p).then(models => models && setModelSelection(models))
   },[ provider, loading ])
-
-  const ref = useRef<HTMLDivElement|null>(null)
-
+  
+  // provider select
+  function onChangeSelect( e: ChangeEvent ){
+    const target = e.target as HTMLSelectElement
+    setProvider(target.value as GPTProvider['id']); 
+    target.blur()
+    setModel('')
+  }
+  
+  // open close
   function openMenu(e: MouseEvent){
     if(!menu) setMenu(true)
   }
-
+  
   function onCloseMenu(){
     setTimeout(() => {
       if(menu) setMenu(false)
     },150)
   }
-
+  const ref = useRef<HTMLDivElement|null>(null)
   useOnClickOutside(ref, onCloseMenu)
+
+  // activate deactivate system prompt
+  const [ systemPromptSel, setSystemPromptSel ] = useState(true)
+  useEffect(() => {
+    if(provider === 'gemini'){
+      setSystemPromptSel(false)
+      setSystemPrompt('')
+    }else{
+      setSystemPromptSel(true)
+    }
+  },[ provider ])
+
 
   return <div className={styles.topbar}>
     <div className={styles.title}>
       <input className={styles.titleInput} type="text" 
         value={title}
         placeholder="untitled"
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => setTitleLocal(e.target.value)}
       />
     </div>
     <div className={styles.menu}>
@@ -118,8 +136,8 @@ export function TopBar(){
             <select 
               disabled={!!activeConvo}
               className={styles.select}
-              defaultValue={provider||''}
-              onChange={e => {setProvider(e.target.value as GPTProvider['id']); e.target.blur()}}
+              value={provider||''}
+              onChange={onChangeSelect}
             >
               {providers.map(v => <option key={v.id} value={v.id}>{v.id}</option>)}
             </select>
@@ -127,7 +145,20 @@ export function TopBar(){
           </div>
           
           <h4 className={styles.menuHeader}>Model</h4>
-          <input
+
+          <div className={styles.selectWrapper}>
+            <select 
+              disabled={!!activeConvo}
+              className={styles.select}
+              value={model||''}
+              onChange={e => setModel(e.target.value)}
+            >
+              {modelSelection.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+            </select>
+            <svg className={styles.chevronDown} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" /></svg>
+          </div>
+
+          {/* <input
             className={styles.input}
             disabled={!!activeConvo}
             type="text"
@@ -139,15 +170,18 @@ export function TopBar(){
             {(modelSelection||[]).map(v => {
               return <option key={v.id} value={v.id}>{v.name}</option>
             })}
-          </datalist>
+          </datalist> */}
 
-          <h4 className={styles.menuHeader}>System Prompt</h4>
-          <textarea 
-            value={systemPrompt}
-            disabled={!!activeConvo}
-            rows={5}
-            onChange={e => setSystemPrompt(e.target.value)}
-            className={styles.systemPrompt}></textarea>
+          { systemPromptSel ? <>
+            <h4 className={styles.menuHeader}>System Prompt</h4>
+            <textarea 
+              value={systemPrompt}
+              disabled={!!activeConvo}
+              rows={5}
+              onChange={e => setSystemPrompt(e.target.value)}
+              className={styles.systemPrompt}></textarea>
+          </> : <p className={styles.systemPromptDisabled}>System prompt disabled for this model</p>}
+          
         </div>
       </div>
     </div>
