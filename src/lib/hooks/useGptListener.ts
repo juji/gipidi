@@ -56,6 +56,10 @@ export function useGptListener(){
         started = true
         requestAnimationFrame(function addText(){
           if(stop) return;
+          if(!text) {
+            started = false
+            return;
+          }
           addGPTText(text[0], text.length === 1 && ended)
           text = text.slice(1)
           if(text) requestAnimationFrame(addText)
@@ -68,7 +72,7 @@ export function useGptListener(){
         client,
         activeConvo,
         (str: string, end?: boolean) => {
-          text += str
+          text += str||''
           ended = !!end
           start()
         },
