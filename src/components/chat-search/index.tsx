@@ -1,17 +1,22 @@
 import { FormEvent, useRef } from 'react'
 import styles from './style.module.css'
+import { useConvo } from '@/lib/convoStore'
 
 export function ChatSearch(){
+
+  const search = useConvo(s => s.search)
 
   function onInput(e: FormEvent<HTMLInputElement>){
     const { value } = (e.target as HTMLInputElement)
     // do stuff with input
+    search(value)
   }
 
   const ref = useRef<HTMLInputElement|null>(null)
   function clear(){
     if(ref.current) ref.current.value = ''
     // clear output
+    search('')
   }
 
   return <div className={styles.searchContainer}>
@@ -19,7 +24,7 @@ export function ChatSearch(){
       <input 
         className={styles.input}
         id="searchconvo"
-        placeholder="Search Convo"
+        placeholder="Search Title"
         onInput={onInput} ref={ref} type="text" required name="search" />
       <button 
         className={styles.closeButton} onClick={clear}>

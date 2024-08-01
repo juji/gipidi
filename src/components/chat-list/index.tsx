@@ -66,14 +66,19 @@ export function ChatList({ closeSidebar }:{ closeSidebar: () => void }){
 
   const loading = useConvo(s => s.loading)
   const convos = useConvo(s => s.convos)
+  const searchResult = useConvo(s => s.searchResult)
+
+  const list = useMemo(() => {
+    return searchResult ? searchResult : convos
+  },[convos, searchResult])
 
   return <div className={styles.chatList}>
-    {loading ? null : convos.length ? convos.map(v => {
+    {loading ? null : list.length ? list.map(v => {
 
       return <Chat key={v.id} convo={v} closeSidebar={closeSidebar} />
 
     }) : <div className={styles.empty}>
-      <p>No Conversation Yet...</p>
+      <p>{searchResult ? 'No Result...' : "No Conversation Yet..."}</p>
     </div>}
   </div>
 
