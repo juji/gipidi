@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useConvo } from "@/lib/convoStore";
 import { useGPT } from "@/lib/gptStore";
 import { useTypeWriter } from '@/lib/hooks/useTypeWriter'
@@ -9,13 +9,20 @@ export function useTitleCreator(){
   const isWaitingReply = useConvo(s => s.isWaitingReply)
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
+  const loading = useConvo(s => s.loading)
   const providers = useGPT(s => s.providers)
   const setCurrentTitle = useConvo(s => s.setCurrentTitle)
-  const currentTitle = useConvo(s => s.currentTitle)
   const { result: title, setText: setTitle } = useTypeWriter('')
   
-  // prevent overflow
+  // prevent overflow (when many multiple updates happening)
   const convoLength = useMemo(() => (activeConvo?.data || []).length >= 2,[activeConvo?.data])
+  const currentTitle = useMemo(() => {
+    if(loading) return 'a'
+    if(!activeConvo?.id) return 'a'
+    const convo = convos.find(v => v.id === activeConvo.id)
+    return convo?.title
+  },[activeConvo?.id, convos, loading])
+
   const createTitle = useMemo(() => {
     return !!(
       convoLength && 
@@ -29,6 +36,8 @@ export function useTitleCreator(){
     if(!activeConvo) return;
     if(!createTitle) return;
 
+    console.debug('CREATING TITLE')
+
     const convo = convos.find(v => v.id === activeConvo.id)
     if(convo?.title) return;
     
@@ -41,7 +50,7 @@ export function useTitleCreator(){
       } = v
       const client = getClientFromProvider(provider)
       createTitle(client, activeConvo).then((v: any) => {
-        if(!currentTitle) setTitle(v)
+        setTitle(v)
       })
     }).catch(e => {
       console.error(e)

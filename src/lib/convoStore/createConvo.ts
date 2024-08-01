@@ -6,9 +6,7 @@ export function createConvo(set: Set, get: Get){
 
   return async ( initialContent: string ) => {
 
-    const {
-      createChatListener
-    } = get()
+    const { createChatListener } = get()
 
     if(!createChatListener)
       throw new Error('Cannot create convo without createChatListener')
@@ -17,7 +15,7 @@ export function createConvo(set: Set, get: Get){
       title, provider, model, systemPrompt
     } = createChatListener()
 
-    if(!title)
+    if(!provider)
       throw new Error('Cannot create convo with empty provider')
     if(!model)
       throw new Error('Cannot create convo with empty model')

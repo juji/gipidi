@@ -3,11 +3,15 @@ import styles from './style.module.css'
 import { Convo } from '@/lib/idb/types'
 import { useConvo } from '@/lib/convoStore'
 import { useGPT } from '@/lib/gptStore'
+import { usePathname, useRouter } from 'next/navigation'
 
 function Chat({ convo }:{ convo: Convo }){
 
   const deleteConvo = useConvo(s => s.deleteConvo)
   const loadConvo = useConvo(s => s.loadConvo)
+
+  const pathname = usePathname()
+  const router = useRouter()
 
   const [confirm, setConfirm] = useState(false)
   function remove(){
@@ -28,13 +32,16 @@ function Chat({ convo }:{ convo: Convo }){
     }
   },[ confirm ])
 
+  function onClickTitle(){
+    loadConvo(convo)
+    if(pathname !== '/') router.push('/')
+  }
+
   return <div className={styles.chat} onMouseOut={() => {
     to.current && clearTimeout(to.current)
     setConfirm(false)
   }}>
-      <button className={styles.titleButton}
-        onClick={() => loadConvo(convo)}
-      >
+      <button className={styles.titleButton} onClick={() => onClickTitle()}>
         {convo.title||<span className={styles.untitled}>Untitled</span>}
       </button>
       <button 

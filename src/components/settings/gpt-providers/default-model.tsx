@@ -5,25 +5,24 @@ import type { GPTProvider } from "@/lib/idb/types";
 import type { GPTModel } from "@/lib/vendors/types";
 import { titleCase } from 'title-case'
 import { useGPT } from "@/lib/gptStore";
-
-import { ls } from "@/lib/local-storage";
+import { getDefaultModel, getDefaultProvider, saveDefaultModel, saveDefaultProvider } from "@/lib/local-storage";
 
 export function DefaultModel(){
 
-  const [ defaultModel, setDefaultModel ] = useState(ls.getDefaultModel()||'')
-  const [ defaultProvider, setDefaultProvider ] = useState<GPTProvider['id']|''>(ls.getDefaultProvider()||'')
+  const [ defaultModel, setDefaultModel ] = useState(getDefaultModel()||'')
+  const [ defaultProvider, setDefaultProvider ] = useState<GPTProvider['id']|''>(getDefaultProvider()||'')
   const [ models, setModels ] = useState<GPTModel[]>([])
   const providers = useGPT(s => s.providers)
   const loading = useGPT(s => s.loading)
   const getModels = useGPT(s => s.getModels)
 
   function changeDefaultProvider(e: ChangeEvent<HTMLSelectElement>){
-    ls.saveDefaultProvider(e.target.value as GPTProvider['id'])
+    saveDefaultProvider(e.target.value as GPTProvider['id'])
     setDefaultProvider(e.target.value as GPTProvider['id'])
   }
 
   function changeDefaultModel(e: ChangeEvent<HTMLInputElement>){
-    ls.saveDefaultModel(e.target.value)
+    saveDefaultModel(e.target.value)
     setDefaultModel(e.target.value)
   }
 

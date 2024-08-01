@@ -10,6 +10,7 @@ import { Footer } from '../footer';
 import { keyboardListeners } from '@/lib/keyboard-listeners';
 import { useTitleCreator } from "@/lib/hooks/useTItleCreator"
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const openSans = Montserrat({
   weight: "600",
@@ -21,6 +22,10 @@ export function Layout({ children }: PropsWithChildren){
 
   const [ open, setOpen ] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+  const isHome = useMemo(() => pathname === '/', [ pathname ])
+
+  console.log('pathname', pathname)
 
   useEffect(() => {
     keyboardListeners({
@@ -30,6 +35,11 @@ export function Layout({ children }: PropsWithChildren){
 
   useTitleCreator()
 
+  function addNote(){
+    if(isHome) window.location.reload()
+    else window.location.pathname = '/'
+  }
+
   return <div className={cx(styles.layout, open && styles.open)}>
       <div className={styles.overlay} onClick={() => setOpen(false)}></div>
       <nav className={styles.nav}>
@@ -37,7 +47,7 @@ export function Layout({ children }: PropsWithChildren){
           <div className={styles.logo}>
             <a className={openSans.className} target="_blank" href="/">GiPiDi'</a>
           </div>
-          <button className={styles.plus} onClick={() => router.push('/')}>
+          <button className={styles.plus} onClick={() => addNote()}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" /></svg>
           </button>
         </header>
@@ -53,7 +63,7 @@ export function Layout({ children }: PropsWithChildren){
           <div className={styles.logo}>
             <a className={openSans.className} href="/">GiPiDi</a>
           </div>
-          <button className={styles.plus} onClick={() => () => router.push('/')}>
+          <button className={styles.plus} onClick={() => () => addNote()}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z" fill="currentColor" /></svg>
           </button>
         </header>

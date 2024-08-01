@@ -3,14 +3,14 @@ import { useState } from 'react'
 import styles from './style.module.css'
 import cx from 'classix'
 import { drop } from '@/lib/idb/drop'
-import { ls } from '@/lib/local-storage'
+import { removeAll } from '@/lib/local-storage'
 
 export function DangerZone(){
 
   const [ confirm, setConfirm ] = useState(false)
 
   async function onRemove(){
-    ls.removeAll()
+    removeAll()
     await drop()
     window.location.href = '/'
   }

@@ -1,9 +1,9 @@
 'use client'
-import { MouseEvent, useEffect, useRef, useState } from 'react'
+import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import useOnClickOutside from 'use-onclickoutside'
 import cx from 'classix'
-import { ls } from '@/lib/local-storage'
+import { getDefaultProvider, getDefaultModel } from '@/lib/local-storage'
 import { useGPT } from '@/lib/gptStore'
 import { GPTModel } from '@/lib/vendors/types'
 import { useConvo } from '@/lib/convoStore'
@@ -29,6 +29,12 @@ export function TopBar(){
   const onCreateChat = useConvo(s => s.onCreateChat)
   const setCurrentTitle = useConvo(s => s.setCurrentTitle)
 
+  const convo = useMemo(() => {
+    if(!activeConvo) return null
+    const convo = convos.find(v => v.id === activeConvo.id)
+    return convo
+  },[ activeConvo, convos ])
+
   useEffect(() => {
     if(provider && model)
       onCreateChat(() => ({
@@ -38,8 +44,17 @@ export function TopBar(){
 
   useEffect(() => {
     if(!activeConvo) return;
+    if(!title) return;
+    if(title === convo?.title) return;
     setCurrentTitle(title)
   },[ title, activeConvo ])
+
+  useEffect(() => {
+    if(!activeConvo) return;
+    if(!convo?.title) return;
+    if(title === convo?.title) return;
+    setTitle(convo?.title)
+  },[ convo?.title, activeConvo ])
 
   useEffect(() => {
     if(activeConvo) {
@@ -49,8 +64,8 @@ export function TopBar(){
       convo && setTitle(convo.title)
     }else{
       setTitle('')
-      setProvider(ls.getDefaultProvider())
-      setModel(ls.getDefaultModel())
+      setProvider(getDefaultProvider())
+      setModel(getDefaultModel())
     }
   },[ activeConvo ])
 

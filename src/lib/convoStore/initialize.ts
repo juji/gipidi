@@ -2,7 +2,6 @@ import { StateCreator } from 'zustand'
 import { ConvoDetail } from '../idb/types'
 import { getAllConvo } from '../idb/convo/getAllConvo'
 import { getConvoDetail } from '../idb/convo/getConvoDetail'
-import { ls } from '../local-storage'
 
 export type IDbStorageType = <T>(f: StateCreator<T, [], any[]>) => StateCreator<T, [], any[]>
 
@@ -23,14 +22,9 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
 
 
       // get state on last active session
-      const lastActiveConvoId = ls.getLastConvoId()
-      const lastActiveConvo = convos.find(v => v.id === lastActiveConvoId)
 
       // get details based on last active convo
       let convo: ConvoDetail|null = null
-      if(lastActiveConvo){
-        convo = await getConvoDetail( lastActiveConvo )
-      }
 
       set({
         loading: false,

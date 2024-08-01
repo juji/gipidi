@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import cx from "classix";
-import { ls } from "@/lib/local-storage";
+import { getDefaultModel, getDefaultProvider } from "@/lib/local-storage";
 import { useGPT } from '@/lib/gptStore'
 
 import { Inputform } from "@/components/input";
@@ -21,8 +21,8 @@ export default function Home() {
     if(loading) return () => {}
     if( 
       !providers.length || 
-      !ls.getDefaultProvider() ||
-      !ls.getDefaultModel()
+      !getDefaultProvider() ||
+      !getDefaultModel()
     ) 
       window.location.href = '/settings?notify=Setup%20Your%20GPT%20Providers%20and%20Default%20Model'
   },[ loading, providers ])
