@@ -1,5 +1,10 @@
 features:
   - bin
   - theme
+    - https://caniuse.com/mdn-css_types_color_color-mix
+    - https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix
   - change avatar
   - font (and size)
+
+todo:
+  - figure out a better way to load providers
