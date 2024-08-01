@@ -46,17 +46,37 @@ export function useGptListener(){
 
       clearInterval(int)
       const client = getClientFromProvider.current(provider.current)
+
+      let text = ''
+      let ended = false
+      let started = false
+      let stop = false
+      function start(){
+        if(started) return;
+        started = true
+        requestAnimationFrame(function addText(){
+          if(stop) return;
+          addGPTText(text[0], text.length === 1 && ended)
+          text = text.slice(1)
+          if(text) requestAnimationFrame(addText)
+          else started = false
+        })
+      }
       
-      addGPTText('', false)
+      addGPTText(text, false)
       chat.current(
         client,
         activeConvo,
         (str: string, end?: boolean) => {
-          addGPTText(str, end)
+          text += str
+          ended = !!end
+          start()
         },
         (e) => {
+          stop = true
           console.error(e)
           showError(e.message)
+          addGPTText('-- [ERROR]', true)
         }
       )
 

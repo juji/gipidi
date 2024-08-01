@@ -41,9 +41,10 @@ export function Inputform(){
   const form = useRef<HTMLFormElement|null>(null)
   function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>){
     if(
-      (e.metaKey || e.ctrlKey) &&
-      e.key === 'Enter'
+      // (e.metaKey || e.ctrlKey) &&
+      e.key === 'Enter' && !(e.metaKey || e.ctrlKey || e.altKey)
     ){
+      e.preventDefault()
       if(isStreaming) return;
       if(!content) return;
       onSubmit(content)

@@ -38,7 +38,7 @@ function Bubble({
   },[ autoScroll ])
 
   const lastTop = useRef(Infinity)
-  const minTop = 62
+  const minTop = 72
   useEffect(() => {
     if(!autoScroll) return () => {}
     
@@ -63,7 +63,6 @@ function Bubble({
 
   useEffect(() => {
 
-    setResult(result)
     Promise.resolve(convert(content))
     .then((res:string) => {
       setResult(res)
@@ -84,12 +83,12 @@ function Bubble({
     <div className={styles.cloud}>
       { result ? 
         <div className={cx(styles.content, 'bubble-content')} 
-          dangerouslySetInnerHTML={{ __html: result || '...'}} /> : 
+          dangerouslySetInnerHTML={{ __html: result }} /> : 
         <div className={cx(styles.content, 'bubble-content')}>
           <ColorRing
           visible={true}
-          height="34"
-          width="34"
+          height="46"
+          width="46"
           ariaLabel="color-ring-loading"
           wrapperStyle={{}}
           wrapperClass="color-ring-wrapper"
