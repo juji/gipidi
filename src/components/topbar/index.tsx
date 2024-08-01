@@ -27,6 +27,7 @@ export function TopBar(){
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
   const onCreateChat = useConvo(s => s.onCreateChat)
+  const setCurrentTitle = useConvo(s => s.setCurrentTitle)
 
   useEffect(() => {
     if(provider && model)
@@ -36,9 +37,9 @@ export function TopBar(){
   },[title, provider, model, systemPrompt])
 
   useEffect(() => {
-    setProvider(ls.getDefaultProvider())
-    setModel(ls.getDefaultModel())
-  },[])
+    if(!activeConvo) return;
+    setCurrentTitle(title)
+  },[ title, activeConvo ])
 
   useEffect(() => {
     if(activeConvo) {
@@ -48,6 +49,8 @@ export function TopBar(){
       convo && setTitle(convo.title)
     }else{
       setTitle('')
+      setProvider(ls.getDefaultProvider())
+      setModel(ls.getDefaultModel())
     }
   },[ activeConvo ])
 

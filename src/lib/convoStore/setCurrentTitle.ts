@@ -20,7 +20,6 @@ export function setCurrentTitle(set: Set, get: Get){
     }
 
     set(state => {
-      state.currentTitle = str
       if(convoIdx > -1){
         state.convos[convoIdx].title = str || ''
       }

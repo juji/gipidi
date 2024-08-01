@@ -10,9 +10,6 @@ import { deleteConvo } from './deleteConvo'
 import { createConvo } from './createConvo'
 import { loadConvo } from './loadConvo'
 
-import { setCurrentModel } from './setCurrentModel'
-import { setCurrentProvider } from './setCurrentProvider'
-import { setCurrentSystemPrompt } from './setCurrentSystemPrompt'
 import { setCurrentTitle } from './setCurrentTitle'
 
 import { addUserText } from './addUserText'
@@ -39,9 +36,6 @@ export type ConvoStore = {
   deleteConvo: ( convo: Convo ) => void
   loadConvo: ( convo: Convo ) => Promise<void>
 
-  setCurrentModel: ( model: string | null ) => void
-  setCurrentProvider: ( provider: GPTProvider['id'] | null ) => void
-  setCurrentSystemPrompt: ( str: string ) => void
   setCurrentTitle: ( str: string ) => Promise<void>
 
   createConvo: ( initialContent: string ) => void
@@ -79,9 +73,6 @@ export function createConvoStore(){
           deleteConvo: deleteConvo(set),
           loadConvo: loadConvo(set),
 
-          setCurrentModel: setCurrentModel(set),
-          setCurrentProvider: setCurrentProvider(set),
-          setCurrentSystemPrompt: setCurrentSystemPrompt(set),
           setCurrentTitle: setCurrentTitle(set, get),
           createConvo: createConvo(set, get),
           addUserText: addUserText(set, get),
