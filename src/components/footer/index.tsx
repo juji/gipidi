@@ -7,6 +7,8 @@ export function Footer(){
     <Link className={styles.link} href="/">Home</Link>
     <Link className={styles.link} href="/settings">Settings</Link>
     <Link className={styles.link} href="/about">About</Link>
+    <Link className={styles.link} href="/bin">Bin</Link>
+    <Link className={styles.link} href="/theme">Theme</Link>
   </div>
 
 }
