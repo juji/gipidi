@@ -21,42 +21,45 @@ function Bubble({
 
   const [ result, setResult ] = useState('')
   const ref = useRef<HTMLDivElement|null>(null)
-  const interObserver = useRef<HTMLDivElement|null>(null)
-  const [changeCounter, setCounter] = useState(0)
-  const [autoScroll, setAutoScroll ] = useState(true)
+  const bottomObserved = useRef<HTMLDivElement|null>(null)
+  const [ changeCounter, setCounter ] = useState(0)
+  const [ autoScroll, setAutoScroll ] = useState(last)
 
+  const [ showDownArrow, setArrowDown ] = useState(false)
   useEffect(() => {
-    if(!last) return;
-    function callback(entries: IntersectionObserverEntry[]){
-      entries.forEach((entry: IntersectionObserverEntry) => {
+    let observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if(entry.isIntersecting) setArrowDown(false)
+        else if(!autoScroll) setArrowDown(true)
+      })
+    }, { rootMargin: '1000px 0px -72px 0px' });
+    bottomObserved.current && observer.observe(bottomObserved.current);
+    return () => { observer.disconnect() }
+  },[ autoScroll ])
 
-        console.log('entry.isIntersecting', entry.isIntersecting)
-        if(!entry.isIntersecting)
-          setAutoScroll(entry.isIntersecting)
-      });
-    }
-
-    let observer = new IntersectionObserver(callback, {
-      rootMargin: '-80px 0px 0px 0px'
-    });
-    interObserver.current && observer.observe(interObserver.current);
-  },[ last ])
-
+  const lastTop = useRef(Infinity)
+  const minTop = 62
   useEffect(() => {
     if(!autoScroll) return () => {}
-    if(last && !(changeCounter % 5)) {
-      ref.current?.scrollIntoView({
-        block: "start"
-      })
+    
+    if(last && !(changeCounter % 5) && ref.current) {
+      
+      const top = ref.current.getBoundingClientRect().top
+      if(top === lastTop.current && top <= minTop){
+        setAutoScroll(false)
+      }
+      lastTop.current = top
+
+      ref.current.scrollIntoView({ block: "start" })
       setCounter(0)
+
     }
   }, [ last, changeCounter, autoScroll ])
 
   useEffect(() => {
-    console.log('autoScroll', autoScroll)
     if(!autoScroll) return () => {}
     setCounter(changeCounter+1)
-  },[ content, autoScroll ])
+  },[ content, autoScroll, showDownArrow ])
 
   useEffect(() => {
 
@@ -71,12 +74,17 @@ function Bubble({
 
   },[ content ])
 
+  function scrollDown(){
+    window.scrollBy({
+      top: 144
+    })
+  }
+
   return <div ref={ref} className={cx(styles.bubble, className)}>
-    <div ref={interObserver} className={styles.interObserver}></div>
     <div className={styles.cloud}>
       { result ? 
         <div className={cx(styles.content, 'bubble-content')} 
-          dangerouslySetInnerHTML={{ __html: result || '...'}} /> : 
+        dangerouslySetInnerHTML={{ __html: result || '...'}} /> : 
         <div className={cx(styles.content, 'bubble-content')}>
           <ColorRing
           visible={true}
@@ -89,10 +97,16 @@ function Bubble({
           />
         </div>
       }
-      
     </div>
     <img className={styles.pict} src={profilePict} />
-    <div className={styles.gap}></div>
+    <div className={styles.gap}>
+      <button 
+        onClick={() => scrollDown()}
+        className={cx(styles.down, showDownArrow && styles.shown)}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.0001 3.67157L13.0001 3.67157L13.0001 16.4999L16.2426 13.2574L17.6568 14.6716L12 20.3284L6.34314 14.6716L7.75735 13.2574L11.0001 16.5001L11.0001 3.67157Z" fill="currentColor" /></svg>
+      </button>
+    </div>
+    <div ref={bottomObserved} className={styles.bottomObserved}></div>
   </div>
 
 }
