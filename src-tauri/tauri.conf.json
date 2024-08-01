@@ -1,5 +1,5 @@
 {
-  "productName": "GiPiDi",
+  "productName": "GiPiDi'",
   "version": "0.1.0",
   "identifier": "com.jujiplay.gipidi",
   "build": {
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "GiPiDi",
+        "title": "GiPiDi'",
         "width": 950,
         "height": 600,
         "resizable": true,

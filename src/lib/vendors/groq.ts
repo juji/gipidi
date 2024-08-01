@@ -49,18 +49,48 @@ export const chat: ChatFn<Groq> = async function(
 
 }
 
-export async function generate( client: Groq, convoDetail: ConvoDetail ){
+export async function createTitle( client: Groq, convoDetail: ConvoDetail ){
+
+  const system = `
+You are an excellent summarizer.
+The following data is a JSON formatted conversation between a user and an assistant.
+You are expected to create a short title to describe the conversation.
+
+Reply with JSON, using the following JSON schema:
+{"title":"string"}
+`
+
+  const convo = 'Please create title for the following data: ' + JSON.stringify(
+    convoDetail.data.filter(v => v.role !== 'system').map(v => ({
+      role: v.role,
+      content: v.content
+    }))
+  )
 
   const data = await client.chat.completions.create({
     model: convoDetail.model,
-    messages: convoDetail.data.map(v => ({
-      role: v.role,
-      content: v.content
-    })),
+    messages: [
+      {
+        role:"system",
+        content: system
+      },{
+        role: "user",
+        content: convo
+      }
+    ],
     response_format: { type: "json_object" },
     stream: false,
   })
 
-  return data
+  console.log(data)
+
+  let title = ''
+  try{
+    const t = data.choices[0].message.content && 
+      JSON.parse(data.choices[0].message.content)
+    if(t) title = t.title
+  }catch(e){}
+
+  return title
 
 }

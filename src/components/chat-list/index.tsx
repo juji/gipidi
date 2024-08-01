@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './style.module.css'
 import { Convo } from '@/lib/idb/types'
 import { useConvo } from '@/lib/convoStore'
+import { useGPT } from '@/lib/gptStore'
 
 function Chat({ convo }:{ convo: Convo }){
 
   const deleteConvo = useConvo(s => s.deleteConvo)
+  const loadConvo = useConvo(s => s.loadConvo)
 
   const [confirm, setConfirm] = useState(false)
   function remove(){
@@ -30,7 +32,9 @@ function Chat({ convo }:{ convo: Convo }){
     to.current && clearTimeout(to.current)
     setConfirm(false)
   }}>
-      <button className={styles.titleButton}>
+      <button className={styles.titleButton}
+        onClick={() => loadConvo(convo)}
+      >
         {convo.title||<span className={styles.untitled}>Untitled</span>}
       </button>
       <button 

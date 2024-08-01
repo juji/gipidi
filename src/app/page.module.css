@@ -44,9 +44,9 @@
       z-index: 2;
       opacity: 1;
       transition: 
-        opacity 500ms ease-out,
-        width 0ms 500ms,
-        height 0ms 500ms
+        opacity 200ms ease-out,
+        width 0ms 200ms,
+        height 0ms 200ms
       ;
 
       &.off{

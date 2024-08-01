@@ -1,5 +1,3 @@
-import Groq from "groq-sdk"
-import { Ollama } from "ollama"
 import { ConvoDetail, GPTProvider } from "../idb/types"
 
 

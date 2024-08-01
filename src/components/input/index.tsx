@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, Fragment, useMemo, useRef, useState, KeyboardEvent } from 'react'
+import { FormEvent, Fragment, useMemo, useRef, useState, KeyboardEvent, useEffect } from 'react'
 import styles from './style.module.css'
 import cx from 'classix'
 import { useConvo } from '@/lib/convoStore'
@@ -51,6 +51,11 @@ export function Inputform(){
     }
   }
 
+  const textarea = useRef<HTMLTextAreaElement|null>(null)
+  useEffect(() => {
+    textarea.current && (textarea.current as HTMLTextAreaElement).focus()
+  },[])
+
   return <form className={styles.form} onSubmit={onSubmitLocal} ref={form}>
     <div className={styles.input}>
       {splitContent.map((v,i,a) => {
@@ -59,6 +64,7 @@ export function Inputform(){
         </Fragment>
       })}
       <textarea 
+        ref={textarea}
         className={styles.textarea}
         placeholder="'sup?"
         value={content}

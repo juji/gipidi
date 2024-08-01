@@ -23,7 +23,7 @@ function Bubble({
   const ref = useRef<HTMLDivElement|null>(null)
   const bottomObserved = useRef<HTMLDivElement|null>(null)
   const [ changeCounter, setCounter ] = useState(0)
-  const [ autoScroll, setAutoScroll ] = useState(last)
+  const [ autoScroll, setAutoScroll ] = useState(!!last)
 
   const [ showDownArrow, setArrowDown ] = useState(false)
   useEffect(() => {

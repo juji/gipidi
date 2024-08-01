@@ -46,19 +46,38 @@ export const chat: ChatFn<Ollama> = async function(
 
 }
 
-export async function generate( client: Ollama, convoDetail: ConvoDetail ){
+export async function createTitle( client: Ollama, convoDetail: ConvoDetail ){
 
-  const system = convoDetail.data[0].role === 'system' ? 
-    convoDetail.data[0].content : ''
+  const system = `
+You are an excellent summarizer.
+The following data is a JSON formatted conversation between a user and an assistant.
+You are expected to create a short title to describe the conversation.
+
+Reply with JSON, using the following JSON schema:
+{"title":"string"}
+`
+
+  const convo = 'Please create title for the following data: ' + JSON.stringify(
+    convoDetail.data.filter(v => v.role !== 'system').map(v => ({
+      role: v.role,
+      content: v.content
+    }))
+  )
 
   const resp = await client.generate({
     model: convoDetail.model,
-    prompt: convoDetail.data[convoDetail.data.length - 1].content,
+    prompt: convo,
     format: "json",
     stream: false,
-    ...system? {system} : {},
+    system,
   })
 
-  return resp
+  let title = ''
+  try{
+    const r = JSON.parse(resp.response)
+    title = r.title
+  }catch(e){}
+
+  return title
 
 }

@@ -5,11 +5,10 @@ import { Convo, ConvoDetail, GPTProvider } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 
-import { setActiveConvo } from './setActiveConvo'
-
 import { updateConvo } from './updateConvo'
 import { deleteConvo } from './deleteConvo'
 import { createConvo } from './createConvo'
+import { loadConvo } from './loadConvo'
 
 import { setCurrentModel } from './setCurrentModel'
 import { setCurrentProvider } from './setCurrentProvider'
@@ -19,30 +18,38 @@ import { setCurrentTitle } from './setCurrentTitle'
 import { addUserText } from './addUserText'
 import { addGPTText } from './addGPTText'
 
+import { onCreateChat } from './onCreateChat'
+
+export type ChatCreationData = {
+  provider: GPTProvider['id'] 
+  model: string 
+  systemPrompt: string
+  title: string
+}
+
 export type ConvoStore = {
   loading: boolean
   convos: Convo[]
   activeConvo: ConvoDetail|null
-  currentProvider: GPTProvider['id'] | null
-  currentModel: string | null
-  currentSystemPrompt: string | null
-  currentTitle: string | null
 
   isStreaming: boolean
   isWaitingReply: boolean
 
-  setActiveConvo: ( convo: Convo ) => void
-
   updateConvo: ( convo: Convo ) => void
   deleteConvo: ( convo: Convo ) => void
+  loadConvo: ( convo: Convo ) => Promise<void>
+
   setCurrentModel: ( model: string | null ) => void
   setCurrentProvider: ( provider: GPTProvider['id'] | null ) => void
   setCurrentSystemPrompt: ( str: string ) => void
-  setCurrentTitle: ( str: string ) => void
+  setCurrentTitle: ( str: string ) => Promise<void>
 
   createConvo: ( initialContent: string ) => void
   addUserText: ( str: string ) => void
   addGPTText: ( str: string, isDone?: boolean ) => void
+
+  createChatListener: null | (() => ChatCreationData)
+  onCreateChat: (fn: () => ChatCreationData) => void
 
 }
 
@@ -64,18 +71,14 @@ export function createConvoStore(){
           loading: true,
           convos: [],
           activeConvo: null,
-          currentProvider: null,
-          currentModel: null,
-          currentSystemPrompt: null,
-          currentTitle: null,
 
           isStreaming: false,
           isWaitingReply: false,
 
-          setActiveConvo: setActiveConvo(set),
-
           updateConvo: updateConvo(set),
           deleteConvo: deleteConvo(set),
+          loadConvo: loadConvo(set),
+
           setCurrentModel: setCurrentModel(set),
           setCurrentProvider: setCurrentProvider(set),
           setCurrentSystemPrompt: setCurrentSystemPrompt(set),
@@ -83,6 +86,9 @@ export function createConvoStore(){
           createConvo: createConvo(set, get),
           addUserText: addUserText(set, get),
           addGPTText: addGPTText(set, get),
+
+          createChatListener: null,
+          onCreateChat: onCreateChat(set)
 
         })
       )

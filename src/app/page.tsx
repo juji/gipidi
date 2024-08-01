@@ -60,7 +60,7 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       setLoaderOff(true)
-    },1000)
+    },500)
   },[])
 
   return (

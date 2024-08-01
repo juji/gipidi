@@ -4,7 +4,7 @@ import { UserBubble, BotBubble } from "./bubble"
 // import { example } from "./example"
 import styles from './style.module.css'
 import { useConvo } from "@/lib/convoStore"
-import { useGptListener } from './useGptListener'
+import { useGptListener } from '@/lib/hooks/useGptListener'
 
 export function Chat(){
 
@@ -14,7 +14,7 @@ export function Chat(){
         top: document.documentElement.scrollHeight - window.innerHeight,
         left: 0,
       })
-    },900)
+    },500)
   },[])
 
   const activeConvo = useConvo(s => s.activeConvo)

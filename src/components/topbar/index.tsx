@@ -26,31 +26,19 @@ export function TopBar(){
 
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
-  const setCurrentModel = useConvo(s => s.setCurrentModel)
-  const setCurrentProvider = useConvo(s => s.setCurrentProvider)
-  const setCurrentSystemPrompt = useConvo(s => s.setCurrentSystemPrompt)
-  const setCurrentTitle = useConvo(s => s.setCurrentTitle)
+  const onCreateChat = useConvo(s => s.onCreateChat)
+
+  useEffect(() => {
+    if(provider && model)
+      onCreateChat(() => ({
+        title, provider, model, systemPrompt
+      }))
+  },[title, provider, model, systemPrompt])
 
   useEffect(() => {
     setProvider(ls.getDefaultProvider())
     setModel(ls.getDefaultModel())
   },[])
-
-  useEffect(() => {
-    setCurrentProvider(provider)
-  }, [ provider ])
-
-  useEffect(() => {
-    setCurrentModel(model)
-  }, [ model ])
-
-  useEffect(() => {
-    setCurrentSystemPrompt(systemPrompt)
-  },[ systemPrompt ])
-
-  useEffect(() => {
-    setCurrentTitle(title)
-  },[ title ])
 
   useEffect(() => {
     if(activeConvo) {

@@ -7,15 +7,19 @@ export function createConvo(set: Set, get: Get){
   return async ( initialContent: string ) => {
 
     const {
-      currentProvider, 
-      currentModel, 
-      currentSystemPrompt,
-      currentTitle
+      createChatListener
     } = get()
 
-    if(!currentProvider)
+    if(!createChatListener)
+      throw new Error('Cannot create convo without createChatListener')
+
+    const {
+      title, provider, model, systemPrompt
+    } = createChatListener()
+
+    if(!title)
       throw new Error('Cannot create convo with empty provider')
-    if(!currentModel)
+    if(!model)
       throw new Error('Cannot create convo with empty model')
     if(!initialContent)
       throw new Error('Cannot create convo with empty initialContent')
@@ -25,10 +29,10 @@ export function createConvo(set: Set, get: Get){
       convoDetail
     } = await create(
       initialContent,
-      currentProvider,
-      currentModel,
-      currentSystemPrompt || '',
-      currentTitle || ''
+      provider,
+      model,
+      systemPrompt || '',
+      title || ''
     )
 
     set(state => {
