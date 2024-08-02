@@ -71,9 +71,9 @@
 
       .menuContent{
         position: absolute;
-        top: 100%;
+        top: calc(100% + 0.5rem);
         right: 0;
-        border: 1px solid #424242;
+        border: 3px solid #424242;
         background: var(--bg-color);
         padding: 1rem;
         border-radius: 0.5rem;

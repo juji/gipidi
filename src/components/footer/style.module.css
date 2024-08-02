@@ -1,24 +1,19 @@
 .footerContainer{
 
-  padding: 1rem 2rem;
+  padding: 0 1rem;
+
   border-top: 1px solid #444;
 
-  @media(min-width: 800px){
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  @media(min-width: 900px){
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
 
   .link{
     color: var(--fg-color);
     opacity: 0.5;
+    padding: 1rem 0rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover{
       opacity: 1;

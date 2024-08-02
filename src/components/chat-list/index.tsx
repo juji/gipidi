@@ -4,13 +4,16 @@ import { Convo } from '@/lib/idb/types'
 import { useConvo } from '@/lib/convoStore'
 import { useGPT } from '@/lib/gptStore'
 import { usePathname, useRouter } from 'next/navigation'
+import cx from 'classix'
 
 function Chat({ 
   convo,
-  closeSidebar
+  closeSidebar,
+  active
 }:{ 
   convo: Convo 
-  closeSidebar: () => void
+  closeSidebar: () => void,
+  active: boolean
 }){
 
   const deleteConvo = useConvo(s => s.deleteConvo)
@@ -44,10 +47,11 @@ function Chat({
     if(pathname !== '/') router.push('/')
   }
 
-  return <div className={styles.chat} onMouseOut={() => {
+  return <div className={cx(styles.chat, active && styles.active)} onMouseOut={() => {
     to.current && clearTimeout(to.current)
     setConfirm(false)
   }}>
+      {active ? <div className={styles.border}></div> : null}
       <button className={styles.titleButton} onClick={() => onClickTitle()}>
         {convo.title||<span className={styles.untitled}>Untitled</span>}
       </button>
@@ -67,6 +71,7 @@ export function ChatList({ closeSidebar }:{ closeSidebar: () => void }){
   const loading = useConvo(s => s.loading)
   const convos = useConvo(s => s.convos)
   const searchResult = useConvo(s => s.searchResult)
+  const activeConvo = useConvo(s => s.activeConvo)
 
   const list = useMemo(() => {
     return searchResult ? searchResult : convos
@@ -75,7 +80,10 @@ export function ChatList({ closeSidebar }:{ closeSidebar: () => void }){
   return <div className={styles.chatList}>
     {loading ? null : list.length ? list.map(v => {
 
-      return <Chat key={v.id} convo={v} closeSidebar={closeSidebar} />
+      return <Chat key={v.id} 
+        convo={v} 
+        active={activeConvo?.id === v.id}
+        closeSidebar={closeSidebar} />
 
     }) : <div className={styles.empty}>
       <p>{searchResult ? 'No Result...' : "No Conversation Yet..."}</p>
