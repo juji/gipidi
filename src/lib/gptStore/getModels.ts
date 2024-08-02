@@ -1,5 +1,5 @@
 import { GPTProvider } from "../idb/types";
-import { getModels as getGPTModels } from "./utils";
+import { loadVendor } from "../vendors/load";
 
 export function getModels(){
 
@@ -7,7 +7,9 @@ export function getModels(){
     provider: GPTProvider
   ) => {
 
-    return provider ? getGPTModels(provider) : null
+    const vendor = await loadVendor(provider)
+    const models = await vendor.models()
+    return models
 
   }
 

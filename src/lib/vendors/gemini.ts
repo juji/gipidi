@@ -100,3 +100,33 @@ Now, ` + 'Please create title for the following data: ' + JSON.stringify(
   return title
 
 }
+
+export async function test( apiKey: string ){
+
+  const model = getDefaultModel()
+  const testData: ConvoDetail = {
+    id: 'asdf',
+    data: [
+      {
+        id: 'asdf',
+        role: 'user',
+        content: 'hello',
+        lastUpdate: new Date()
+      },
+      {
+        id: 'asdf',
+        role: 'assistant',
+        content: 'hello again',
+        lastUpdate: new Date()
+      }
+    ],
+    provider: 'gemini',
+    systemPrompt: 'asdf',
+    model: model.id,
+    created: new Date(),
+    deleted: new Date()
+  }
+
+  return await createTitle(getClient(apiKey),testData)
+
+}

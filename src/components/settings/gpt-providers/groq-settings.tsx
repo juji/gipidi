@@ -1,20 +1,23 @@
 'use client'
-import { GenericSetting } from "@/lib/idb/types"
-import { getClient, models } from "@/lib/vendors/groq"
+import { GenericSetting, GPTProvider } from "@/lib/idb/types"
 import { useEffect, useState } from "react"
 import styles from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
 
+import { loadFromId } from "@/lib/vendors/load"
+
+const PROVIDER = 'groq'
 
 export function GroqSettings(){
 
   const [ apiKey, setApiKey ] = useState('')
+  const loading = useGPT(s => s.loading)
   const providers = useGPT(s => s.providers)
+
   const saveProvider = useGPT(s => s.saveProvider)
   const removeProvider = useGPT(s => s.removeProvider)
-  const loading = useGPT(s => s.loading)
   const [ isOn, setisOn ] = useState(false)
   const [ err, setErr ] = useState('')
 
@@ -22,35 +25,36 @@ export function GroqSettings(){
     if(loading) return () => {}
     if(!providers.length) return () => {}
 
-    const provider = providers.find(v => v.id === 'groq')
-    if(!provider){
-      setisOn(false)
-    }else{
+    const provider = providers.find(v => v.id === PROVIDER)
+    if(!provider) setisOn(false)
+    else{
       const setting = provider.setting as GenericSetting
       setApiKey(setting.apiKey)
       setisOn(true)
     }
-  }, [ loading, providers ])
+  },[ loading, providers ])
 
   useEffect(() => {
-
-    if(loading) return () => {}
     if(!apiKey) {
-      removeProvider('groq')
+      removeProvider(PROVIDER)
       return () => {}
     }
 
     setErr('')
 
-    models(getClient(apiKey)).then(v => {
-      saveProvider('groq', { apiKey })
-    }).catch(e => {
-      removeProvider('groq')
-      console.error(e)
-      setErr(e.toString())
+    loadFromId(PROVIDER, { apiKey }).then(provider => {
+      
+      provider.test(apiKey).then(() => {
+        saveProvider(PROVIDER, { apiKey })
+      }).catch((e:any) => {
+        removeProvider(PROVIDER)
+        console.error(e)
+        setErr(e.toString())
+      })
+
     })
 
-  },[ loading, apiKey ])
+  },[ apiKey ])
 
   return <>
     <h6 className={styles.heading}>

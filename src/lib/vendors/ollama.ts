@@ -88,3 +88,9 @@ Reply with JSON, using the following JSON schema:
   return title
 
 }
+
+export async function test( host: string  ){
+
+  return models(getClient(host))
+
+}

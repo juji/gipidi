@@ -91,8 +91,6 @@ Reply with JSON, using the following JSON schema:
     stream: false,
   })
 
-  console.log(data)
-
   let title = ''
   try{
     const t = data.choices[0].message.content && 
@@ -102,4 +100,8 @@ Reply with JSON, using the following JSON schema:
 
   return title
 
+}
+
+export async function test( apiKey: string  ){
+  return await models(getClient(apiKey))
 }

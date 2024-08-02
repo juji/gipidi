@@ -9,6 +9,8 @@ import { GPTModel } from '@/lib/vendors/types'
 import { useConvo } from '@/lib/convoStore'
 import { GPTProvider } from '@/lib/idb/types'
 
+import { loadAll } from '@/lib/vendors/load'
+
 export function TopBar(){
 
   const [ menu, setMenu ] = useState(false)
@@ -18,10 +20,6 @@ export function TopBar(){
   const [ model, setModel ] = useState<string|null>(null)
 
   const [ systemPrompt, setSystemPrompt ] = useState('')
-  const [ modelSelection, setModelSelection ] = useState<GPTModel[]>([])
-
-  const providers = useGPT(s => s.providers)
-  const getModels = useGPT(s => s.getModels)
   const loading = useGPT(s => s.loading)
 
   const activeConvo = useConvo(s => s.activeConvo)
@@ -66,23 +64,6 @@ export function TopBar(){
       setModel(getDefaultModel())
     }
   },[ activeConvo ])
-
-  // model selection
-  useEffect(() => {
-    if(loading) return () => {}
-
-    setModelSelection([])
-    const p = providers.find(v => v.id === provider)
-    p && getModels(p).then(models => models && setModelSelection(models))
-  },[ provider, loading ])
-  
-  // provider select
-  function onChangeSelect( e: ChangeEvent ){
-    const target = e.target as HTMLSelectElement
-    setProvider(target.value as GPTProvider['id']); 
-    target.blur()
-    setModel('')
-  }
   
   // open close
   function openMenu(e: MouseEvent){
@@ -108,6 +89,31 @@ export function TopBar(){
     }
   },[ provider ])
 
+  const [modelSelection, setModelSelection] = useState<any|null>(null)
+  useEffect(() => {
+    if(loading) return () => {}
+
+    loadAll().then(async all => {
+      const models = await Promise.all(Object.values(all).map(v => v.models()))
+      setModelSelection(Object.keys(all).reduce((a,b,i) => {
+        a[b as GPTProvider['id']] = models[i]
+        return a  
+      },{} as {[key in GPTProvider['id']]: GPTModel[]}))
+    })
+
+  },[ loading ])
+
+  function onChangeModel(e: ChangeEvent){
+    const target = e.target as HTMLSelectElement
+    if(!target.value) {
+      setProvider(null)
+      setModel(null)
+    }
+    const val = target.value.split('|')
+    setProvider(val[0] as GPTProvider['id']); 
+    setModel(val[1])
+  }
+
 
   return <div className={styles.topbar}>
     <div className={styles.title}>
@@ -119,7 +125,9 @@ export function TopBar(){
     </div>
     <div className={styles.menu}>
       <div className={styles.modelName}>
-        {modelSelection.find(v => v.id === model)?.name}
+        { provider && model && 
+          modelSelection && modelSelection[provider] 
+        ? modelSelection[provider].find((v:GPTModel) => v.id === model).name : null}
       </div>
       <div className={styles.menuContainer}>
         <button className={styles.menuButton} onClick={openMenu}>
@@ -131,47 +139,26 @@ export function TopBar(){
             Cannot edit settings on an active conversation
           </p> : null}
 
-          <h4 className={styles.menuHeader}>Provider</h4>
-          <div className={styles.selectWrapper}>
-            <select 
-              disabled={!!activeConvo}
-              className={styles.select}
-              value={provider||''}
-              onChange={onChangeSelect}
-            >
-              {providers.map(v => <option key={v.id} value={v.id}>{v.id}</option>)}
-            </select>
-            <svg className={styles.chevronDown} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" /></svg>
-          </div>
-          
           <h4 className={styles.menuHeader}>Model</h4>
 
           <div className={styles.selectWrapper}>
             <select 
               disabled={!!activeConvo}
               className={styles.select}
-              value={model||''}
-              onChange={e => setModel(e.target.value)}
+              value={provider && model ? `${provider}|${model}` : ''}
+              onChange={onChangeModel}
             >
-              <option value={""}></option>
-              {modelSelection.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+              {/* <option value={""}></option> */}
+              {modelSelection && Object.keys(modelSelection).map(v => {
+
+                return <optgroup label={v}>
+                  {modelSelection[v].map((m:GPTModel) => <option key={m.id} value={`${v}|${m.id}`}>{m.name}</option>)}
+                </optgroup>
+
+              })}
             </select>
             <svg className={styles.chevronDown} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" /></svg>
           </div>
-
-          {/* <input
-            className={styles.input}
-            disabled={!!activeConvo}
-            type="text"
-            list="modelsselection"
-            value={model||''}
-            onChange={e => setModel(e.target.value)}
-          />
-          <datalist id="modelsselection">
-            {(modelSelection||[]).map(v => {
-              return <option key={v.id} value={v.id}>{v.name}</option>
-            })}
-          </datalist> */}
 
           { systemPromptSel ? <>
             <h4 className={styles.menuHeader}>System Prompt</h4>

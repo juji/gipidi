@@ -1,21 +1,23 @@
 'use client'
 import { GenericSetting } from "@/lib/idb/types"
-import { getClient, createTitle, getDefaultModel } from "@/lib/vendors/gemini"
 import { useEffect, useState } from "react"
 import styles from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
-import type { ConvoDetail } from "@/lib/idb/types"
 
+import { loadFromId } from "@/lib/vendors/load"
+
+const PROVIDER = 'gemini'
 
 export function GeminiSettings(){
 
   const [ apiKey, setApiKey ] = useState('')
+  const loading = useGPT(s => s.loading)
   const providers = useGPT(s => s.providers)
+
   const saveProvider = useGPT(s => s.saveProvider)
   const removeProvider = useGPT(s => s.removeProvider)
-  const loading = useGPT(s => s.loading)
   const [ isOn, setisOn ] = useState(false)
   const [ err, setErr ] = useState('')
 
@@ -23,59 +25,36 @@ export function GeminiSettings(){
     if(loading) return () => {}
     if(!providers.length) return () => {}
 
-    const provider = providers.find(v => v.id === 'gemini')
-    if(!provider){
-      setisOn(false)
-    }else{
+    const provider = providers.find(v => v.id === PROVIDER)
+    if(!provider) setisOn(false)
+    else{
       const setting = provider.setting as GenericSetting
       setApiKey(setting.apiKey)
       setisOn(true)
     }
-  }, [ loading, providers ])
+  },[ loading, providers ])
 
   useEffect(() => {
-
-    if(loading) return () => {}
     if(!apiKey) {
-      removeProvider('gemini')
+      removeProvider(PROVIDER)
       return () => {}
     }
 
     setErr('')
 
-    const model = getDefaultModel()
-    const testData: ConvoDetail = {
-      id: 'asdf',
-      data: [
-        {
-          id: 'asdf',
-          role: 'user',
-          content: 'hello',
-          lastUpdate: new Date()
-        },
-        {
-          id: 'asdf',
-          role: 'assistant',
-          content: 'hello again',
-          lastUpdate: new Date()
-        }
-      ],
-      provider: 'gemini',
-      systemPrompt: 'asdf',
-      model: model.id,
-      created: new Date(),
-      deleted: new Date()
-    }
+    loadFromId(PROVIDER, { apiKey }).then(provider => {
+      
+      provider.test(apiKey).then(() => {
+        saveProvider(PROVIDER, { apiKey })
+      }).catch((e:any) => {
+        removeProvider(PROVIDER)
+        console.error(e)
+        setErr(e.toString())
+      })
 
-    createTitle(getClient(apiKey),testData).then(v => {
-      saveProvider('gemini', { apiKey })
-    }).catch(e => {
-      removeProvider('gemini')
-      console.error(e)
-      setErr(e.toString())
     })
 
-  },[ loading, apiKey ])
+  },[ apiKey ])
 
   return <>
     <h6 className={styles.heading}>
