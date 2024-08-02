@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useConvo } from "@/lib/convoStore";
 import { useGPT } from "@/lib/gptStore";
 import { useTypeWriter } from '@/lib/hooks/useTypeWriter'
@@ -23,6 +23,7 @@ export function useTitleCreator(){
     return convo?.title
   },[activeConvo?.id, convos, loading])
 
+  const canceled = useRef(false)
   const createTitle = useMemo(() => {
     return !!(
       convoLength && 
@@ -32,30 +33,43 @@ export function useTitleCreator(){
     )
   }, [ convoLength, isStreaming, isWaitingReply, currentTitle ])
 
-  useEffect(() => {
+  async function createTitleFn(){
+    
     if(!activeConvo) return;
-    if(!createTitle) return;
-
-    console.debug('CREATING TITLE')
-
     const convo = convos.find(v => v.id === activeConvo.id)
     if(convo?.title) return;
-    
+
+    console.debug('CREATING TITLE')
     const currentProvider = activeConvo.provider
     const provider = providers.find(v => v.id === currentProvider) || null
-    import(`@/lib/vendors/${currentProvider}`).then(v => {
-      const {
-        createTitle,
-        getClientFromProvider
-      } = v
-      const client = getClientFromProvider(provider)
-      createTitle(client, activeConvo).then((v: any) => {
-        setTitle(v)
-      })
-    }).catch(e => {
-      console.error(e)
-    })
-  
+
+    const {
+      createTitle,
+      getClientFromProvider
+    } = await import(`@/lib/vendors/${currentProvider}`)
+    if(canceled.current) return;
+    
+    const client = getClientFromProvider(provider)
+    const title = await createTitle(client, activeConvo)
+    if(canceled.current) return;
+    
+    setTitle(title)
+
+  }
+
+  useEffect(() => {
+    if(!activeConvo) return;
+    if(!createTitle) {
+      canceled.current = true
+      return;
+    }
+
+    canceled.current = false
+    setTimeout(() => {
+      if(canceled.current) return;
+      createTitleFn()
+    },5000)
+
   },[ createTitle ])
   
   useEffect(() => {
