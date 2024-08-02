@@ -45,6 +45,7 @@ function getMethods( loaded: any, client: any ){
     createTitle,
     getDefaultModel: loaded.getDefaultModel as GetDefaultFn ?? null,
     test: loaded.test as TestFn,
+    icon: loaded.icon as string ?? null
   }
 
 }

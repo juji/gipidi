@@ -2,6 +2,8 @@ import Groq from "groq-sdk"
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
 
+export const icon = '/gpt/groq.svg'
+
 export function getClient( apiKey: string ){
   const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true })
   return groq

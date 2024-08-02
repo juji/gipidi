@@ -2,6 +2,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
 
+export const icon = '/gpt/gemini.svg'
+
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )
   return gemini

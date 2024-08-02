@@ -5,7 +5,12 @@ import type { GPTProvider } from "@/lib/idb/types";
 import type { GPTModel } from "@/lib/vendors/types";
 import { titleCase } from 'title-case'
 import { useGPT } from "@/lib/gptStore";
-import { getDefaultModel, getDefaultProvider, saveDefaultModel, saveDefaultProvider } from "@/lib/local-storage";
+import { 
+  getDefaultModel, 
+  getDefaultProvider, 
+  saveDefaultModel, 
+  saveDefaultProvider 
+} from "@/lib/local-storage";
 
 export function DefaultModel(){
 

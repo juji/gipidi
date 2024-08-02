@@ -18,6 +18,7 @@ export function TopBar(){
 
   const [ provider, setProvider ] = useState<GPTProvider['id']|null>(null)
   const [ model, setModel ] = useState<string|null>(null)
+  const [ icon, setIcon ] = useState<string|null>(null)
 
   const [ systemPrompt, setSystemPrompt ] = useState('')
   const loading = useGPT(s => s.loading)
@@ -60,8 +61,13 @@ export function TopBar(){
       convo && setTitle(convo.title)
     }else{
       setTitle('')
-      setProvider(getDefaultProvider())
+
+      const defaultProvider = getDefaultProvider()
+      setProvider(defaultProvider)
       setModel(getDefaultModel())
+      defaultProvider && loadAll().then(async all => {
+        setIcon(all[defaultProvider].icon)
+      })
     }
   },[ activeConvo ])
   
@@ -89,16 +95,28 @@ export function TopBar(){
     }
   },[ provider ])
 
+  const icons = useRef<{[key:string]: string}>()
   const [modelSelection, setModelSelection] = useState<any|null>(null)
   useEffect(() => {
     if(loading) return () => {}
 
     loadAll().then(async all => {
+      
       const models = await Promise.all(Object.values(all).map(v => v.models()))
+      
+      // this is crazy
+      // to have to define a type of key in a reduce
+      // with 'keyof typeof'
+      icons.current = Object.keys(all).reduce((a,b) => {
+        a[b as keyof typeof all] = all[b as keyof typeof all].icon
+        return a
+      },{} as {[key in keyof typeof all]: string})
+
       setModelSelection(Object.keys(all).reduce((a,b,i) => {
         a[b as GPTProvider['id']] = models[i]
         return a  
       },{} as {[key in GPTProvider['id']]: GPTModel[]}))
+
     })
 
   },[ loading ])
@@ -108,11 +126,19 @@ export function TopBar(){
     if(!target.value) {
       setProvider(null)
       setModel(null)
+      setIcon(null)
     }
     const val = target.value.split('|')
     setProvider(val[0] as GPTProvider['id']); 
     setModel(val[1])
+    icons.current && setIcon(icons.current[val[0]])
   }
+
+  const modelName = useMemo(() => {
+    return provider && model && 
+      modelSelection && modelSelection[provider] ? 
+        modelSelection[provider].find((v:GPTModel) => v.id === model).name : ''
+  },[ provider, model, modelSelection ])
 
 
   return <div className={styles.topbar}>
@@ -124,10 +150,14 @@ export function TopBar(){
       />
     </div>
     <div className={styles.menu}>
-      <div className={styles.modelName}>
-        { provider && model && 
-          modelSelection && modelSelection[provider] 
-        ? modelSelection[provider].find((v:GPTModel) => v.id === model).name : null}
+      <div className={styles.model}>
+        
+        { modelName ? <span className={styles.name}>{modelName}</span> : null}
+
+        { icon ? <span className={styles.icon}>
+          <img className={styles.image} src={icon} title={modelName} />
+        </span> : null}
+
       </div>
       <div className={styles.menuContainer}>
         <button className={styles.menuButton} onClick={openMenu}>

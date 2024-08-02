@@ -2,6 +2,8 @@ import { Ollama } from 'ollama/browser'
 import type { GPTModel, ChatFn, GetClientFromProvider } from './types'
 import { ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
 
+export const icon = '/gpt/ollama.png'
+
 export function getClient( host: string ){
   const ollama = new Ollama({ host })
   return ollama
