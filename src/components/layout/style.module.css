@@ -23,7 +23,11 @@
     width: 80%;
     max-width: var(--content-nav-width);
     z-index: 101;
-    transition: left 200ms 0ms ease-out;
+    transition: 
+      left 200ms 0ms ease-out, 
+      width 200ms ease-out,
+      max-width 200ms ease-out
+    ;
     left:-100%;
     background-color: #222;
 

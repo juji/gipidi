@@ -53,6 +53,10 @@
       background: #333;
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 400px;
     }
 
     .select{
@@ -60,6 +64,10 @@
       background: #333;
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
+      width: 100%;
+      display: block;
+      box-sizing: border-box;
+      max-width: 400px;
       cursor: pointer;
 
       .nullValue[value=""]{

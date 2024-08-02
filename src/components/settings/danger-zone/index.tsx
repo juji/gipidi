@@ -28,7 +28,7 @@ export function DangerZone(){
         <button
           className={cx(styles.button, styles.danger)}
           onClick={() => onRemove()}
-        >Confirm Remove</button>
+        >Confirm Removal</button>
       </> : <button
         className={cx(styles.button, styles.danger)}
         onClick={() => setConfirm(true)}

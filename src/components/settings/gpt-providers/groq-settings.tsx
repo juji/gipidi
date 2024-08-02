@@ -71,7 +71,6 @@ export function GroqSettings(){
           className={styles.input}
           placeholder='Groq API Key'
           onInput={(e) => setApiKey((e.target as HTMLInputElement).value)}
-          value={apiKey}
         />
       </label>
       {err ? <div className={styles.error}>{err}</div> : null}

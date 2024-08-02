@@ -131,7 +131,6 @@ export function TopBar(){
     const val = target.value.split('|')
     setProvider(val[0] as GPTProvider['id']); 
     setModel(val[1])
-    icons.current && setIcon(icons.current[val[0]])
   }
 
   const modelName = useMemo(() => {
@@ -139,6 +138,10 @@ export function TopBar(){
       modelSelection && modelSelection[provider] ? 
         modelSelection[provider].find((v:GPTModel) => v.id === model).name : ''
   },[ provider, model, modelSelection ])
+
+  useEffect(() => {
+    icons.current && provider && setIcon(icons.current[provider])
+  },[ provider ])
 
 
   return <div className={styles.topbar}>

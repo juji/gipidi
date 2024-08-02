@@ -21,9 +21,13 @@ export type ConvoDetail = {
 
 export type ConvoData = {
   id: string
-  lastUpdate: Date,
-  role: 'user' | 'assistant' | 'system',
+  lastUpdate: Date
+  role: 'user' | 'assistant' | 'system'
   content: string
+  attachments?: {
+    data: string, // base64
+    mime: string
+  }[]
 }
 
 export type OllamaSetting = { url: string }
