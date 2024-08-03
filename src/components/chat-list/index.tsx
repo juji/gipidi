@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './style.module.css'
 import { Convo } from '@/lib/idb/types'
 import { useConvo } from '@/lib/convoStore'
-import { useGPT } from '@/lib/gptStore'
 import { usePathname, useRouter } from 'next/navigation'
 import cx from 'classix'
 

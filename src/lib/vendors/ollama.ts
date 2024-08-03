@@ -39,7 +39,10 @@ export const chat: ChatFn<Ollama> = async function(
       messages: convoDetail.data.map(v => {
         return {
           role: v.role,
-          content: v.content
+          content: v.content,
+          ...v.attachments && v.attachments.length ? {
+            images: v.attachments.map(atta => `${atta.data}`)
+          } : {}
         }
       }),
       stream: true

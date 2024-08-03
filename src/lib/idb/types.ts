@@ -19,15 +19,18 @@ export type ConvoDetail = {
   deleted: Date
 }
 
+export type ConvoAttachment = {
+  data: string, // base64
+  mime: string,
+  name: string
+}
+
 export type ConvoData = {
   id: string
   lastUpdate: Date
   role: 'user' | 'assistant' | 'system'
   content: string
-  attachments?: {
-    data: string, // base64
-    mime: string
-  }[]
+  attachments?: ConvoAttachment[]
 }
 
 export type OllamaSetting = { url: string }

@@ -1,10 +1,11 @@
 import { nanoid } from "nanoid";
 import { Get, Set } from ".";
 import { updateConvoDetail } from "../idb/convo/updateConvoDetail";
+import { ConvoAttachment } from "../idb/types";
 
-export function addUserText(set: Set, get: Get){
+export function addUserMessage(set: Set, get: Get){
   
-  return async ( text: string ) => {
+  return async ( text: string, files: ConvoAttachment[] ) => {
 
     const { activeConvo } = get()
   
@@ -17,7 +18,8 @@ export function addUserText(set: Set, get: Get){
       id: nanoid(),
       lastUpdate: new Date(),
       role: 'user',
-      content: text
+      content: text,
+      ...files && files.length ? {attachments: files} : {}
     })
 
     set(state => { 

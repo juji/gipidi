@@ -53,14 +53,30 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
     const history = convoDetail.data.slice(0, convoDetail.data.length - 1)
       .map(v => ({
         role: v.role === 'user' ? 'user' : 'model',
-        parts: [{ text: v.content }],
+        parts: [
+          { text: v.content },
+          ...v.attachments && v.attachments.length ? v.attachments.map(atta => ({
+            inlineData: {
+              mimeType: atta.mime,
+              data: atta.data,
+            },
+          })) : []
+        ],
       }))
     
-    const last = convoDetail.data.at(-1)?.content
+    const last = convoDetail.data.at(-1)
     if(!last) throw new Error('User message is empty')
 
     const chat = model.startChat({ history });
-    const result = await chat.sendMessageStream(last)
+    const result = await chat.sendMessageStream(last.attachments?.length ? [
+      last.content,
+      ...last.attachments.map(atta => ({
+        inlineData: {
+          mimeType: atta.mime,
+          data: atta.data,
+        },
+      }))
+    ] : last.content)
     for await (const chunk of result.stream) onResponse(chunk.text() || '')
     onResponse('', true)
 

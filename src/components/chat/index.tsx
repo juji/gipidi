@@ -16,7 +16,7 @@ export function Chat(){
     {activeConvo && activeConvo.data.map((v, i, a) => {
 
       return v.role === 'user' ?
-        <UserBubble key={v.id} content={v.content} /> :
+        <UserBubble key={v.id} content={v.content} attachments={v.attachments} /> :
         i === (a.length - 1) ? 
           <BotBubble key={v.id} last={true} content={v.content} /> :
           <BotBubble key={v.id} content={v.content} />

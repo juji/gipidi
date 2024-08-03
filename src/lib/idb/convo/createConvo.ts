@@ -2,12 +2,13 @@
 import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
 import { nanoid } from 'nanoid'
-import { Convo, ConvoDetail, GPTProvider, ConvoData } from '../types';
+import { Convo, ConvoDetail, GPTProvider, ConvoData, ConvoAttachment } from '../types';
 
 export async function createConvo(
   initialContent: string,
   provider: GPTProvider['id'],
   model : string,
+  files?: ConvoAttachment[],
   systemPrompt?: string,
   currentTitle?: string,
   connection?: Connection 
@@ -36,7 +37,8 @@ export async function createConvo(
         id: nanoid(),
         lastUpdate: new Date(),
         role: 'user' as ConvoData['role'],
-        content: initialContent
+        content: initialContent,
+        ...files ? {attachments: files} : {}
       }
     ],
     provider,

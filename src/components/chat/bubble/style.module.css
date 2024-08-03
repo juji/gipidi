@@ -98,10 +98,19 @@
     & > .cloud{
       display: flex;
       justify-content: flex-end;
+      flex-direction: column;
+
+      /* display: grid;
+      grid-template-columns: 1fr; */
+      /* grid-template-rows: auto; */
+      gap: 1rem;
+
       & > .content{
         background-color: #333;
         border-radius: 0.5rem;
         padding: 0.7rem 1rem;
+        width: fit-content;
+        align-self: flex-end;
       }
     }
   }

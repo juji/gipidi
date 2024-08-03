@@ -1,0 +1,76 @@
+
+.attachments{
+  
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgb(42, 42, 42);
+  display: grid;
+  gap: 0.5rem;
+  
+  grid-template-columns: repeat(var(--column-number, 6), 1fr);
+  max-height: calc( 100vh - 19rem );
+  overflow-y: auto;
+
+  .file{
+
+    position: relative;
+
+    .remove{
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+      padding: 0.2rem;
+      border-radius: 0.2rem;
+      background-color: rgba(0,0,0,0.3);
+      display: none;
+
+      &:hover{
+        background-color: red;
+        color: white;
+      }
+    }
+
+    &:hover .remove{
+      display: block;
+    }
+
+    .image{
+      border-radius: 0.5rem;
+      overflow: hidden;
+      display: block;
+      height: 6rem;
+      object-fit: cover;
+      object-position: center center;
+      width: 100%;
+      cursor: pointer;
+
+      &.icon{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: royalblue;
+        position: relative;
+
+        .svg{
+          color: rgb(51, 82, 175);
+          width: 2rem;
+          height: auto;
+        }
+
+        .fileName{
+          position: absolute;
+          display: block;
+          width: 80%;
+          bottom: .2rem;
+          font-size: 0.7rem;
+          margin-top: 0.5rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+    }
+  }
+
+}

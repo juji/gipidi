@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { Convo, ConvoDetail, GPTProvider } from '../idb/types'
+import { Convo, ConvoAttachment, ConvoDetail, GPTProvider } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 
@@ -12,7 +12,7 @@ import { loadConvo } from './loadConvo'
 
 import { setCurrentTitle } from './setCurrentTitle'
 
-import { addUserText } from './addUserText'
+import { addUserMessage } from './addUserMessage'
 import { addGPTText } from './addGPTText'
 
 import { onCreateChat } from './onCreateChat'
@@ -40,8 +40,8 @@ export type ConvoStore = {
 
   setCurrentTitle: ( str: string ) => Promise<void>
 
-  createConvo: ( initialContent: string ) => void
-  addUserText: ( str: string ) => void
+  createConvo: ( initialContent: string, files: ConvoAttachment[] ) => void
+  addUserMessage: ( str: string, files: ConvoAttachment[] ) => void
   addGPTText: ( str: string, isDone?: boolean ) => void
 
   createChatListener: null | (() => ChatCreationData)
@@ -79,7 +79,7 @@ export function createConvoStore(){
 
           setCurrentTitle: setCurrentTitle(set, get),
           createConvo: createConvo(set, get),
-          addUserText: addUserText(set, get),
+          addUserMessage: addUserMessage(set, get),
           addGPTText: addGPTText(set, get),
 
           createChatListener: null,

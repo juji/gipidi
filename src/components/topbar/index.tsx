@@ -184,7 +184,7 @@ export function TopBar(){
               {/* <option value={""}></option> */}
               {modelSelection && Object.keys(modelSelection).map(v => {
 
-                return <optgroup label={v}>
+                return <optgroup key={v} label={v}>
                   {modelSelection[v].map((m:GPTModel) => <option key={m.id} value={`${v}|${m.id}`}>{m.name}</option>)}
                 </optgroup>
 

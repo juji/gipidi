@@ -1,10 +1,11 @@
 
 import { createConvo as create } from '../idb/convo/createConvo'
+import { ConvoAttachment } from '../idb/types'
 import type { Set, Get } from './'
 
 export function createConvo(set: Set, get: Get){
 
-  return async ( initialContent: string ) => {
+  return async ( initialContent: string, files: ConvoAttachment[] ) => {
 
     const { createChatListener } = get()
 
@@ -29,6 +30,7 @@ export function createConvo(set: Set, get: Get){
       initialContent,
       provider,
       model,
+      files.length ? files : undefined,
       systemPrompt || '',
       title || ''
     )

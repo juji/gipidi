@@ -6,15 +6,19 @@ import cx from 'classix'
 import styles from './style.module.css'
 import './bubble.css'
 import { ColorRing } from 'react-loader-spinner'
+import { ConvoAttachment } from '@/lib/idb/types';
+import { ChatAttachment } from '@/components/chat-attachment';
 
 function Bubble({ 
   className,
   content,
+  attachments,
   profilePict,
   last
 }:{ 
   className: string 
-  content: string 
+  content: string
+  attachments?: ConvoAttachment[] | null
   profilePict: string
   last?: boolean
 }){
@@ -81,9 +85,17 @@ function Bubble({
 
   return <div ref={ref} className={cx(styles.bubble, className)}>
     <div className={styles.cloud}>
-      { result ? 
-        <div className={cx(styles.content, 'bubble-content')} 
-          dangerouslySetInnerHTML={{ __html: result }} /> : 
+      {result ? 
+        <>
+          <div className={cx(styles.content, 'bubble-content')} 
+            dangerouslySetInnerHTML={{ __html: result }} />
+          {attachments && attachments.length ? <ChatAttachment
+            columnNumber={attachments.length < 4 ? attachments.length : 4}
+            files={attachments}
+            className={styles.attachments}
+          /> : null}
+          {/* attachments */}
+        </> : 
         <div className={cx(styles.content, 'bubble-content')}>
           <ColorRing
           visible={true}
@@ -111,11 +123,15 @@ function Bubble({
 }
 
 
-export function UserBubble({ content }:{ content: string }){
+export function UserBubble({ content, attachments }: {
+  content: string,
+  attachments?: ConvoAttachment[] | null
+}) {
 
   return <Bubble 
     className={styles.user} 
-    content={content} 
+    content={content}
+    attachments={attachments}
     profilePict={'/user.webp'}
   />
 
