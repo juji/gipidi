@@ -54,7 +54,7 @@ export function useGptListener(){
           stop = true
           console.error(e)
           showError(e.message)
-          addGPTText('-- [ERROR]', true)
+          addGPTText(' [ERROR]', true)
         }
       })
 

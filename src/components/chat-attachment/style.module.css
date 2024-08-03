@@ -3,13 +3,18 @@
   
   padding: 0.5rem;
   border-radius: 0.5rem;
-  background-color: rgb(42, 42, 42);
+  background-color: rgb(1, 1, 1, 0.90);
+  border: 1px solid #222;
   display: grid;
   gap: 0.5rem;
   
-  grid-template-columns: repeat(var(--column-number, 6), 1fr);
+  grid-template-columns: repeat(var(--column-number, 3), 1fr);
   max-height: calc( 100vh - 19rem );
   overflow-y: auto;
+
+  @media (min-width: 800px){
+    grid-template-columns: repeat(var(--column-number, 6), 1fr);
+  }
 
   .file{
 

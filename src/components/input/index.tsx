@@ -36,7 +36,7 @@ export function Inputform(){
   const remove = useFileUpload(s => s.remove)
   const removeAll = useFileUpload(s => s.removeAll)
   const filesInQueue = useFileUpload(s => s.filesInQueue)
-  console.log('filesInQueue', filesInQueue)
+
   function onRemoveFile(index: number) {
     remove(index)
   }
@@ -57,11 +57,6 @@ export function Inputform(){
   }
 
   function onSubmit(content: string) {
-    console.log({
-      content, 
-      filesInQueue,
-      isStreaming
-    })
     if(!content) return; 
     if(filesInQueue) return;
     if(isStreaming) return;

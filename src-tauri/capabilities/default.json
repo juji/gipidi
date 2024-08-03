@@ -6,16 +6,10 @@
     "main"
   ],
   "permissions": [
-    "path:default",
-    "event:default",
-    "window:default",
-    "webview:default",
-    "app:default",
-    "resources:default",
-    "image:default",
-    "menu:default",
-    "tray:default",
-    "shell:default",
-    "shell:allow-open"
+    "core:app:default",
+    "core:webview:default",
+    "dialog:allow-save",
+    "fs:default",
+    "fs:allow-home-write-recursive"
   ]
 }

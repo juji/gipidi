@@ -12,12 +12,12 @@
     "windows": [
       {
         "title": "GiPiDi'",
-        "width": 950,
+        "width": 800,
         "height": 600,
+        "minHeight": 300,
+        "minWidth": 300,
         "resizable": true,
         "fullscreen": false,
-        "minWidth": 300,
-        "minHeight": 500,
         "dragDropEnabled": false
       }
     ],
