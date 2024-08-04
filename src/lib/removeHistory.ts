@@ -9,14 +9,14 @@ export async function removeHistory(){
       from: TABLES.CONVO_DETAIL,
       where: [
         { deleted: { '!=': DEFAULT_DELETED } },
-        { deleted: { '<': date } },
+        { deleted: { '<=': date } },
       ]
     }),
     conn.remove({
       from: TABLES.CONVO,
       where: [
         { deleted: { '!=': DEFAULT_DELETED } },
-        { deleted: { '<': date } },
+        { deleted: { '<=': date } },
       ]
     })
   ])
