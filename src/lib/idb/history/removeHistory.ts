@@ -1,7 +1,7 @@
 
 import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
-import type { Convo, ConvoDetail } from '../types';
+import type { Convo } from '../types';
 
 export async function removeHistory( 
   convos: Convo[],
