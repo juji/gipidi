@@ -1,4 +1,13 @@
 
+.downladImageButton{
+  opacity: 0.7;
+  transition: opacity 200ms ease-out;
+
+  &:hover{
+    opacity: 1;
+  }
+}
+
 .attachments{
   
   padding: 0.5rem;
@@ -11,8 +20,9 @@
   grid-template-columns: repeat(var(--column-number, 3), 1fr);
   max-height: calc( 100vh - 19rem );
   overflow-y: auto;
-
+  
   @media (min-width: 800px){
+    width: var(--width, 100%);
     grid-template-columns: repeat(var(--column-number, 6), 1fr);
   }
 

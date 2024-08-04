@@ -91,6 +91,7 @@ function Bubble({
             dangerouslySetInnerHTML={{ __html: result }} />
           {attachments && attachments.length ? <ChatAttachment
             columnNumber={attachments.length < 4 ? attachments.length : 4}
+            width={attachments.length < 4 ? 25 * attachments.length +'%' : undefined}
             files={attachments}
             className={styles.attachments}
           /> : null}

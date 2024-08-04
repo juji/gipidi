@@ -33,15 +33,17 @@ export const chat: ChatFn<Ollama> = async function(
   onError: (e: any)   => void
 ){
 
+  
   try{
     const resp = await client.chat({
       model: convoDetail.model,
       messages: convoDetail.data.map(v => {
+        console.log('v.attachments', v.attachments)
         return {
           role: v.role,
           content: v.content,
           ...v.attachments && v.attachments.length ? {
-            images: v.attachments.map(atta => `${atta.data}`)
+            images: v.attachments.filter(v => v.mime.match('image/')).map(atta => `${atta.data}`)
           } : {}
         }
       }),

@@ -1,8 +1,6 @@
 'use client'
-import { useEffect } from "react"
 import { UserBubble, BotBubble } from "./bubble"
 // import { example } from "./example"
-import styles from './style.module.css'
 import { useConvo } from "@/lib/convoStore"
 import { useGptListener } from '@/lib/hooks/useGptListener'
 
@@ -12,7 +10,7 @@ export function Chat(){
   useGptListener()
 
   return <>
-    <div className={styles.chat}>
+    <div>
     {activeConvo && activeConvo.data.map((v, i, a) => {
 
       return v.role === 'user' ?

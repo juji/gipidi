@@ -5,15 +5,19 @@
   width: 100%;
   max-width: var(--content-max-width);
   padding: 0 calc( 2 * var(--content-padding-lr));
-  margin: 1rem auto;
+  margin: 0 auto;
 
   @media(min-width: 800px){
     margin: 3rem auto;
   }
 
   .heading{
-    margin: 1rem 0;
-    margin-bottom: calc(1rem - 2px); /* so it aligns with sidebar */
+    margin-bottom: 1rem;
+    
+    @media(min-width: 800px){
+      margin-bottom: calc(1rem - 2px); /* so it aligns with sidebar */
+      margin-top: 1rem;
+    }
   }
 
 }
