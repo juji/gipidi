@@ -3,15 +3,12 @@ import { UserBubble, BotBubble } from "./bubble"
 // import { example } from "./example"
 import { useConvo } from "@/lib/convoStore"
 import { useGptListener } from '@/lib/hooks/useGptListener'
+import { ConvoDetail } from "@/lib/idb/types"
 
-export function Chat(){
+export function ChatBubbles({ activeConvo }:{ activeConvo: ConvoDetail }){
 
-  const activeConvo = useConvo(s => s.activeConvo)
-  useGptListener()
-
-  return <>
-    <div>
-    {activeConvo && activeConvo.data.map((v, i, a) => {
+  return <div>
+    {activeConvo.data.map((v, i, a) => {
 
       return v.role === 'user' ?
         <UserBubble key={v.id} content={v.content} attachments={v.attachments} /> :
@@ -20,7 +17,15 @@ export function Chat(){
           <BotBubble key={v.id} content={v.content} />
 
     })}
-    </div>
-  </>
+  </div>
+
+}
+
+export function Chat(){
+
+  const activeConvo = useConvo(s => s.activeConvo)
+  useGptListener()
+
+  return activeConvo ? <ChatBubbles activeConvo={activeConvo} /> : null
 
 }

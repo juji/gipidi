@@ -17,6 +17,7 @@ import { addGPTText } from './addGPTText'
 
 import { onCreateChat } from './onCreateChat'
 import { search } from './search'
+import { loadAll } from './loadAll'
 
 export type ChatCreationData = {
   provider: GPTProvider['id'] 
@@ -47,6 +48,11 @@ export type ConvoStore = {
   createChatListener: null | (() => ChatCreationData)
   onCreateChat: (fn: () => ChatCreationData) => void
   search: ( str: string ) => void
+
+  onRemoveListener: null | ((convo: Convo) => void)
+  onRemove: (fn: null | ((convo: Convo) => void)) => void
+
+  loadAll: () => Promise<void>
 
 }
 
@@ -84,7 +90,14 @@ export function createConvoStore(){
 
           createChatListener: null,
           onCreateChat: onCreateChat(set),
-          search: search(set, get)
+          search: search(set, get),
+
+          onRemoveListener: null,
+          onRemove: (fn: null | ((convo: Convo) => void)) => {
+            set(s => { s.onRemoveListener = fn })
+          },
+          
+          loadAll: loadAll(set)
 
         })
       )

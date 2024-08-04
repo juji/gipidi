@@ -3,7 +3,7 @@ import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
 import type { Convo, ConvoDetail } from '../types';
 
-export async function getConvoDetail( 
+export async function getHistoryDetails( 
   convo: Convo,
   connection?: Connection 
 ){
@@ -13,7 +13,7 @@ export async function getConvoDetail(
     from: TABLES.CONVO_DETAIL,
     where: {
       id: convo.id,
-      deleted: DEFAULT_DELETED
+      deleted: { '!=': DEFAULT_DELETED }
     }
   });
 

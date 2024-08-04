@@ -8,8 +8,9 @@ import { ChatSearch } from '../chat-search';
 import { ChatList } from '../chat-list';
 import { Footer } from '../footer';
 import { keyboardListeners } from '@/lib/keyboard-listeners';
-import { useTitleCreator } from "@/lib/hooks/useTItleCreator"
+import { useTitleCreator } from "@/lib/hooks/useTitleCreator"
 import { usePathname } from 'next/navigation';
+import { removeHistory } from '@/lib/removeHistory';
 
 const montserrat = Montserrat({
   weight: "600",
@@ -27,6 +28,10 @@ export function Layout({ children }: PropsWithChildren){
     keyboardListeners({
       searchBarId: 'searchconvo'
     })
+  },[])
+
+  useEffect(() => {
+    removeHistory()
   },[])
 
   useTitleCreator()

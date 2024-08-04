@@ -4,6 +4,8 @@ import { Convo } from '@/lib/idb/types'
 import { useConvo } from '@/lib/convoStore'
 import { usePathname, useRouter } from 'next/navigation'
 import cx from 'classix'
+import { useHistory } from '@/lib/historyStore'
+import { loadAll } from '@/lib/convoStore/loadAll'
 
 function Chat({ 
   convo,
@@ -71,6 +73,18 @@ export function ChatList({ closeSidebar }:{ closeSidebar: () => void }){
   const convos = useConvo(s => s.convos)
   const searchResult = useConvo(s => s.searchResult)
   const activeConvo = useConvo(s => s.activeConvo)
+  const onRestore = useHistory(s => s.onRestore)
+  const loadAll = useConvo(s => s.loadAll)
+
+  useEffect(() => {
+    onRestore(() => {
+      loadAll()
+    })
+
+    return (() => {
+      onRestore(null)
+    })
+  },[])
 
   const list = useMemo(() => {
     return searchResult ? searchResult : convos

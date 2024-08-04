@@ -68,7 +68,7 @@ export function useTitleCreator(){
     setTimeout(() => {
       if(canceled.current) return;
       createTitleFn()
-    },5000)
+    },3000)
 
   },[ createTitle ])
   

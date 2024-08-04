@@ -1,18 +1,18 @@
 
 import { Connection } from '@juji/jsstore';
 import { createConnection, TABLES, DEFAULT_DELETED } from '../connection'
-import type { GPTProvider } from '../types';
+import type { Convo } from '../types';
 
-export async function getAllProvider( connection?: Connection ){
+export async function getConvoHistory( connection?: Connection ){
 
   const conn = connection ? connection : createConnection()
-  const results = await conn.select<GPTProvider>({
-    from: TABLES.GPT_PROVIDER,
+  const results = await conn.select<Convo>({
+    from: TABLES.CONVO,
     where: {
-      deleted: DEFAULT_DELETED
+      deleted: { '!=': DEFAULT_DELETED }
     },
     order: {
-      by: 'created',
+      by: 'deleted',
       type: 'desc' //supprted sort type is - asc,desc
     }
   });
