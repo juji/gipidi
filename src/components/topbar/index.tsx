@@ -84,6 +84,17 @@ export function TopBar(){
   const ref = useRef<HTMLDivElement|null>(null)
   useOnClickOutside(ref, onCloseMenu)
 
+  // activate deactivate system prompt
+  const [ systemPromptSel, setSystemPromptSel ] = useState(true)
+  useEffect(() => {
+    if(model === 'gemini-1.0-pro'){
+      setSystemPromptSel(false)
+      setSystemPrompt('')
+    }else{
+      setSystemPromptSel(true)
+    }
+  },[ model ])
+
   const icons = useRef<{[key:string]: string}>()
   const [modelSelection, setModelSelection] = useState<any|null>(null)
   useEffect(() => {
@@ -182,6 +193,7 @@ export function TopBar(){
             <svg className={styles.chevronDown} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" /></svg>
           </div>
 
+          { systemPromptSel ? <>
             <h4 className={styles.menuHeader}>System Prompt</h4>
             <textarea 
               value={systemPrompt}
@@ -189,6 +201,7 @@ export function TopBar(){
               rows={5}
               onChange={e => setSystemPrompt(e.target.value)}
               className={styles.systemPrompt}></textarea>
+          </> : <p className={styles.systemPromptDisabled}>System prompt disabled for this model</p>}
           
         </div>
       </div>

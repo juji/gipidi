@@ -49,7 +49,8 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
 
   try{
 
-    const systemInstruction = convoDetail.data[0].role === 'system' ? 
+    const isGemini1 = getDefaultModel().id === convoDetail.model
+    const systemInstruction = convoDetail.data[0].role === 'system' && !isGemini1 ? 
       convoDetail.data[0].content : null
 
     const model = client.getGenerativeModel({ 
