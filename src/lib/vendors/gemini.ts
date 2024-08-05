@@ -104,21 +104,33 @@ Prevent from using the word "user" and "assistant" in the resulting title.
 Reply with JSON, using the following JSON schema:
 {"title":"string"}
 `
-  const prompt = 'Please create title for the following data: ' + JSON.stringify(
+  const isGemini1 = getDefaultModel().id === convoDetail.model
+  const isGeminiPro = convoDetail.model.match('pro')
+  const prompt = (isGemini1 ? systemInstruction + '\n' : '') + 'Please create title for the following data: ' + JSON.stringify(
     convoDetail.data.filter(v => v.role !== 'system').map(v => ({
       role: v.role,
       content: v.content
     }))
   )
 
+  const modelUsed = isGeminiPro ? getDefaultModel().id : convoDetail.model
+
   const model = client.getGenerativeModel({ 
-    model: convoDetail.model,
-    systemInstruction,
-    generationConfig: { responseMimeType: "application/json" } 
+    model: modelUsed,
+    ...isGemini1 ? {} : { 
+      systemInstruction,
+      generationConfig: { responseMimeType: "application/json" }  
+    }
   })
   const result = await model.generateContent(prompt);
   const response = result.response;
-  const text = response.text();
+  let text = ''
+  if(isGemini1){
+    const t = response.text().match(/{"title":"[^"]+"}/)
+    text = t ? t[0] : '{}'
+  } else {
+    text = response.text()
+  }
 
   let title = ''
   try{
