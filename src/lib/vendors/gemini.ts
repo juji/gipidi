@@ -49,8 +49,15 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
 
   try{
 
-    const model = client.getGenerativeModel({ model: convoDetail.model })
-    const history = convoDetail.data.slice(0, convoDetail.data.length - 1)
+    const systemInstruction = convoDetail.data[0].role === 'system' ? 
+      convoDetail.data[0].content : null
+
+    const model = client.getGenerativeModel({ 
+      model: convoDetail.model,
+      ...systemInstruction ? { systemInstruction } : {}
+    })
+
+    const history = convoDetail.data.slice(systemInstruction ? 1 : 0, convoDetail.data.length - 1)
       .map(v => ({
         role: v.role === 'user' ? 'user' : 'model',
         parts: [
@@ -88,7 +95,7 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
 
 export async function createTitle( client: GoogleGenerativeAI, convoDetail: ConvoDetail ){
 
-  const prompt = `You are an excellent summarizer.
+  const systemInstruction = `You are an excellent summarizer.
 The following data is a JSON formatted conversation between a user and an assistant.
 You are expected to create a short title to describe the conversation.
 
@@ -96,22 +103,26 @@ Prevent from using the word "user" and "assistant" in the resulting title.
 
 Reply with JSON, using the following JSON schema:
 {"title":"string"}
+`
+  const prompt = 'Please create title for the following data: ' + JSON.stringify(
+    convoDetail.data.filter(v => v.role !== 'system').map(v => ({
+      role: v.role,
+      content: v.content
+    }))
+  )
 
-Now, ` + 'Please create title for the following data: ' + JSON.stringify(
-  convoDetail.data.filter(v => v.role !== 'system').map(v => ({
-    role: v.role,
-    content: v.content
-  }))
-)
-
-  const model = client.getGenerativeModel({ model: convoDetail.model })
+  const model = client.getGenerativeModel({ 
+    model: convoDetail.model,
+    systemInstruction,
+    generationConfig: { responseMimeType: "application/json" } 
+  })
   const result = await model.generateContent(prompt);
   const response = result.response;
-  const text = response.text().match(/{"title":"[^"]+"}/);
+  const text = response.text();
 
   let title = ''
   try{
-    const t = text && text.length && JSON.parse(text[0])
+    const t = text && text.length && JSON.parse(text)
     if(t) title = t.title
   }catch(e){}
 

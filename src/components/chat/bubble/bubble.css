@@ -10,7 +10,12 @@
   }
 
   .highlighted-code{
-  
+
+    margin: 1rem 0;
+    &:first-child{
+      margin-top: 0;
+    }
+
     .highlighted-code-header{
   
       padding: 0.5rem 1rem;
