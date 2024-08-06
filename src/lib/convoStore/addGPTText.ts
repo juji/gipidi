@@ -16,7 +16,7 @@ export function addGPTText(set: Set, get: Get){
     const lastIndex = activeConvo.data.length - 1
 
     // update db with the last data
-    updateConvoDetail(activeConvo)
+    if(!text) updateConvoDetail(activeConvo)
 
     // set new data to the state
     set(state => {

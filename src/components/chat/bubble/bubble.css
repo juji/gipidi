@@ -1,6 +1,8 @@
 
 .bubble-content{
 
+  line-height: 1.5rem;
+
   & > * {
     margin-bottom: 1rem;
   }
