@@ -4,7 +4,7 @@ import { updateConvoDetail } from "../idb/convo/updateConvoDetail";
 
 export function addGPTText(set: Set, get: Get){
   
-  return async ( text: string, isDone?: boolean ) => {
+  return async ( text: string ) => {
 
     const { activeConvo } = get()
   
@@ -15,8 +15,12 @@ export function addGPTText(set: Set, get: Get){
     const last = activeConvo.data.at(-1)
     const lastIndex = activeConvo.data.length - 1
 
-    set(state => {
+    // update db with the last data
+    updateConvoDetail(activeConvo)
 
+    // set new data to the state
+    set(state => {
+      
       if(state.activeConvo){
         if(last?.role === 'assistant'){
           state.activeConvo.data[lastIndex].content += text
@@ -30,12 +34,12 @@ export function addGPTText(set: Set, get: Get){
           })
         }
       }
-      state.isWaitingReply = false,
-      state.isStreaming = !isDone 
+
+      state.isInitializing = false
     })
 
-    await updateConvoDetail(activeConvo)
   }
+
 
 
 }

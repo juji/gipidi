@@ -33,7 +33,7 @@ export type ConvoStore = {
   activeConvo: ConvoDetail|null
 
   isStreaming: boolean
-  isWaitingReply: boolean
+  isInitializing: boolean
 
   updateConvo: ( convo: Convo ) => void
   deleteConvo: ( convo: Convo ) => void
@@ -43,7 +43,7 @@ export type ConvoStore = {
 
   createConvo: ( initialContent: string, files: ConvoAttachment[] ) => void
   addUserMessage: ( str: string, files: ConvoAttachment[] ) => void
-  addGPTText: ( str: string, isDone?: boolean ) => void
+  addGPTText: ( str: string ) => void
 
   createChatListener: null | (() => ChatCreationData)
   onCreateChat: (fn: () => ChatCreationData) => void
@@ -53,6 +53,7 @@ export type ConvoStore = {
   onRemove: (fn: null | ((convo: Convo) => void)) => void
 
   loadAll: () => Promise<void>
+  setDoneStreaming: () => void
 
 }
 
@@ -77,7 +78,7 @@ export function createConvoStore(){
           activeConvo: null,
 
           isStreaming: false,
-          isWaitingReply: false,
+          isInitializing: false,
 
           updateConvo: updateConvo(set),
           deleteConvo: deleteConvo(set),
@@ -97,7 +98,11 @@ export function createConvoStore(){
             set(s => { s.onRemoveListener = fn })
           },
           
-          loadAll: loadAll(set)
+          loadAll: loadAll(set),
+
+          setDoneStreaming(){
+            set({ isStreaming: false })
+          },
 
         })
       )

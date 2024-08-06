@@ -6,7 +6,7 @@ import { useTypeWriter } from '@/lib/hooks/useTypeWriter'
 export function useTitleCreator(){
 
   const isStreaming = useConvo(s => s.isStreaming)
-  const isWaitingReply = useConvo(s => s.isWaitingReply)
+  const isInitializing = useConvo(s => s.isInitializing)
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
   const loading = useConvo(s => s.loading)
@@ -27,11 +27,11 @@ export function useTitleCreator(){
   const createTitle = useMemo(() => {
     return !!(
       convoLength && 
-      !isWaitingReply && 
+      !isInitializing && 
       !isStreaming &&
       !currentTitle
     )
-  }, [ convoLength, isStreaming, isWaitingReply, currentTitle ])
+  }, [ convoLength, isStreaming, isInitializing, currentTitle ])
 
   async function createTitleFn(){
     

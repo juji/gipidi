@@ -7,14 +7,15 @@ import { loadVendor } from '@/lib/vendors/load'
 
 export function useGptListener(){
 
-  const isWaitingReply = useConvo(s => s.isWaitingReply)
+  const isInitializing = useConvo(s => s.isInitializing)
   const activeConvo = useConvo(s => s.activeConvo)
   const addGPTText = useConvo(s => s.addGPTText)
+  const setDoneStreaming = useConvo(s => s.setDoneStreaming)
   const providers = useGPT(s => s.providers)
 
   useEffect(() => {
 
-    if(!activeConvo || !isWaitingReply) return;
+    if(!activeConvo || !isInitializing) return;
 
     const currentProvider = activeConvo.provider
     const provider = providers.find(v => v.id === currentProvider)
@@ -30,31 +31,44 @@ export function useGptListener(){
         if(started) return;
         started = true
         requestAnimationFrame(function addText(){
-          if(stop) return;
-          if(!text) {
-            started = false
+          if(stop) {
+            addGPTText('') // add empty string to commit the last string to db
+            setDoneStreaming()
             return;
           }
-          addGPTText(text[0], text.length === 1 && ended)
+          if(!text.length) {
+            started = false
+            addGPTText('')
+            setDoneStreaming()
+            return;
+          }
+
+          addGPTText(text[0])
           text = text.slice(1)
-          if(text) requestAnimationFrame(addText)
-          else started = false
+          if(text.length) requestAnimationFrame(addText)
+          else {
+            started = false
+            addGPTText('')
+            setDoneStreaming()
+          }
         })
       }
       
-      addGPTText(text, false)
+      addGPTText('')
       vendor.chat({
         convoDetail: activeConvo,
         onResponse: (str: string, end?: boolean) => {
-          text += str||''
+          text += str
           ended = !!end
+          // addGPTText(str, !!end)
           start()
         },
         onError: (e) => {
           stop = true
           console.error(e)
           showError(e.message)
-          addGPTText(' [ERROR]', true)
+          addGPTText(' [ERROR]')
+          setDoneStreaming()
         }
       })
 
@@ -63,7 +77,7 @@ export function useGptListener(){
   },[ 
     providers, 
     activeConvo, 
-    isWaitingReply 
+    isInitializing 
   ])
 
   return null

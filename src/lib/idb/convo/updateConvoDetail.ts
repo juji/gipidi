@@ -10,7 +10,7 @@ export async function updateConvoDetail(
 
   const conn = connection || createConnection()
 
-  await conn.update({
+  const i = await conn.update({
     in: TABLES.CONVO_DETAIL,
     set: {
       ...detail,
@@ -21,6 +21,8 @@ export async function updateConvoDetail(
       deleted: DEFAULT_DELETED
     },
   })
+
+  console.log('update info', i)
 
   if(!connection) conn.terminate()
 
