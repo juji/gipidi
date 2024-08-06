@@ -1,3 +1,57 @@
+@keyframes iframeSlideIn {
+  0%{
+    opacity: 0;
+    translate: 0 -1rem;
+  }
+
+  100%{
+    opacity: 1;
+    translate: 0 0rem;
+  }
+}
+
+
+.iframeContainer{
+  --gap: 1rem;
+
+  position: fixed;
+  z-index: 1000;
+  top: var(--gap);
+  left: var(--gap);
+  width: calc(100% - var(--gap) - var(--gap));
+  height: calc(100% - var(--gap) - var(--gap));
+  
+  .iframe, .iframeClose{
+    animation-name: iframeSlideIn;
+    animation-duration: 300ms;
+    animation-delay: 300ms;
+    animation-fill-mode: both;
+  }
+  
+  .iframe{
+    width: 100%;
+    height: 100%;
+  }
+
+  .iframeClose{
+    position: fixed;
+    top: var(--gap);
+    right: var(--gap);
+    z-index: 1001;
+    color: white;
+    background-color: rgb(189, 0, 0);
+    padding: 0.24rem;
+
+    &:hover{
+      color: white;
+      background-color: red;
+    }
+
+    &:active{
+      opacity: 0.5;
+    }
+  }
+}
 
 .downladImageButton{
   opacity: 0.7;

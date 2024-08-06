@@ -26,15 +26,14 @@ export function GeminiSettings(){
     if(!providers.length) return () => {}
 
     const provider = providers.find(v => v.id === PROVIDER)
-    if(!provider) setisOn(false)
-    else{
+    if(provider) {
       const setting = provider.setting as GenericSetting
       setApiKey(setting.apiKey)
-      setisOn(true)
     }
   },[ loading, providers ])
 
   useEffect(() => {
+    setisOn(false)
     if(!apiKey) {
       removeProvider(PROVIDER)
       return () => {}
@@ -46,6 +45,7 @@ export function GeminiSettings(){
       
       provider.test(apiKey).then(() => {
         saveProvider(PROVIDER, { apiKey })
+        setisOn(true)
       }).catch((e:any) => {
         removeProvider(PROVIDER)
         console.error(e)

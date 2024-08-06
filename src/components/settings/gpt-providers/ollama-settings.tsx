@@ -22,18 +22,23 @@ export function OllamaSettings(){
 
   useEffect(() => {
     if(loading) return () => {}
-    if(!providers.length) return () => {}
+    if(!providers.length) {
+      setUrl('http://localhost:11434')
+      return () => {}
+    }
 
     const provider = providers.find(v => v.id === PROVIDER)
-    if(!provider) setisOn(false)
+    if(!provider) {
+      setUrl('http://localhost:11434')
+    }
     else{
       const setting = provider.setting as OllamaSetting
       setUrl(setting.url)
-      setisOn(true)
     }
   },[ loading, providers ])
 
   useEffect(() => {
+    setisOn(false)
     if(!url) {
       removeProvider(PROVIDER)
       return () => {}
@@ -45,6 +50,7 @@ export function OllamaSettings(){
       
       provider.test(url).then(() => {
         saveProvider(PROVIDER, { url })
+        setisOn( true )
       }).catch((e:any) => {
         removeProvider(PROVIDER)
         console.error(e)

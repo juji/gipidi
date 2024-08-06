@@ -4,7 +4,8 @@ import { Connection, DATA_TYPE, type IDataBase, type ITable } from '@juji/jsstor
 export const TABLES = {
   CONVO: 'convo',
   CONVO_DETAIL: 'convoDetail',
-  GPT_PROVIDER: 'gptProvider'
+  GPT_PROVIDER: 'gptProvider',
+  TEMP: 'temporary'
 }
 
 
@@ -50,11 +51,11 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 1,
+    version: 3,
     tables: [
       convo,
       convoDetail,
-      gptProvider
+      gptProvider,
     ]
   }
 

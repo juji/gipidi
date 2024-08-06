@@ -11,6 +11,8 @@
   --content-nav-width: 340px;
   --content-nav-width-sm: 240px;
 
+  color-scheme: dark;
+
 }
 
 * {
@@ -20,13 +22,17 @@
 }
 
 html{
-  scroll-behavior: smooth
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--fg-color);
   background: var(--bg-color);
   overflow: overlay;
+
+  &.transparent{
+    background: transparent;
+  }
 }
 
 *::-webkit-scrollbar{
