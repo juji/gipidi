@@ -89,22 +89,7 @@ const parser = marked.use(
 )
 
 onmessage = (e) => {
-  // console.log('e.data', e.data)
-  const res = e.data
-  // .replace(/(\#{1,})$/,'$1 ')
-  // .replace(/(`{1,})([^`]+)$/,'$1$2$1')
-  // .replace(/(\*{1,})([^\*]+)$/,'$1$2$1')
-  // .replace(/(_{1,})([^_]+)$/,'$1$2$1')
-  // .replace(/(~{1,})([^~]+)$/,'$1$2$1')
-
-  // .replace(/\s__([^_]+)$/,'__$1__')
-  // .replace(/\s___([^_]+)$/,'___$1___')
-  // .replace(/\s~([^~]+)$/,'~$1~')
-  // .replace(/\s~~([^~]+)$/,'~~$1~~')
-  // .replace(/\s~~~([^~]+)$/,'~~~$1~~~')
-  // console.log('res', res)
-
-  parser.parse(res).then(v => {
+  parser.parse(e.data).then(v => {
     postMessage(v)
   })
 };

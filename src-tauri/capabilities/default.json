@@ -10,6 +10,7 @@
     "core:webview:default",
     "dialog:allow-save",
     "fs:default",
-    "fs:allow-home-write-recursive"
+    "shell:default",
+    "shell:deny-stdin-write"
   ]
 }
