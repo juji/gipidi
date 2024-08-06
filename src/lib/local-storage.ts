@@ -24,4 +24,12 @@ export function getDefaultModel(): string | null {
   return localStorage.getItem('default-model') || null
 }
 
+export function saveCountryCode( str: string ){
+  localStorage.setItem('country-code', str)
+}
+
+export function getCountryCode( str: string ){
+  localStorage.getItem('country-code')
+}
+
 

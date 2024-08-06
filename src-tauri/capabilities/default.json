@@ -11,6 +11,10 @@
     "dialog:allow-save",
     "fs:default",
     "shell:default",
-    "shell:deny-stdin-write"
+    "shell:deny-stdin-write",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://ipgeo.jujiyangasli.workers.dev" }]
+    }
   ]
 }

@@ -11,6 +11,8 @@ import { keyboardListeners } from '@/lib/keyboard-listeners';
 import { useTitleCreator } from "@/lib/hooks/useTitleCreator"
 import { usePathname } from 'next/navigation';
 import { removeHistory } from '@/lib/removeHistory';
+import { getCC } from '@/lib/get-country-code';
+import { saveCountryCode } from '@/lib/local-storage';
 
 const montserrat = Montserrat({
   weight: "600",
@@ -32,6 +34,12 @@ export function Layout({ children }: PropsWithChildren){
 
   useEffect(() => {
     removeHistory()
+  },[])
+
+  useEffect(() => {
+    getCC().then((cc) => {
+      saveCountryCode(cc)
+    })
   },[])
 
   useTitleCreator()
