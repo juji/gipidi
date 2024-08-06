@@ -35,7 +35,7 @@
         border: 1px solid #555;
         width: 13px;
         height: 13px;
-        margin-top: 0.3rem;
+        margin-top: 0.2rem;
         cursor: pointer;
 
         &:checked{
