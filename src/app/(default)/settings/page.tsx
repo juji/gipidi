@@ -5,6 +5,7 @@ import { showNote } from "@/lib/toast"
 import { useEffect } from "react"
 import dynamic from 'next/dynamic'
 
+// weirdly throws error on dev when this is not imported with ssr false
 const GPTProviders = dynamic(
   () => import('@/components/settings/gpt-providers').then(v => v.GPTProviders), 
   { ssr: false }
