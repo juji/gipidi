@@ -166,13 +166,13 @@ export function TopBar(){
     </div>
     <div className={styles.menu}>
       <div className={styles.model}>
-        
+        <button className={styles.menuButton} onClick={openMenu}>
         { modelName ? <span className={styles.name}>{modelName}</span> : null}
 
         { icon ? <span className={styles.icon}>
           <img className={styles.image} src={icon} title={modelName} />
         </span> : null}
-
+        </button>
       </div>
       <div className={styles.menuContainer}>
         <button className={styles.menuButton} onClick={openMenu}>

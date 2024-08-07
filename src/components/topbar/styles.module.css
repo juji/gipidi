@@ -31,25 +31,34 @@
     column-gap: 1rem;
 
     .model{
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      
-      .name{
-        display: none;
-        @media(min-width: 600px){
-          display: block;
+
+      .menuButton{
+
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        
+        .name{
+          display: none;
+          @media(min-width: 600px){
+            display: block;
+          }
+        }
+  
+        .icon{
+          .image{
+            height: 24px;
+            width: auto;
+            border-radius: 50%;
+            overflow: hidden;
+          }
+        }
+
+        &:active{
+          opacity: 0.5;
         }
       }
 
-      .icon{
-        .image{
-          height: 24px;
-          width: auto;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-      }
     }
 
     .menuContainer{
