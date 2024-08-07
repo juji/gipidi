@@ -74,7 +74,7 @@ function Bubble({
 
   function scrollDown(){
     window.scrollBy({
-      top: 144
+      top: 256
     })
   }
 

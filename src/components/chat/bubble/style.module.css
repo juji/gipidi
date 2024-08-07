@@ -2,23 +2,29 @@
 
 .bubble{
 
+  --aside-width: 1.8rem;
+  --row-gap: .8rem;
+
   padding: 1rem 0;
   display: grid;
-  gap: 1rem;
+  gap: var(--row-gap);
   scroll-margin-top: 62px;
   position: relative;
   
-  --aside-width: 2.9rem;
+
+  @media(min-width: 500px){
+    --aside-width: 2.9rem;
+    --row-gap: 1rem;
+  }
+
   --max-width-cloud: calc(
       min(100vw,  var(--content-max-width)) -
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 4 * 1rem )
+      calc( 2 * 1rem )
       /* 
-        why is there four 1rem? 
-        two is for the gap,
-        another two is for outside padding,
+        two 1rem padding for outside padding,
       */
     );
   
@@ -28,7 +34,7 @@
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 4 * 1rem )
+      calc( 2 * 1rem )
     );
   }
 
@@ -38,7 +44,7 @@
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 4 * 1rem )
+      calc( 2 * 1rem )
     );
   }
   
@@ -68,8 +74,11 @@
 
       background: var(--fg-color);
       color: var(--bg-color);
-      padding: 0.4rem;
+      padding: 0.2rem;
       border-radius: 50%;
+      @media(min-width: 500px){
+        padding: 0.4rem;
+      }
       cursor: unset;
 
       &.shown{

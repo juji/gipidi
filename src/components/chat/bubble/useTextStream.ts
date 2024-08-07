@@ -23,7 +23,7 @@ export function useTextStream(): [ s: string, t: (s: string) => void]{
         return;
       }
 
-      current.current = text.current.substring(0,current.current.length+2)
+      current.current = text.current.substring(0,current.current.length+3)
       convert(current.current).then(v => {
         setResult(v)
         started.current = false
