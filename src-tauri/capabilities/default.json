@@ -9,7 +9,7 @@
     "core:app:default",
     "core:webview:default",
     "dialog:default",
-    "fs:default",
+    "fs:allow-home-write-recursive",
     "shell:default",
     "shell:deny-stdin-write",
     {

@@ -68,7 +68,7 @@ const parser = marked.use(
             <img src="${href}" alt="${alt?alt.replace(/\"/g,'\\"'):''}" />
             ${caption ? `<figcaption>${caption}</figcaption>` : ''}
           </figure>
-        `
+        `.replace(/[\n\r]/g,'')
       },
 
       // @ts-expect-error

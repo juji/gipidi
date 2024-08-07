@@ -1,7 +1,7 @@
 
 .bubble-content{
 
-  line-height: 1.5em;
+  line-height: 1.7em;
 
   & > * {
     margin-bottom: 1em;
@@ -16,6 +16,9 @@
     margin: 1em 0;
     &:first-child{
       margin-top: 0;
+    }
+    &:last-child{
+      margin-bottom: 0;
     }
 
     .highlighted-code-header{
@@ -60,13 +63,24 @@
     border: 1px solid #444;
     padding: 0.5em;
 
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+    border-radius: 0.5em;
+    border-radius: 0.5em;
+    margin: 1em 0;
+    &:first-child{
+      margin-top: 0;
+    }
+
+    &:last-child{
+      margin-bottom: 0;
+    }
 
     img{
       display: block;
       margin: 0 auto;
       max-width: 100%;
+      border-radius: 0.3em;
+      border-radius: 0.3em;
+      cursor: pointer;
     }
 
     figcaption{
@@ -91,11 +105,22 @@
   ul{
     list-style-type: disc;
     margin-left: 1.5em;
+
+    &:has(li > input){
+      list-style-type: none;
+      margin-left: 0.3em;
+
+      & > li > input{
+        margin-right: 0.2em;
+        position: relative;
+        top: -0.1em;
+      }
+    }
   }
 
   ol, ul {
     li{
-      margin-bottom: 0.5em;
+      margin-bottom: 0.3em;
     }
   }
 

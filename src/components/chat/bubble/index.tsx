@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { convert } from './marked';
 import cx from 'classix'
 import styles from './style.module.css'
@@ -9,6 +9,8 @@ import { ColorRing } from 'react-loader-spinner'
 import { ConvoData } from '@/lib/idb/types';
 import { ChatAttachment } from '@/components/chat-attachment';
 import { useTextStream } from './useTextStream';
+import { markedToReact } from './marked-to-react';
+
 
 function Bubble({ 
   className,
@@ -90,12 +92,20 @@ function Bubble({
     })
   }
 
+  const reactComponent = useRef<ReactElement<any, any>>()
+  useEffect(() => {
+    reactComponent.current = markedToReact(result)
+  },[ result ])
+
   return <div ref={container} className={cx(styles.bubble, className)}>
     <div className={styles.cloud}>
       {result||text ? 
         <>
-          <div className={cx(styles.content, 'bubble-content')} 
-            dangerouslySetInnerHTML={{ __html: isNewText.current ? text : result }} />
+          {isNewText.current ? <div className={cx(styles.content, 'bubble-content')} 
+            dangerouslySetInnerHTML={{ __html: text }} /> : 
+            <div className={cx(styles.content, 'bubble-content')}
+            >{reactComponent.current}</div>}
+          
           {attachments.current && attachments.current.length ? <ChatAttachment
             columnNumber={attachments.current.length < 4 ? attachments.current.length : 4}
             width={attachments.current.length < 4 ? 25 * attachments.current.length +'%' : undefined}
