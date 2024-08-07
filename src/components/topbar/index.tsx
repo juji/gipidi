@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, MouseEvent, useEffect, useId, useMemo, useRef, useState } from 'react'
 import styles from './styles.module.css'
 import useOnClickOutside from 'use-onclickoutside'
 import cx from 'classix'
@@ -121,6 +121,7 @@ export function TopBar(){
 
   },[ loading ])
 
+  const modelSelId = useId()
   function onChangeModel(e: ChangeEvent){
     const target = e.target as HTMLSelectElement
     if(!target.value) {
@@ -129,8 +130,11 @@ export function TopBar(){
       setIcon(null)
     }
     const val = target.value.split('|')
-    setProvider(val[0] as GPTProvider['id']); 
+    setProvider(val[0] as GPTProvider['id'])
     setModel(val[1])
+
+    // force the ui to change
+    document.getElementById(modelSelId)?.blur()
   }
 
   const modelName = useMemo(() => {
@@ -180,6 +184,7 @@ export function TopBar(){
               className={styles.select}
               value={provider && model ? `${provider}|${model}` : ''}
               onChange={onChangeModel}
+              id={modelSelId}
             >
               {/* <option value={""}></option> */}
               {modelSelection && Object.keys(modelSelection).map(v => {
