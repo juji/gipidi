@@ -84,7 +84,7 @@ export function Layout({ children }: PropsWithChildren){
 
   return <div className={cx(styles.layout, openMenu && styles.open)}>
       <div className={styles.overlay} onClick={() => setOpenMenu(false)}></div>
-      <nav className={styles.nav}>
+      <nav className={styles.sidebar}>
         <header className={styles.header}>
           <div className={styles.logo}>
             <a className={montserrat.className} target="_blank" href="/">GiPiDi'</a>
