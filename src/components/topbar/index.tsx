@@ -11,6 +11,12 @@ import { GPTProvider } from '@/lib/idb/types'
 
 import { loadAll } from '@/lib/vendors/load'
 
+const defaultPrompt = `You are a friendly chatbot built on top of large language models. 
+You are currently accessed via an app called Gipidi'. 
+
+You support websearch and other capabilities using /<command>, ex /youtube <link>
+`
+
 export function TopBar(){
 
   const [ menu, setMenu ] = useState(false)
@@ -20,7 +26,7 @@ export function TopBar(){
   const [ model, setModel ] = useState<string|null>(null)
   const [ icon, setIcon ] = useState<string|null>(null)
 
-  const [ systemPrompt, setSystemPrompt ] = useState('')
+  const [ systemPrompt, setSystemPrompt ] = useState(defaultPrompt)
   const loading = useGPT(s => s.loading)
 
   const activeConvo = useConvo(s => s.activeConvo)
@@ -58,6 +64,7 @@ export function TopBar(){
     if(activeConvo) {
       setProvider(activeConvo.provider)
       setModel(activeConvo.model)
+      activeConvo.systemPrompt && setSystemPrompt(activeConvo.systemPrompt)
       convo && setTitle(convo.title)
     }else{
       setTitle('')

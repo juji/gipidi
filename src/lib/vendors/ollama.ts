@@ -38,7 +38,6 @@ export const chat: ChatFn<Ollama> = async function(
     const resp = await client.chat({
       model: convoDetail.model,
       messages: convoDetail.data.map(v => {
-        console.log('v.attachments', v.attachments)
         return {
           role: v.role,
           content: v.content,

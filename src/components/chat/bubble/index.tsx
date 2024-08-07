@@ -8,74 +8,69 @@ import './bubble.css'
 import { ColorRing } from 'react-loader-spinner'
 import { ConvoAttachment } from '@/lib/idb/types';
 import { ChatAttachment } from '@/components/chat-attachment';
+import { useTextStream } from './useTextStream';
 
 function Bubble({ 
   className,
   content,
   attachments,
   profilePict,
-  last
+  streamText
 }:{ 
   className: string 
   content: string
   attachments?: ConvoAttachment[] | null
   profilePict: string
-  last?: boolean
+  streamText?: boolean
 }){
 
+  const [ text, setText ] = useTextStream()
   const [ result, setResult ] = useState('')
-  const ref = useRef<HTMLDivElement|null>(null)
+  useEffect(() => {
+    
+    if(streamText){
+      setText(content)
+    }else{
+      Promise.resolve(convert(content)).then((res:string) => {
+        setResult(res)
+      }).catch(e => {
+        console.error(e)
+      })
+    }
+    
+  },[ content, streamText ])
+  
+  const [ autoScroll, setAutoScroll ] = useState(!!streamText)
+  const container = useRef<HTMLDivElement|null>(null)
   const bottomObserved = useRef<HTMLDivElement|null>(null)
-  const [ changeCounter, setCounter ] = useState(0)
-  const [ autoScroll, setAutoScroll ] = useState(!!last)
-
   const [ showDownArrow, setArrowDown ] = useState(false)
+  const minTop = 72
+
   useEffect(() => {
     let observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if(entry.isIntersecting) setArrowDown(false)
         else if(!autoScroll) setArrowDown(true)
       })
-    }, { rootMargin: '1000px 0px -72px 0px' });
+    }, { rootMargin: `1000px 0px -${minTop}px 0px` });
     bottomObserved.current && observer.observe(bottomObserved.current);
     return () => { observer.disconnect() }
   },[ autoScroll ])
 
-  const lastTop = useRef(Infinity)
-  const minTop = 72
   useEffect(() => {
     if(!autoScroll) return () => {}
-    
-    if(last && !(changeCounter % 5) && ref.current) {
-      
-      const top = ref.current.getBoundingClientRect().top
-      if(top === lastTop.current && top <= minTop){
-        setAutoScroll(false)
-      }
-      lastTop.current = top
+    if(!container.current) return () => {}
 
-      ref.current.scrollIntoView({ block: "start" })
-      setCounter(0)
+    const top = container.current.getBoundingClientRect().top
+    const shouldScroll = top > minTop
 
+    if(shouldScroll){
+      container.current.scrollIntoView({ block: "start" })
+    }else{
+      setAutoScroll(false)
     }
-  }, [ last, changeCounter, autoScroll ])
 
-  useEffect(() => {
-    if(!autoScroll) return () => {}
-    setCounter(changeCounter+1)
-  },[ content, autoScroll, showDownArrow ])
-
-  useEffect(() => {
-
-    Promise.resolve(convert(content))
-    .then((res:string) => {
-      setResult(res)
-    })
-    .catch(e => {
-      console.error(e)
-    })
-
-  },[ content ])
+  },[ content, autoScroll ])
 
   function scrollDown(){
     window.scrollBy({
@@ -83,12 +78,12 @@ function Bubble({
     })
   }
 
-  return <div ref={ref} className={cx(styles.bubble, className)}>
+  return <div ref={container} className={cx(styles.bubble, className)}>
     <div className={styles.cloud}>
-      {result ? 
+      {result||text ? 
         <>
           <div className={cx(styles.content, 'bubble-content')} 
-            dangerouslySetInnerHTML={{ __html: result }} />
+            dangerouslySetInnerHTML={{ __html: streamText ? text : result }} />
           {attachments && attachments.length ? <ChatAttachment
             columnNumber={attachments.length < 4 ? attachments.length : 4}
             width={attachments.length < 4 ? 25 * attachments.length +'%' : undefined}
@@ -138,12 +133,12 @@ export function UserBubble({ content, attachments }: {
 
 }
 
-export function BotBubble({ content, last }:{ content: string, last?: boolean }){
+export function BotBubble({ content, streamText }:{ content: string, streamText?: boolean }){
 
   return <Bubble 
     className={styles.bot} 
     content={content}
-    last={last} 
+    streamText={streamText} 
     profilePict={'/bot.webp'}
   />
 

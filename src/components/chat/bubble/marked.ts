@@ -9,7 +9,7 @@ export async function convert(str: string): Promise<string>{
     const terminate = setTimeout(() => {
       markedWorker.terminate();
       j('Worker is taking too long')
-    },50000)
+    },500)
 
     markedWorker.onmessage = (e) => {
       clearTimeout(terminate)

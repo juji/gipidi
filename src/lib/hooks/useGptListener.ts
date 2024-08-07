@@ -22,49 +22,18 @@ export function useGptListener(){
     if(!provider) return () => {}
 
     loadVendor(provider).then(vendor => {
-
-      let text = ''
-      let ended = false
-      let started = false
-      let stop = false
-      function start(){
-        if(started) return;
-        started = true
-        requestAnimationFrame(function addText(){
-          if(stop) {
-            addGPTText('') // add empty string to commit the last string to db
-            setDoneStreaming()
-            return;
-          }
-          if(!text.length) {
-            started = false
-            addGPTText('')
-            setDoneStreaming()
-            return;
-          }
-
-          addGPTText(text[0])
-          text = text.slice(1)
-          if(text.length) requestAnimationFrame(addText)
-          else {
-            started = false
-            addGPTText('')
-            setDoneStreaming()
-          }
-        })
-      }
       
       addGPTText('')
       vendor.chat({
         convoDetail: activeConvo,
         onResponse: (str: string, end?: boolean) => {
-          text += str
-          ended = !!end
-          // addGPTText(str, !!end)
-          start()
+          addGPTText(str)
+          if(end) {
+            addGPTText('')
+            setDoneStreaming()
+          }
         },
         onError: (e) => {
-          stop = true
           console.error(e)
           showError(e.message)
           addGPTText(' [ERROR]')
