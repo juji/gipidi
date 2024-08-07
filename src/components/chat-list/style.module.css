@@ -2,29 +2,29 @@
 
 .chatList{
 
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 
   .empty{
     color: #777;
-    padding: 0.5rem 2rem;
+    padding: 0.5em 2em;
   }
 
   .chat{
 
-    padding: 0.5rem 2rem;
+    padding: 0.5em 2em;
     display: grid;
     grid-template-columns: 1fr;
-    height: 2.5rem;
+    height: 2.6em;
 
     @media(min-width: 800px){
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding-left: 1em;
+      padding-right: 1em;
     }
     
     @media(min-width: 900px){
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 2em;
+      padding-right: 2em;
     }
 
     &.active{

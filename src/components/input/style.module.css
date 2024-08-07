@@ -19,8 +19,8 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto 1fr auto;
-  padding: 0.5rem 0;
-  column-gap: 0.5rem;
+  padding: 0.5em 0;
+  column-gap: 0.5em;
 
   .filesPreview{
     position: relative;
@@ -29,7 +29,7 @@
 
     .content{
       position: absolute;
-      bottom: 0.5rem;
+      bottom: 0.5em;
       width: 100%;
     }
   }
@@ -43,10 +43,10 @@
 
       .fileIcon{
         display: block;
-        border-radius: 0.5rem;
-        padding: 0.7rem;
-        width: 2.9rem;
-        height: 2.9rem;
+        border-radius: 0.5em;
+        padding: 0.7em;
+        width: 2.9em;
+        height: 2.9em;
         border: 1px solid #424242;
         color: var(--fg-color);
         background-color: var(--bg-color);
@@ -84,11 +84,11 @@
     max-height: 300px;
     overflow: hidden;
     line-break: anywhere;
-    padding: 0.7rem;
-    margin: 0 0.25rem;
+    padding: 0.7em;
+    margin: 0 0.25em;
 
     .textarea{
-      padding: 0.7rem;
+      padding: 0.7em;
       line-break: anywhere;
       position: absolute;
       top: 0;
@@ -97,7 +97,7 @@
       height: 100%;
       outline: none;
       border: 1px solid #3c3c3c;
-      border-radius: 0.5rem;
+      border-radius: 0.5em;
       background-color: var(--bg-color);
       scrollbar-width: none;
       resize: none;
@@ -122,10 +122,10 @@
     
     outline: none;
     align-self: end;
-    border-radius: 0.5rem;
-    padding: 0.7rem;
-    width: 2.9rem;
-    height: 2.9rem;
+    border-radius: 0.5em;
+    padding: 0.7em;
+    width: 2.9em;
+    height: 2.9em;
     border: 1px solid #424242;
     color: var(--fg-color);
     background-color: var(--bg-color);
@@ -145,7 +145,7 @@
     font-size: small;
     opacity: 0.8;
     color: #bababa;
-    margin-top:0.5rem;
+    margin-top:0.5em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

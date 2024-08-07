@@ -1,24 +1,24 @@
 
 
 .mainHeading{
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 .dangerContainer{
 
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 2em;
+  margin-bottom: 2em;
   border: 1px solid rgb(172, 50, 50);
-  border-radius: 0.5rem;
+  border-radius: 0.5em;
 
   .note{
-    margin-bottom: 1rem;
+    margin-bottom: 1em;
   }
 
   .button{
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0.5rem 1em;
+    border-radius: 0.5em;
     background-color: rgb(189, 17, 17);
 
     &:active{
@@ -29,7 +29,7 @@
   .cancel{
     background-color: var(--fg-color);
     color: var(--bg-color);
-    margin-right: 1rem;
+    margin-right: 1em;
   }
 
   .danger{
