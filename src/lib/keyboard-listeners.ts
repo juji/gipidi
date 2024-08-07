@@ -26,6 +26,7 @@ export function zoomOut(){
 }
 
 
+
 export function keyboardListeners({
   searchBarId = ''
 }:{
@@ -67,10 +68,14 @@ export function keyboardListeners({
     }
   }
 
-  window.addEventListener('keydown', listener);
+  // so i don't forget
+  // @ts-ignore
+  const isTauri = !!window.__TAURI__
+
+  if(isTauri) window.addEventListener('keydown', listener);
 
   return () => {
-    window.removeEventListener('keydown', listener);
+    if(isTauri) window.removeEventListener('keydown', listener);
   }
 
 }

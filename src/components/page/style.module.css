@@ -5,6 +5,7 @@
   width: 100%;
   max-width: var(--content-max-width);
   padding: 0 calc( 2 * var(--content-padding-lr));
+  /* padding: 0px; */
   margin: 0 auto;
 
   @media(min-width: 800px){
@@ -15,8 +16,8 @@
     margin-bottom: 1em;
     
     @media(min-width: 800px){
-      margin-bottom: calc(1em - 2px); /* so it aligns with sidebar */
-      margin-top: 1em;
+      margin-bottom: calc(0.39em); /* so it aligns with sidebar */
+      margin-top: 0.39em; /* well, 1px diff */
     }
   }
 
