@@ -28,7 +28,7 @@ export function saveCountryCode( str: string ){
   localStorage.setItem('country-code', str)
 }
 
-export function getCountryCode( str: string ){
+export function getCountryCode(){
   localStorage.getItem('country-code')
 }
 

@@ -5,7 +5,7 @@ export const TABLES = {
   CONVO: 'convo',
   CONVO_DETAIL: 'convoDetail',
   GPT_PROVIDER: 'gptProvider',
-  TEMP: 'temporary'
+  SETTINGS: 'settings'
 }
 
 
@@ -49,13 +49,22 @@ function getDatabase(){
     }
   }
 
+  const settings:ITable = {
+    name: TABLES.SETTINGS,
+    columns: {
+      id: { dataType: DATA_TYPE.String, primaryKey: true },
+      data: { dataType: DATA_TYPE.Object },
+    }
+  }
+
   const database: IDataBase = {
     name: 'gipidi',
-    version: 3,
+    version: 4,
     tables: [
       convo,
       convoDetail,
       gptProvider,
+      settings
     ]
   }
 

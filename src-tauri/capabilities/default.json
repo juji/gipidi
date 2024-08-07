@@ -8,13 +8,20 @@
   "permissions": [
     "core:app:default",
     "core:webview:default",
-    "dialog:allow-save",
+    "dialog:default",
     "fs:default",
     "shell:default",
     "shell:deny-stdin-write",
     {
       "identifier": "http:default",
-      "allow": [{ "url": "https://ipgeo.jujiyangasli.workers.dev" }]
-    }
+      "allow": [
+        {
+          "url": "https://*"
+        }
+      ]
+    },
+    "geolocation:default",
+    "geolocation:allow-watch-position",
+    "geolocation:allow-get-current-position"
   ]
 }

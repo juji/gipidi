@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { type PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './style.module.css'
 import cx from 'classix'
 import { Montserrat } from "next/font/google";
@@ -13,6 +13,8 @@ import { usePathname } from 'next/navigation';
 import { removeHistory } from '@/lib/removeHistory';
 import { getCC } from '@/lib/get-country-code';
 import { saveCountryCode } from '@/lib/local-storage';
+import { getCurrentPosition, watchPosition } from "@tauri-apps/plugin-geolocation";
+
 
 const montserrat = Montserrat({
   weight: "600",
@@ -40,6 +42,39 @@ export function Layout({ children }: PropsWithChildren){
     getCC().then((cc) => {
       saveCountryCode(cc)
     })
+  },[])
+
+  function watchPos(){
+    console.log('getting position')
+    // navigator.geolocation.getCurrentPosition((pos) => { console.log(pos) })
+  }
+
+  const isWatching = useRef(false)
+  useEffect(() => {
+    if(isWatching.current) return;
+    isWatching.current = true
+
+    getCurrentPosition(
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 }
+    ).then(v => console.log('v', v))
+
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      console.log('geolocation permission', result)
+      navigator.geolocation.getCurrentPosition(
+        (pos) => { console.log('navigator', pos) },
+        err => console.error(err)
+      )
+    })
+
+
+    watchPosition(
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 },
+      (pos) => {
+        console.log('pos', pos);
+      }
+    ).then(d => console.debug('d', d))
+    .catch(e => console.error('e', e))
+    // watchPos()
   },[])
 
   useTitleCreator()

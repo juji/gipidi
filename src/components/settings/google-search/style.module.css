@@ -1,0 +1,64 @@
+
+
+
+.gs{
+
+  margin-top: 2rem;
+
+  .link{
+    text-decoration: dotted underline;
+    text-underline-offset: 3px;
+  }
+
+  .desc{
+    margin-bottom: 2rem;
+  }
+
+  .form{
+
+    .label{
+      display: block;
+      
+      .info{
+        display: block;
+        font-size: smaller;
+        margin-bottom: 0.2rem;
+        margin-top: 0.5rem;
+      }
+  
+      .input{
+        all: unset;
+        background: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 400px;
+      }
+  
+      .select{
+        all: unset;
+        background: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        width: 100%;
+        display: block;
+        box-sizing: border-box;
+        max-width: 400px;
+        cursor: pointer;
+  
+        .nullValue[value=""]{
+          color: #999;
+        }
+      }
+    }
+  
+    .error{
+      padding: 0.5rem 0;
+      color: rgb(255, 100, 100);
+      font-size: 0.9rem;
+    }
+  }
+
+}
