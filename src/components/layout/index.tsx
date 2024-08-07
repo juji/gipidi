@@ -44,36 +44,30 @@ export function Layout({ children }: PropsWithChildren){
     })
   },[])
 
-  function watchPos(){
-    console.log('getting position')
-    // navigator.geolocation.getCurrentPosition((pos) => { console.log(pos) })
-  }
-
   const isWatching = useRef(false)
   useEffect(() => {
     if(isWatching.current) return;
     isWatching.current = true
 
-    getCurrentPosition(
-      { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 }
-    ).then(v => console.log('v', v))
+    // getCurrentPosition(
+    //   { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 }
+    // ).then(v => console.log('v', v))
 
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      console.log('geolocation permission', result)
-      navigator.geolocation.getCurrentPosition(
-        (pos) => { console.log('navigator', pos) },
-        err => console.error(err)
-      )
-    })
+    // navigator.permissions.query({ name: "geolocation" }).then((result) => {
+    //   console.log('geolocation permission', result)
+    //   navigator.geolocation.getCurrentPosition(
+    //     (pos) => { console.log('navigator', pos) },
+    //     err => console.error(err)
+    //   )
+    // })
 
-
+    // this is currently not working
     watchPosition(
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 },
       (pos) => {
-        console.log('pos', pos);
+        console.debug('pos', pos);
       }
-    ).then(d => console.debug('d', d))
-    .catch(e => console.error('e', e))
+    ).catch(e => console.error('watchPosition ERROR', e))
     // watchPos()
   },[])
 

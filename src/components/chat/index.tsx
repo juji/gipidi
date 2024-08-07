@@ -10,12 +10,10 @@ export function ChatBubbles({ activeConvo }:{ activeConvo: ConvoDetail }){
   return <div>
     {activeConvo.data.map((v, i, a) => {
 
-      const streamText = i === (a.length - 1) && !v.content
-
       return v.role === 'user' ?
-          <UserBubble key={v.id} content={v.content} attachments={v.attachments} /> :
+          <UserBubble key={v.id} data={v} /> :
         v.role === 'assistant' ? 
-          <BotBubble key={v.id} streamText={streamText} content={v.content} /> : 
+          <BotBubble key={v.id} data={v} /> : 
         null
 
     })}

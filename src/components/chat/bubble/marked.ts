@@ -1,15 +1,15 @@
 import 'highlight.js/styles/github-dark-dimmed.min.css'
 
 export async function convert(str: string): Promise<string>{
+  
+  const markedWorker = new Worker('/chat-printer.js');
 
   return new Promise((r,j) => {
-
-    const markedWorker = new Worker('/chat-printer.js');
 
     const terminate = setTimeout(() => {
       markedWorker.terminate();
       j('Worker is taking too long')
-    },500)
+    },300)
 
     markedWorker.onmessage = (e) => {
       clearTimeout(terminate)

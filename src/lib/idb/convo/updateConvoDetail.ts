@@ -22,8 +22,6 @@ export async function updateConvoDetail(
     },
   })
 
-  console.log('update info', i)
-
   if(!connection) conn.terminate()
 
 }

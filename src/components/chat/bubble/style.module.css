@@ -116,6 +116,7 @@
         padding: 0.7rem 1rem;
         width: fit-content;
         align-self: flex-end;
+        max-width: 100%;
       }
 
       & > .attachments{

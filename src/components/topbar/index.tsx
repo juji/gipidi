@@ -11,11 +11,12 @@ import { GPTProvider } from '@/lib/idb/types'
 
 import { loadAll } from '@/lib/vendors/load'
 
-const defaultPrompt = `You are a friendly chatbot built on top of large language models. 
-You are currently accessed via an app called Gipidi'. 
+const defaultPrompt = ''
+// const defaultPrompt = `You are a friendly chatbot built on top of large language models. 
+// You are currently accessed via an app called Gipidi'. 
 
-You support websearch and other capabilities using /<command>, ex /youtube <link>
-`
+// You support websearch and other capabilities using /<command>, ex /youtube <link>
+// `
 
 export function TopBar(){
 

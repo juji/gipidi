@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { convert } from './marked';
+import { useConvo } from "@/lib/convoStore";
 
 
 export function useTextStream(): [ s: string, t: (s: string) => void]{
@@ -8,18 +9,28 @@ export function useTextStream(): [ s: string, t: (s: string) => void]{
   const current = useRef<string>('')
   const [ result, setResult ] = useState('')
   const started = useRef(false)
+  const setInputAvailable = useConvo(s => s.setInputAvailable)
   
+  const inputAvailTo = useRef<ReturnType<typeof setTimeout>|null>(null)
+
   function setText(str: string){
     text.current = str
+    if(inputAvailTo.current) clearTimeout(inputAvailTo.current)
+    setInputAvailable(false)
     start()
   }
 
   function start(){
     if(started.current) return;
+    if(!text.current) return;
     started.current = true
-    requestAnimationFrame(async function addText(){
+
+    requestAnimationFrame(function addText(){
       if(current.current === text.current){
         started.current = false
+        inputAvailTo.current = setTimeout(() => {
+          setInputAvailable(true)
+        },300)
         return;
       }
 

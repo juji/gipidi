@@ -14,7 +14,7 @@ export function Inputform(){
   const activeConvo = useConvo(s => s.activeConvo)
   const createConvo = useConvo(s => s.createConvo)
   const addUserMessage = useConvo(s => s.addUserMessage)
-  const isStreaming = useConvo(s => s.isStreaming)
+  const disableInput = useConvo(s => s.disableInput)
 
   const supportFileUpload = true
 
@@ -59,7 +59,7 @@ export function Inputform(){
   function onSubmit(content: string) {
     if(!content) return; 
     if(filesInQueue) return;
-    if(isStreaming) return;
+    if(disableInput) return;
 
     if(!activeConvo){
       createConvo( content, [...files] )
@@ -97,7 +97,7 @@ export function Inputform(){
       })}
       <textarea 
         ref={textarea}
-        className={styles.textarea}
+        className={cx(styles.textarea, disableInput && styles.disabled)}
         placeholder="'sup?"
         value={content}
         required

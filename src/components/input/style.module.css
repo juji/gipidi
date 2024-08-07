@@ -103,6 +103,11 @@
       resize: none;
       overflow: auto;
 
+      &.disabled{
+        background-color: #353535;
+        border: 1px solid var(--bg-color);
+      }
+
       &::-webkit-scrollbar{
         width: 0px;
       }

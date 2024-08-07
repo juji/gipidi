@@ -10,7 +10,8 @@ export function useGptListener(){
   const isInitializing = useConvo(s => s.isInitializing)
   const activeConvo = useConvo(s => s.activeConvo)
   const addGPTText = useConvo(s => s.addGPTText)
-  const setDoneStreaming = useConvo(s => s.setDoneStreaming)
+  const setStreaming = useConvo(s => s.setStreaming)
+  const setInputAvailable = useConvo(s => s.setInputAvailable)
   const providers = useGPT(s => s.providers)
 
   useEffect(() => {
@@ -21,6 +22,13 @@ export function useGptListener(){
     const provider = providers.find(v => v.id === currentProvider)
     if(!provider) return () => {}
 
+    // when starting, 
+    // we set this two
+    // but, the input will be enabled when the UI finish rendering the text
+    // see: src/components/chat/bubble/useTextStream.ts
+    setStreaming(true)
+    setInputAvailable(false)
+
     loadVendor(provider).then(vendor => {
       
       addGPTText('')
@@ -30,17 +38,22 @@ export function useGptListener(){
           addGPTText(str)
           if(end) {
             addGPTText('')
-            setDoneStreaming()
+            setStreaming(false)
           }
         },
         onError: (e) => {
           console.error(e)
           showError(e.message)
           addGPTText(' [ERROR]')
-          setDoneStreaming()
+          setStreaming(false)
         }
       })
 
+    }).catch(e => {
+      console.error(e)
+      showError(e.message)
+      addGPTText(' [ERROR]')
+      setStreaming(false)
     })
 
   },[ 

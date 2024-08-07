@@ -6,29 +6,35 @@ import cx from 'classix'
 import styles from './style.module.css'
 import './bubble.css'
 import { ColorRing } from 'react-loader-spinner'
-import { ConvoAttachment } from '@/lib/idb/types';
+import { ConvoData } from '@/lib/idb/types';
 import { ChatAttachment } from '@/components/chat-attachment';
 import { useTextStream } from './useTextStream';
 
 function Bubble({ 
   className,
-  content,
-  attachments,
   profilePict,
-  streamText
+  data,
 }:{ 
   className: string 
-  content: string
-  attachments?: ConvoAttachment[] | null
   profilePict: string
-  streamText?: boolean
+  data: ConvoData
 }){
 
   const [ text, setText ] = useTextStream()
   const [ result, setResult ] = useState('')
+
+  const attachments = useRef(data.attachments)
+  const content = data.content
+  
+  // this is set only once
+  const isNewText = useRef(
+    data.role === 'assistant' && 
+    (new Date().valueOf() - data.lastUpdate.valueOf()) < 3000 // kira-kira aja
+  )
+
   useEffect(() => {
     
-    if(streamText){
+    if(isNewText.current){
       setText(content)
     }else{
       Promise.resolve(convert(content)).then((res:string) => {
@@ -38,9 +44,9 @@ function Bubble({
       })
     }
     
-  },[ content, streamText ])
+  },[ content ])
   
-  const [ autoScroll, setAutoScroll ] = useState(!!streamText)
+  const [ autoScroll, setAutoScroll ] = useState(!!isNewText.current)
   const container = useRef<HTMLDivElement|null>(null)
   const bottomObserved = useRef<HTMLDivElement|null>(null)
   const [ showDownArrow, setArrowDown ] = useState(false)
@@ -60,6 +66,7 @@ function Bubble({
   useEffect(() => {
     if(!autoScroll) return () => {}
     if(!container.current) return () => {}
+    if(!isNewText.current) return () => {}
 
     const top = container.current.getBoundingClientRect().top
     const shouldScroll = top > minTop
@@ -70,7 +77,7 @@ function Bubble({
       setAutoScroll(false)
     }
 
-  },[ content, autoScroll ])
+  },[ text, autoScroll ])
 
   function scrollDown(){
     window.scrollBy({
@@ -83,26 +90,26 @@ function Bubble({
       {result||text ? 
         <>
           <div className={cx(styles.content, 'bubble-content')} 
-            dangerouslySetInnerHTML={{ __html: streamText ? text : result }} />
-          {attachments && attachments.length ? <ChatAttachment
-            columnNumber={attachments.length < 4 ? attachments.length : 4}
-            width={attachments.length < 4 ? 25 * attachments.length +'%' : undefined}
-            files={attachments}
+            dangerouslySetInnerHTML={{ __html: isNewText.current ? text : result }} />
+          {attachments.current && attachments.current.length ? <ChatAttachment
+            columnNumber={attachments.current.length < 4 ? attachments.current.length : 4}
+            width={attachments.current.length < 4 ? 25 * attachments.current.length +'%' : undefined}
+            files={attachments.current}
             className={styles.attachments}
           /> : null}
           {/* attachments */}
         </> : 
-        <div className={cx(styles.content, 'bubble-content')}>
-          <ColorRing
-          visible={true}
-          height="46"
-          width="46"
-          ariaLabel="color-ring-loading"
-          wrapperStyle={{}}
-          wrapperClass="color-ring-wrapper"
-          colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-          />
-        </div>
+        isNewText.current ? <div className={cx(styles.content, 'bubble-content')}>
+        <ColorRing
+        visible={true}
+        height="46"
+        width="46"
+        ariaLabel="color-ring-loading"
+        wrapperClass="color-ring-wrapper"
+        colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+        />
+      </div> : <p style={{color: 'grey'}}>[NO DATA]</p>
+        
       }
     </div>
     <img className={styles.pict} src={profilePict} />
@@ -119,26 +126,21 @@ function Bubble({
 }
 
 
-export function UserBubble({ content, attachments }: {
-  content: string,
-  attachments?: ConvoAttachment[] | null
-}) {
+export function UserBubble({ data }: { data: ConvoData }) {
 
   return <Bubble 
     className={styles.user} 
-    content={content}
-    attachments={attachments}
+    data={data}
     profilePict={'/user.webp'}
   />
 
 }
 
-export function BotBubble({ content, streamText }:{ content: string, streamText?: boolean }){
+export function BotBubble({ data }: { data: ConvoData }){
 
   return <Bubble 
     className={styles.bot} 
-    content={content}
-    streamText={streamText} 
+    data={data}
     profilePict={'/bot.webp'}
   />
 

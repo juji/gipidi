@@ -33,6 +33,7 @@ export type ConvoStore = {
   activeConvo: ConvoDetail|null
 
   isStreaming: boolean
+  disableInput: boolean
   isInitializing: boolean
 
   updateConvo: ( convo: Convo ) => void
@@ -53,7 +54,8 @@ export type ConvoStore = {
   onRemove: (fn: null | ((convo: Convo) => void)) => void
 
   loadAll: () => Promise<void>
-  setDoneStreaming: () => void
+  setStreaming: (b: boolean) => void
+  setInputAvailable: (b: boolean) => void
 
 }
 
@@ -78,6 +80,7 @@ export function createConvoStore(){
           activeConvo: null,
 
           isStreaming: false,
+          disableInput: false,
           isInitializing: false,
 
           updateConvo: updateConvo(set),
@@ -100,8 +103,13 @@ export function createConvoStore(){
           
           loadAll: loadAll(set),
 
-          setDoneStreaming(){
-            set({ isStreaming: false })
+          setStreaming( b: boolean ){
+            if(b) set({ isStreaming: b })
+            else set({ isStreaming: b })
+          },
+
+          setInputAvailable(b: boolean){
+            set({ disableInput:!b })
           },
 
         })
