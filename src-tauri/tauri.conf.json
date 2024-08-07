@@ -18,11 +18,9 @@
         "minWidth": 300,
         "resizable": true,
         "fullscreen": false,
-        "dragDropEnabled": false,
-        "transparent": true
+        "dragDropEnabled": false
       }
     ],
-    "macOSPrivateApi": true,
     "security": {
       "csp": null
     }

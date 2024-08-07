@@ -28,7 +28,7 @@
     }
 
     &.active{
-      background-color: rgb(64, 64, 64);
+      background-color: #111;
       position: relative;
 
       .border{
