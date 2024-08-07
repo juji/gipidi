@@ -51,9 +51,9 @@
 
       &.off{
         transition: 
-          opacity 200ms 200ms ease-out,
-          width 0ms 400ms,
-          height 0ms 400ms
+          opacity 300ms 0ms ease-out,
+          width 0ms 300ms,
+          height 0ms 300ms
         ;
         opacity: 0;
         width: 0%;

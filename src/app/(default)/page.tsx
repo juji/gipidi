@@ -19,6 +19,9 @@ export default function Home() {
   const providers = useGPT(s => s.providers)
   const activeConvo = useConvo(s => s.activeConvo)
 
+  // loader, basically just a dark screen
+  const loadingConvo = useConvo(s => s.loadingConvo)
+
   // check if initial settings are done
   // and redirect
   useEffect(() => {
@@ -58,24 +61,15 @@ export default function Home() {
 
   },[ scrolledUp ])
 
-  // loader, basically just a dark screen
-  const [ loaderOff, setLoaderOff ] = useState(false)
-  useEffect(() => {
-    setLoaderOff(false)
-    setTimeout(() => {
-      setLoaderOff(true)
-    },200)
-  },[ activeConvo?.id ])
-
   // scroll down
   useEffect(() => {
-    setTimeout(() => {
+    if(!loadingConvo) setTimeout(() => {
       window.scrollTo({
         top: document.documentElement.scrollHeight - window.innerHeight,
         left: 0,
       })
     },500)
-  },[ activeConvo?.id ])
+  },[ loadingConvo ])
 
   return (
     <div className={styles.page}>
@@ -85,7 +79,7 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.chat}>
-        <div className={cx(styles.loader, loaderOff && styles.off)}></div>
+        <div className={cx(styles.loader, !loadingConvo && styles.off)}></div>
         <div className={styles.content}>
           <div></div>
           <div>

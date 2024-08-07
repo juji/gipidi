@@ -18,6 +18,7 @@ import { addGPTText } from './addGPTText'
 import { onCreateChat } from './onCreateChat'
 import { search } from './search'
 import { loadAll } from './loadAll'
+import { WritableDraft } from 'immer'
 
 export type ChatCreationData = {
   provider: GPTProvider['id'] 
@@ -31,6 +32,7 @@ export type ConvoStore = {
   convos: Convo[]
   searchResult: Convo[]|null
   activeConvo: ConvoDetail|null
+  loadingConvo: boolean
 
   isStreaming: boolean
   disableInput: boolean
@@ -60,8 +62,8 @@ export type ConvoStore = {
 }
 
 export type Set = (
-  nextStateOrUpdater: (state: ConvoStore) => void, 
-  shouldReplace?: boolean | undefined,
+  nextStateOrUpdater: ConvoStore | Partial<ConvoStore> | ((state: WritableDraft<ConvoStore>) => void), 
+  shouldReplace?: boolean | undefined
 ) => void
 
 export type Get = () => ConvoStore
@@ -78,6 +80,7 @@ export function createConvoStore(){
           convos: [],
           searchResult: null,
           activeConvo: null,
+          loadingConvo: false,
 
           isStreaming: false,
           disableInput: false,

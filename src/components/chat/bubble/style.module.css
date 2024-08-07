@@ -22,9 +22,11 @@
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 2 * 1rem )
+      calc( 2 * var(--content-padding-lr) ) - 
+      calc( 1 * var(--row-gap) )
       /* 
-        two 1rem padding for outside padding,
+        two --content-padding-lr padding for outside padding,
+        one --row-gap for.. i don't know why it's one.. but it is
       */
     );
   
@@ -34,7 +36,8 @@
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 2 * 1rem )
+      calc( 2 * var(--content-padding-lr) ) - 
+      calc( 1 * var(--row-gap) )
     );
   }
 
@@ -44,7 +47,8 @@
       var(--content-padding-lr) -
       var(--aside-width) - 
       var(--aside-width) -
-      calc( 2 * 1rem )
+      calc( 2 * var(--content-padding-lr) ) - 
+      calc( 1 * var(--row-gap) )
     );
   }
   

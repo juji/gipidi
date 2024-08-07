@@ -7,11 +7,13 @@ export function loadConvo(set: Set){
 
   return async ( convo: Convo ) => {
 
+    set({ loadingConvo : true })
     const details = await getConvoDetail(convo)
+    set({ activeConvo : details })
 
-    set(state => {
-      state.activeConvo = details
-    })
+    setTimeout(() => {
+      set({ loadingConvo : false })
+    },300)
 
   }
 

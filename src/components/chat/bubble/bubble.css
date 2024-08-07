@@ -93,6 +93,12 @@
     margin-left: 1.5rem;
   }
 
+  ol, ul {
+    li{
+      margin-bottom: 0.5rem;
+    }
+  }
+
   .table-container{
     overflow-x: auto;
     width: 100%;

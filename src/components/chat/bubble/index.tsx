@@ -25,6 +25,8 @@ function Bubble({
 
   const attachments = useRef(data.attachments)
   const content = data.content
+
+  const isUser = data.role === 'user'
   
   // this is set only once
   const isNewText = useRef(
@@ -53,6 +55,9 @@ function Bubble({
   const minTop = 72
 
   useEffect(() => {
+    // not useing arrow from user
+    if(isUser) return;
+
     let observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if(entry.isIntersecting) setArrowDown(false)
@@ -61,7 +66,7 @@ function Bubble({
     }, { rootMargin: `1000px 0px -${minTop}px 0px` });
     bottomObserved.current && observer.observe(bottomObserved.current);
     return () => { observer.disconnect() }
-  },[ autoScroll ])
+  },[ autoScroll, isUser ])
 
   useEffect(() => {
     if(!autoScroll) return () => {}
