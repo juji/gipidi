@@ -28,6 +28,11 @@ const DangerZone = dynamic(
   { ssr: false }
 )
 
+const ChromaDB = dynamic(
+  () => import('@/components/settings/chroma-db').then(v => v.ChromaDB), 
+  { ssr: false }
+)
+
 
 export default function Settings(){
 
@@ -42,6 +47,7 @@ export default function Settings(){
 
   return <Page title="Settings">
     <GPTProviders />
+    <ChromaDB />
     <GoogleSearch />
     <DangerZone />
   </Page>

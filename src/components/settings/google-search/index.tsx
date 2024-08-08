@@ -33,6 +33,7 @@ export function GoogleSearch(){
       Checkout the <a className={styles.link} href="https://programmablesearchengine.google.com/" target="_blank">page</a>.
       Also, the <a className={styles.link} href="https://developers.google.com/custom-search/v1/introduction" target="_blank">docs</a>.
     </p>
+    
     <div className={styles.form}>
       <label className={styles.label}>
         <span className={styles.info}>Search engine ID</span>

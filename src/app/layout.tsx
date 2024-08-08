@@ -18,6 +18,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <script type="module" src="/pdfjs/build/pdf.mjs"></script>
+        <script dangerouslySetInnerHTML={{__html: `
+          pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/build/pdf.worker.js'
+        `}} />
+      </head>
       <body className={inter.className}>
         {children}
       </body>

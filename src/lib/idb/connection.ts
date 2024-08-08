@@ -32,6 +32,7 @@ function getDatabase(){
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
       data: { dataType: DATA_TYPE.Array },
+      embeddings: { dataType: DATA_TYPE.Array },
       provider: { dataType: DATA_TYPE.String },
       model: { dataType: DATA_TYPE.String },
       systemPrompt: { dataType: DATA_TYPE.String },
@@ -59,7 +60,7 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 4,
+    version: 5,
     tables: [
       convo,
       convoDetail,

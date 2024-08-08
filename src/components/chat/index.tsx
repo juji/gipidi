@@ -1,6 +1,5 @@
 'use client'
 import { UserBubble, BotBubble } from "./bubble"
-// import { example } from "./example"
 import { useConvo } from "@/lib/convoStore"
 import { useGptListener } from '@/lib/hooks/useGptListener'
 import { ConvoDetail } from "@/lib/idb/types"

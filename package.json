@@ -15,6 +15,7 @@
     "@google/generative-ai": "^0.16.0",
     "@juji/jsstore": "^4.8.4",
     "@juji/preflight": "^1.0.1",
+    "@juji/zl-fetch": "^6.0.11",
     "@mikecousins/react-pdf": "^7.1.0",
     "@shikijs/transformers": "^1.12.0",
     "@tauri-apps/plugin-dialog": "^2.0.0-rc.0",
