@@ -1,4 +1,11 @@
 features:
+
+  TOOLS: 
+    - RAG and how to use it
+    - Content Moderation with Groq https://console.groq.com/docs/content-moderation
+    - speech to text https://console.groq.com/docs/speech-text
+    - tool use https://console.groq.com/docs/tool-use
+
   - bin
   - theme
     - https://caniuse.com/mdn-css_types_color_color-mix

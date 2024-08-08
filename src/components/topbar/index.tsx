@@ -41,6 +41,7 @@ export function TopBar(){
     return convo
   },[ activeConvo, convos ])
 
+  // send info to chat creator
   useEffect(() => {
     if(provider && model)
       onCreateChat(() => ({
@@ -109,6 +110,8 @@ export function TopBar(){
     if(loading) return () => {}
 
     loadAll().then(async all => {
+
+      console.log('all providers', all)
       
       const models = await Promise.all(Object.values(all).map(v => v.models()))
       

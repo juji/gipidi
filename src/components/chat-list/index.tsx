@@ -5,7 +5,6 @@ import { useConvo } from '@/lib/convoStore'
 import { usePathname, useRouter } from 'next/navigation'
 import cx from 'classix'
 import { useHistory } from '@/lib/historyStore'
-import { loadAll } from '@/lib/convoStore/loadAll'
 
 function Chat({ 
   convo,
