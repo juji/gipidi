@@ -3,18 +3,6 @@ importScripts('/modules/marked.min.js');
 importScripts('./modules/marked-highlight.js')
 importScripts('./modules/highlight.min.js')
 
-const copyAction = `(() => {
-  const pre = this.parentNode?.parentNode?.querySelector('pre');
-  if(pre){
-    navigator.clipboard.writeText(pre.innerText);
-    this.innerText = 'Copied';
-    setTimeout(() => {
-      this.innerText = 'Copy';
-    },1000);
-  }
-})()
-`.replace(/\n|\r/g,'').replace(/\s{2,}/g,' ')
-
 const parser = marked.use(
   {
     async: true,
@@ -36,9 +24,7 @@ const parser = marked.use(
         return `<figure class="highlighted-code">
           <div class="highlighted-code-header">
           <span>${lang||'plaintext'}</span>
-          <button 
-            onclick="${copyAction}"
-            class="btn-copy">Copy</button>
+          <button class="btn-copy">Copy</button>
           </div>
           <pre><code class="hljs language-${lang||'plaintext'}">${text}</code></pre>
           </figure>
@@ -66,9 +52,9 @@ const parser = marked.use(
         return `
           <figure class="convo-image">
             <img src="${href}" alt="${alt?alt.replace(/\"/g,'\\"'):''}" />
-            ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+            ${caption||alt ? `<figcaption>${caption||alt}</figcaption>` : ''}
           </figure>
-        `.replace(/[\n\r]/g,'')
+        `
       },
 
       // @ts-expect-error
@@ -89,7 +75,33 @@ const parser = marked.use(
 )
 
 onmessage = (e) => {
-  parser.parse(e.data).then(v => {
+  parser.parse(
+    e.data
+
+      // fix stream, add temp spaces or closing
+
+      // headings, blockquote and lists: add space
+      .replace(/(^|[\s]+)([\#]+)$/, '$1$2 ')
+      .replace(/(^|[\s]+)([\>]+)$/, '$1$2 ')
+      .replace(/(^|[\s]+)([\-]+)$/, '$1$2 ')
+      .replace(/(^|[\s]+)([\+]+)$/, '$1$2 ')
+
+      // codes, bolds and italics: autoclose
+      .replace(/(^|[\s]+)([\`]+)([^\s][^\`]+$)/, '$1$2$3$2')
+      .replace(/(^|[\s]+)([\*]+)([^\s][^\*]+$)/, '$1$2$3$2')
+      .replace(/(^|[\s]+)([\_]+)([^\s][^\_]+$)/, '$1$2$3$2')
+
+      // links: not showing as link until finish
+      .replace(/(^|[\s]+)\[([^\]]+)$/, '$1$2')
+      .replace(/(^|[\s]+)\[([^\]]+)\]$/, '$1$2')
+      .replace(/(^|[\s]+)\[([^\]]+)\]\(([^\)]+$)/, '$1$2')
+
+      // images: not drawing untill it is finished
+      .replace(/(^|[\s]+)\!\[([^\]]+)$/, '$1')
+      .replace(/(^|[\s]+)\!\[([^\]]+)\]$/, '$1')
+      .replace(/(^|[\s]+)\!\[([^\]]+)\]\(([^\)]+$)/, '$1')
+
+  ).then(v => {
     postMessage(v)
   })
 };

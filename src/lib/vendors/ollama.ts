@@ -1,6 +1,7 @@
 import { Ollama } from 'ollama/browser'
 import type { GPTModel, ChatFn, GetClientFromProvider } from './types'
 import { ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
+import { defaultSysPrompt } from "./system";
 
 export const icon = '/gpt/ollama.png'
 
@@ -33,11 +34,22 @@ export const chat: ChatFn<Ollama> = async function(
   onError: (e: any)   => void
 ){
 
+  let convo = [...convoDetail.data]
+  if(convo[0].role === 'system'){
+    convo[0].content += defaultSysPrompt
+  }else{
+    convo.unshift({
+      id: 'asdf',
+      lastUpdate: new Date(),
+      role: 'system', 
+      content: defaultSysPrompt
+    })
+  }
   
   try{
     const resp = await client.chat({
       model: convoDetail.model,
-      messages: convoDetail.data.map(v => {
+      messages: convo.map((v, i) => {
         return {
           role: v.role,
           content: v.content,

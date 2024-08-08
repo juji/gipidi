@@ -26,8 +26,6 @@ function Bubble({
   const [ result, setResult ] = useState('')
 
   const attachments = useRef(data.attachments)
-  const content = data.content
-
   const isUser = data.role === 'user'
   
   // this is set only once
@@ -39,16 +37,16 @@ function Bubble({
   useEffect(() => {
     
     if(isNewText.current){
-      setText(content)
+      setText(data.content)
     }else{
-      Promise.resolve(convert(content)).then((res:string) => {
+      Promise.resolve(convert(data.content)).then((res:string) => {
         setResult(res)
       }).catch(e => {
         console.error(e)
       })
     }
     
-  },[ content ])
+  },[ data.content ])
   
   const [ autoScroll, setAutoScroll ] = useState(!!isNewText.current)
   const container = useRef<HTMLDivElement|null>(null)
@@ -92,19 +90,16 @@ function Bubble({
     })
   }
 
-  const reactComponent = useRef<ReactElement<any, any>>()
+  const [ content, setContent ] = useState<ReactElement>()
   useEffect(() => {
-    reactComponent.current = markedToReact(result)
-  },[ result ])
+    if(result||text) setContent(markedToReact(result||text))
+  },[ result, text ])
 
   return <div ref={container} className={cx(styles.bubble, className)}>
     <div className={styles.cloud}>
-      {result||text ? 
+      { content ? 
         <>
-          {isNewText.current ? <div className={cx(styles.content, 'bubble-content')} 
-            dangerouslySetInnerHTML={{ __html: text }} /> : 
-            <div className={cx(styles.content, 'bubble-content')}
-            >{reactComponent.current}</div>}
+          <div className={cx(styles.content, 'bubble-content')}>{content}</div>
           
           {attachments.current && attachments.current.length ? <ChatAttachment
             columnNumber={attachments.current.length < 4 ? attachments.current.length : 4}

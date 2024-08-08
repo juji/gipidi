@@ -1,6 +1,7 @@
 import Groq from "groq-sdk"
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
+import { defaultSysPrompt } from "./system"
 
 export const icon = '/gpt/groq.svg'
 
@@ -35,6 +36,18 @@ export const chat: ChatFn<Groq> = async function(
   onResponse: (str: string, end?: boolean) => void,
   onError: (e: any)   => void
 ){
+
+  let convo = [...convoDetail.data]
+  if(convo[0].role === 'system'){
+    convo[0].content += defaultSysPrompt
+  }else{
+    convo.unshift({
+      id: 'asdf',
+      lastUpdate: new Date(),
+      role: 'system', 
+      content: defaultSysPrompt
+    })
+  }
 
   try{
 
