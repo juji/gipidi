@@ -1,9 +1,18 @@
 import { Ollama } from 'ollama/browser'
 import type { GPTModel, ChatFn, GetClientFromProvider } from './types'
-import { ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
+import { ConvoAttachment, ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
 import { defaultSysPrompt } from "./system";
+import { 
+  enabled as chromaDbEnabled,
+  process as chromaDbProcessFiles 
+} from "../chroma-db";
 
 export const icon = '/gpt/ollama.png'
+export const attachmentEnabled = async () => await chromaDbEnabled()
+
+export const onAttach = async ( files: ConvoAttachment[] ) => {
+  // await chromaDbProcessFiles(files)
+}
 
 export function getClient( host: string ){
   const ollama = new Ollama({ host })

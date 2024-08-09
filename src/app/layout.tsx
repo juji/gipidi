@@ -21,7 +21,12 @@ export default function RootLayout({
       <head>
         <script type="module" src="/pdfjs/build/pdf.mjs"></script>
         <script dangerouslySetInnerHTML={{__html: `
-          pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/build/pdf.worker.js'
+          const int = setInterval(() => {
+            if(pdfjsLib) {
+              clearInterval(int)
+              pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/build/pdf.worker.js'
+            }
+          },500)
         `}} />
       </head>
       <body className={inter.className}>

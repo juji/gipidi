@@ -38,12 +38,10 @@ export function OllamaSettings(){
   },[ loading, providers ])
 
   useEffect(() => {
+    if(loading) return () => {}
+    if(!url) return () => {}
+    
     setisOn(false)
-    if(!url) {
-      removeProvider(PROVIDER)
-      return () => {}
-    }
-
     setErr('')
 
     loadFromId(PROVIDER, { url }).then(provider => {
@@ -59,7 +57,7 @@ export function OllamaSettings(){
 
     })
 
-  },[ url ])
+  },[ url, loading ])
 
   return <>
     <h6 className={styles.heading}>

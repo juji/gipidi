@@ -4,7 +4,10 @@ import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
 
 import { defaultSysPrompt } from "./system";
 
+
 export const icon = '/gpt/gemini.svg'
+export const attachmentEnabled = async () => true
+export const onAttach = async () => {}
 
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )
@@ -111,7 +114,7 @@ Reply with JSON, using the following JSON schema:
 `
   const isGemini1 = getDefaultModel().id === convoDetail.model
   const isGeminiPro = convoDetail.model.match('pro')
-  const prompt = (isGemini1 ? systemInstruction + '\n' : '') + 'Please create title for the following data: ' + JSON.stringify(
+  const prompt = (isGemini1 ? systemInstruction + '\n\n' : '') + 'Please create title for the following data: ' + JSON.stringify(
     convoDetail.data.filter(v => v.role !== 'system').map(v => ({
       role: v.role,
       content: v.content
@@ -149,30 +152,11 @@ Reply with JSON, using the following JSON schema:
 
 export async function test( apiKey: string ){
 
-  const model = getDefaultModel()
-  const testData: ConvoDetail = {
-    id: 'asdf',
-    data: [
-      {
-        id: 'asdf',
-        role: 'user',
-        content: 'hello',
-        lastUpdate: new Date()
-      },
-      {
-        id: 'asdf',
-        role: 'assistant',
-        content: 'hello again',
-        lastUpdate: new Date()
-      }
-    ],
-    provider: 'gemini',
-    systemPrompt: 'asdf',
-    model: model.id,
-    created: new Date(),
-    deleted: new Date()
-  }
-
-  return await createTitle(getClient(apiKey),testData)
+  const client = getClient(apiKey)
+  const model = client.getGenerativeModel({ 
+    model: getDefaultModel().id,
+  })
+  const result = await model.generateContent('say y');
+  return !!result.response.text()
 
 }

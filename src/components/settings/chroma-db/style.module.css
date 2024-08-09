@@ -83,10 +83,20 @@
     overflow: auto;
     width: 100%;
     max-width: min(400px, calc(100vw - 4.4em));
-    margin-bottom: 2em;
     padding: 1em;
     background-color: #222;
+    margin-bottom: 1em;
+  }
 
+  .install{
+    margin-bottom: 2em;
+    color: #999;
+  }
+
+  .install > a{
+    text-decoration: dotted;
+    text-decoration-line: underline;
+    color: var(--fg-color);
   }
 
   .pre > button{
@@ -106,4 +116,33 @@
     }
   }
 
+}
+
+.downloadStatus{
+
+  margin-top: 1em;
+
+  .progress{
+    width: 100%;
+    max-width: 400px;
+    height: 0.2em;
+    background-color: #333;
+    border-radius: 1em;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress > div {
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100%;
+    background-color: greenyellow;
+    transition: width 200ms ease-out;
+  }
+
+  .info{
+    margin-top: 0.5em;
+    color: #999;
+  }
 }

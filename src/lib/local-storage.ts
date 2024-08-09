@@ -32,4 +32,10 @@ export function getCountryCode(){
   localStorage.getItem('country-code')
 }
 
+export function saveChromaDbURL( str: string ){
+  localStorage.setItem('chroma-db', str)
+}
 
+export function getChromaDbURL(){
+  return localStorage.getItem('chroma-db')
+}

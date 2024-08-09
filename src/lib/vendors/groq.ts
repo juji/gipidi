@@ -1,9 +1,18 @@
 import Groq from "groq-sdk"
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
-import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
+import { ConvoAttachment, ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
 import { defaultSysPrompt } from "./system"
+import { 
+  enabled as chromaDbEnabled,
+  process as chromaDbProcessFiles 
+} from "../chroma-db";
 
 export const icon = '/gpt/groq.svg'
+export const attachmentEnabled = async () => await chromaDbEnabled()
+
+export const onAttach = async ( files: ConvoAttachment[] ) => {
+  // await chromaDbProcessFiles(files)
+}
 
 export function getClient( apiKey: string ){
   const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true })
