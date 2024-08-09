@@ -59,6 +59,9 @@ export type ConvoStore = {
   setStreaming: (b: boolean) => void
   setInputAvailable: (b: boolean) => void
 
+  fileUploadEnabled: boolean
+  setFileUpload: (b: boolean) => void
+
 }
 
 export type Set = (
@@ -114,6 +117,11 @@ export function createConvoStore(){
           setInputAvailable(b: boolean){
             set({ disableInput:!b })
           },
+
+          fileUploadEnabled: false,
+          setFileUpload: (b: boolean) => {
+            set({ fileUploadEnabled: b })
+          }
 
         })
       )

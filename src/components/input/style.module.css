@@ -17,8 +17,13 @@
 .form{
   
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr auto;
+
+  &.fileUpload{
+    grid-template-columns: auto 1fr auto;
+  }
+
   padding: 0.5em 0;
   column-gap: 0.5em;
 
@@ -85,7 +90,6 @@
     overflow: hidden;
     line-break: anywhere;
     padding: 0.7em;
-    margin: 0 0.25em;
 
     .textarea{
       padding: 0.7em;

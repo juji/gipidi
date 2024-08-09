@@ -42,6 +42,8 @@ function getMethods( loaded: any, client: any ){
     client,
     models,
     chat,
+    attachmentEnabled: loaded.attachmentEnabled as () => Promise<boolean>,
+    processAttchments: loaded.processAttchments as () => Promise<boolean>,
     createTitle,
     getDefaultModel: loaded.getDefaultModel as GetDefaultFn ?? null,
     test: loaded.test as TestFn,

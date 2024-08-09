@@ -7,7 +7,7 @@ import { defaultSysPrompt } from "./system";
 
 export const icon = '/gpt/gemini.svg'
 export const attachmentEnabled = async () => true
-export const onAttach = async () => {}
+export const processAttchments = async () => false
 
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )
@@ -65,7 +65,7 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
       ...systemInstruction ? { systemInstruction } : {}
     })
 
-    const history = convoDetail.data.slice(systemInstruction ? 1 : 0, convoDetail.data.length - 1)
+    const history = convoDetail.data.filter(v => v.role !== 'system')
       .map(v => ({
         role: v.role === 'user' ? 'user' : 'model',
         parts: [

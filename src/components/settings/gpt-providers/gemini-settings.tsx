@@ -33,12 +33,10 @@ export function GeminiSettings(){
   },[ loading, providers ])
 
   useEffect(() => {
+    if(loading) return () => {}
+    if(!apiKey) return () => {}
+    
     setisOn(false)
-    if(!apiKey) {
-      removeProvider(PROVIDER)
-      return () => {}
-    }
-
     setErr('')
 
     loadFromId(PROVIDER, { apiKey }).then(provider => {
@@ -54,7 +52,7 @@ export function GeminiSettings(){
 
     })
 
-  },[ apiKey ])
+  },[ apiKey, loading ])
 
   return <>
     <h6 className={styles.heading}>

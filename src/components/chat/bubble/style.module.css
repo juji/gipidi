@@ -36,17 +36,6 @@
         one --row-gap for.. i don't know why it's one.. but it is
       */
     );
-  
-  @media (min-width: 800px){
-    --max-width-cloud: calc(
-      min(100vw - var(--content-nav-width-sm),  var(--content-max-width)) -
-      var(--content-padding-lr) -
-      var(--aside-width) - 
-      var(--aside-width) -
-      calc( 2 * var(--content-padding-lr) ) - 
-      calc( 1 * var(--row-gap) )
-    );
-  }
 
   @media (min-width: 900px){
     --max-width-cloud: calc(
@@ -68,6 +57,8 @@
     grid-area: pict;
     align-self: start;
     height: auto;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
   & > .gap{

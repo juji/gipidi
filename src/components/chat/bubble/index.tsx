@@ -10,6 +10,8 @@ import { ConvoData } from '@/lib/idb/types';
 import { ChatAttachment } from '@/components/chat-attachment';
 import { useTextStream } from './useTextStream';
 import { markedToReact } from './marked-to-react';
+import { useConvo } from '@/lib/convoStore';
+import { loadAll } from '@/lib/vendors/load';
 
 
 function Bubble({ 
@@ -148,10 +150,19 @@ export function UserBubble({ data }: { data: ConvoData }) {
 
 export function BotBubble({ data }: { data: ConvoData }){
 
+  const [icon, setIcon] = useState('/bot.webp')
+  const activeConvo = useConvo(s => s.activeConvo)
+  useEffect(() => {
+    if(!activeConvo?.provider) return () => {}
+    loadAll().then(all => {
+      setIcon(all[activeConvo.provider].icon)
+    })
+  },[ activeConvo?.provider ])
+
   return <Bubble 
     className={styles.bot} 
     data={data}
-    profilePict={'/bot.webp'}
+    profilePict={icon}
   />
 
 }

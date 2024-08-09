@@ -8,20 +8,33 @@ import { getGPTProvider } from './idb/gpt/getGPTProvider';
 import { Ollama } from 'ollama/browser'
 import mime from 'mime'
 import { nanoid } from "nanoid";
+import { showError } from './toast';
 
 const PREFIX = '/api/v1'
 const TENANT = 'gipidi.v1'
 const DBNAME = 'iamplaying'
 
+async function getOllama(){
+  const ollamaSettings = await getGPTProvider('ollama')
+  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url) 
+    throw new Error('test: ollama is not set')
+  const ollama = new Ollama({ host: (ollamaSettings.setting as OllamaSetting).url })
+  return ollama
+}
+
+async function getEmbeddingModel(){
+  const ollama = await getOllama()
+  const ls = await ollama.list()
+  const model = ls.models.find(v => v.name === 'mxbai-embed-large:latest')
+  if(!model) throw new Error('Embedding model do not exist')
+  return model
+}
+
 // test and create db
 export async function test(url: string, tenant?:string, dbname?:string){
 
   // check existence of ollama
-  const ollamaSettings = await getGPTProvider('ollama')
-  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url) 
-    throw new Error('test: ollama is not set')
-
-  const ollama = new Ollama({ host: (ollamaSettings.setting as OllamaSetting).url })
+  const ollama = await getOllama()
   await ollama.list()
 
   // check if chromadb is around
@@ -59,15 +72,19 @@ export async function test(url: string, tenant?:string, dbname?:string){
 
 export async function prepareOllama(){
 
-  const ollamaSettings = await getGPTProvider('ollama')
-  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url) 
-    throw new Error('ollama is not set')
-
-  const ollama = new Ollama({ host: (ollamaSettings.setting as OllamaSetting).url })
-  const ls = await ollama.list()
-  const exists = ls.models.find(v => v.name === 'mxbai-embed-large:latest')
+  let exists:any = false;
+  try{
+    exists = await getEmbeddingModel()
+  }catch(e){
+    const err = (e as Error).toString()
+    if(err !== 'Error: Embedding model do not exist'){
+      showError(err)
+      throw e
+    }
+  }
 
   if(!exists){
+    const ollama = await getOllama()
     return ollama.pull({
       model: 'mxbai-embed-large',
       stream: true
@@ -130,9 +147,7 @@ export async function process(
   dbname?:string
 ){
 
-  const ollamaSettings = await getGPTProvider('ollama')
-  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url) 
-    throw new Error('Ollama is not set')
+  const ollama = await getOllama()
 
   // select files by type
   const text = files.filter(v => mime.getExtension(v.mime) === 'txt')
@@ -150,7 +165,6 @@ export async function process(
       })
   )
 
-  const ollama = new Ollama({ host: (ollamaSettings.setting as OllamaSetting).url })
   const collection = await getCollection(convoId, tenant, dbname)
 
   const data = await Promise.all(
