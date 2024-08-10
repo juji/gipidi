@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
 
-import { defaultSysPrompt } from "./system";
+import { defaultSysPrompt, encloseUserRequirement } from "./system";
 
 
 export const icon = '/gpt/gemini.svg'
@@ -55,14 +55,14 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
   try{
 
     const isGemini1 = getDefaultModel().id === convoDetail.model
-    const systemInstruction = (
+    const systemInstruction = defaultSysPrompt + (
       convoDetail.data[0].role === 'system' && !isGemini1 ? 
-      convoDetail.data[0].content : null
-    ) + defaultSysPrompt
+      encloseUserRequirement(convoDetail.data[0].content) : null
+    )
 
     const model = client.getGenerativeModel({ 
       model: convoDetail.model,
-      ...systemInstruction ? { systemInstruction } : {}
+      systemInstruction
     })
 
     const history = convoDetail.data.filter(v => v.role !== 'system')

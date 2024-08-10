@@ -1,9 +1,9 @@
 import { Ollama } from 'ollama/browser'
 import type { GPTModel, ChatFn, GetClientFromProvider } from './types'
 import { ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
-import { defaultSysPrompt } from "./system";
+import { defaultSysPrompt, encloseUserRequirement } from "./system";
 import { 
-  enabled as chromaDbEnabled,
+  chromaDbEnabled,
 } from "../chroma-db";
 
 export const icon = '/gpt/ollama.png'
@@ -39,9 +39,9 @@ export const chat: ChatFn<Ollama> = async function(
   onError: (e: any)   => void
 ){
 
-  let convo = [...convoDetail.data]
+  let convo = structuredClone(convoDetail.data)
   if(convo[0].role === 'system'){
-    convo[0].content += defaultSysPrompt
+    convo[0].content = defaultSysPrompt + encloseUserRequirement(convo[0].content)
   }else{
     convo.unshift({
       id: 'asdf',

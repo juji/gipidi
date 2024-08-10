@@ -152,6 +152,7 @@
   h1{
     padding-top: 1em;
     font-size: 2.4rem;
+    line-height: 1.2em;
     &:first-child{
       padding-top: 0;
     }
@@ -160,6 +161,7 @@
   h2{
     padding-top: 1em;
     font-size: 2.2rem;
+    line-height: 1.2em;
     &:first-child{
       padding-top: 0;
     }
@@ -168,6 +170,7 @@
   h3{
     padding-top: 1em;
     font-size: 2rem;
+    line-height: 1.2em;
     &:first-child{
       padding-top: 0;
     }
@@ -176,6 +179,7 @@
   h4{
     padding-top: 1em;
     font-size: 1.8rem;
+    line-height: 1.2em;
     &:first-child{
       padding-top: 0;
     }
@@ -184,6 +188,7 @@
   h5{
     padding-top: 1em;
     font-size: 1.6rem;
+    line-height: 1.2em;
     &:first-child{
       padding-top: 0;
     }
@@ -192,6 +197,7 @@
   h5{
     padding-top: 1em;
     font-size: 1.4rem;
+    line-height: 1.3em;
     &:first-child{
       padding-top: 0;
     }
@@ -200,6 +206,7 @@
   h6{
     padding-top: 1em;
     font-size: 1.2rem;
+    line-height: 1.4em;
     &:first-child{
       padding-top: 0;
     }

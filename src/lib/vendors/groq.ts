@@ -1,9 +1,9 @@
 import Groq from "groq-sdk"
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
-import { defaultSysPrompt } from "./system"
+import { defaultSysPrompt, encloseUserRequirement } from "./system"
 import { 
-  enabled as chromaDbEnabled,
+  chromaDbEnabled,
 } from "../chroma-db";
 
 export const icon = '/gpt/groq.svg'
@@ -42,9 +42,9 @@ export const chat: ChatFn<Groq> = async function(
   onError: (e: any)   => void
 ){
 
-  let convo = [...convoDetail.data]
+  let convo = structuredClone(convoDetail.data)
   if(convo[0].role === 'system'){
-    convo[0].content += defaultSysPrompt
+    convo[0].content = defaultSysPrompt + encloseUserRequirement(convo[0].content)
   }else{
     convo.unshift({
       id: 'asdf',

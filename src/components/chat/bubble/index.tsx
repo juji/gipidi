@@ -33,7 +33,7 @@ function Bubble({
   // this is set only once
   const isNewText = useRef(
     data.role === 'assistant' && 
-    (new Date().valueOf() - data.lastUpdate.valueOf()) < 3000 // kira-kira aja
+    (new Date().valueOf() - data.lastUpdate.valueOf()) < 1000 // kira-kira aja
   )
 
   useEffect(() => {
@@ -70,17 +70,27 @@ function Bubble({
     return () => { observer.disconnect() }
   },[ autoScroll, isUser ])
 
+  const scrollCounter = useRef(0)
   useEffect(() => {
     if(!autoScroll) return () => {}
     if(!container.current) return () => {}
     if(!isNewText.current) return () => {}
-
+    
+    
     const top = container.current.getBoundingClientRect().top
     const shouldScroll = top > minTop
+    scrollCounter.current += 1
 
-    if(shouldScroll){
-      container.current.scrollIntoView({ block: "start" })
+    if(shouldScroll){ 
+      // this is needed so the browser doesn't do too many scrolls
+      //
+      if(scrollCounter.current === 1 || scrollCounter.current >= 10){
+        container.current.scrollIntoView({ block: "start" })
+        if(scrollCounter.current >= 10) scrollCounter.current = 2
+      }
     }else{
+      container.current.scrollIntoView({ block: "start" })
+      scrollCounter.current = 0
       setAutoScroll(false)
     }
 

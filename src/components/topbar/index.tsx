@@ -9,7 +9,7 @@ import { GPTModel } from '@/lib/vendors/types'
 import { useConvo } from '@/lib/convoStore'
 import { GPTProvider } from '@/lib/idb/types'
 
-import { loadAll, loadVendor } from '@/lib/vendors/load'
+import { loadAll, loadProviderById } from '@/lib/vendors/load'
 
 const defaultPrompt = ''
 // const defaultPrompt = `You are a friendly chatbot built on top of large language models. 
@@ -47,28 +47,25 @@ export function TopBar(){
   // send info to chat creator
   // also set if file upload is enabled
   useEffect(() => {
-
-    if(provider){
-      loadAll().then(async all => {
-        
-        all[provider].attachmentEnabled()
-          .then((b: boolean) => {
-            setFileUpload(b)
-          })
-
-        all[provider].processAttchments()
-          .then((b: boolean) => {
-            setAttachmentsProcessing(b)
-          })
-          
-      })
-    }
-
     if(provider && model)
       onCreateChat(() => ({
         title, provider, model, systemPrompt
       }))
   },[title, provider, model, systemPrompt])
+
+  useEffect(() => {
+    if(provider){
+      loadProviderById(provider).then(async provider => {
+        
+        provider.attachmentEnabled()
+          .then((b: boolean) => { setFileUpload(b) })
+
+          provider.processAttchments()
+          .then((b: boolean) => { setAttachmentsProcessing(b) })
+          
+      })
+    }
+  },[provider])
 
 
   // title

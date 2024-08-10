@@ -94,7 +94,7 @@ export async function prepareOllama(){
   }
 }
 
-export async function enabled(tenant?:string, dbname?:string){
+export async function chromaDbEnabled(tenant?:string, dbname?:string){
   const url = getChromaDbURL()
   await zlFetch(url + `${PREFIX}/databases/${dbname||DBNAME}`,{
     query: {

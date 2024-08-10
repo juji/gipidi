@@ -1,6 +1,7 @@
 import type { ConvoDetail, GPTProvider } from "../idb/types";
 import { getAllProvider } from "../idb/gpt/getAllProvider";
 import { GPTModel } from "./types";
+import { getGPTProvider } from "../idb/gpt/getGPTProvider";
 
 export type ModelsFn = () => Promise<GPTModel[]>
 export type ChatFn = (params: {
@@ -45,7 +46,7 @@ function getMethods( loaded: any, client: any ){
     attachmentEnabled: loaded.attachmentEnabled as () => Promise<boolean>,
     processAttchments: loaded.processAttchments as () => Promise<boolean>,
     createTitle,
-    getDefaultModel: loaded.getDefaultModel as GetDefaultFn ?? null,
+    getDefaultModel: loaded.getDefaultModel ? loaded.getDefaultModel as GetDefaultFn : null,
     test: loaded.test as TestFn,
     icon: loaded.icon as string ?? null
   }
@@ -64,10 +65,15 @@ export async function loadFromId(
 
 }
 
+export async function loadProviderById( id:GPTProvider['id'] ){
+  const l = await import(`@/lib/vendors/${id}`)
+  return l
+}
+
 export async function loadVendor( 
   provider: GPTProvider
 ){
-  const l = await import(`@/lib/vendors/${provider.id}`)
+  const l = await loadProviderById(provider.id)
   const client = l.getClientFromProvider(provider)
   return getMethods(l, client)
 }
@@ -87,5 +93,3 @@ export async function loadAll(){
   }, {} as {[key in GPTProvider['id']]: AwaitedVendor})
 
 }
-
-/// NOW, ADD TYPE

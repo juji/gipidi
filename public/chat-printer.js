@@ -74,32 +74,60 @@ const parser = marked.use(
   }
 )
 
+
+
 onmessage = (e) => {
   parser.parse(
-    e.data
+    e.data.replace(/(.*)$/, (_, lastLine) => {
 
-      // fix stream, add temp spaces or closing
+      // console.log(lastLine)
 
-      // headings, blockquote and lists: add space
-      .replace(/(^|[\s]+)([\#]+)$/, '$1$2 ')
-      .replace(/(^|[\s]+)([\>]+)$/, '$1$2 ')
-      .replace(/(^|[\s]+)([\-]+)$/, '$1$2 ')
-      .replace(/(^|[\s]+)([\+]+)$/, '$1$2 ')
+      return lastLine ? lastLine
 
-      // codes, bolds and italics: autoclose
-      .replace(/(^|[\s]+)([\`]+)([^\s][^\`]+$)/, '$1$2$3$2')
-      .replace(/(^|[\s]+)([\*]+)([^\s][^\*]+$)/, '$1$2$3$2')
-      .replace(/(^|[\s]+)([\_]+)([^\s][^\_]+$)/, '$1$2$3$2')
+        // headings, blockquote and lists: add space
+        .replace(/(^|\s+)(\#+)$/, '$1$2 ')
+        .replace(/(^|\s+)(\>+)$/, '$1$2 ')
+        .replace(/(^|\s+)(\-+)$/, '$1$2 ')
+        .replace(/(^|\s+)(\++)$/, '$1$2 ')
 
-      // links: not showing as link until finish
-      .replace(/(^|[\s]+)\[([^\]]+)$/, '$1$2')
-      .replace(/(^|[\s]+)\[([^\]]+)\]$/, '$1$2')
-      .replace(/(^|[\s]+)\[([^\]]+)\]\(([^\)]+$)/, '$1$2')
+        // links: not showing as link until finish
+        .replace(/(^|[\s]+)\[([^\]]+)$/, '$1$2')
+        .replace(/(^|[\s]+)\[([^\]]+)\]$/, '$1$2')
+        .replace(/(^|[\s]+)\[([^\]]+)\]\(([^\)]+$)/, '$1$2')
 
-      // images: not drawing untill it is finished
-      .replace(/(^|[\s]+)\!\[([^\]]+)$/, '$1')
-      .replace(/(^|[\s]+)\!\[([^\]]+)\]$/, '$1')
-      .replace(/(^|[\s]+)\!\[([^\]]+)\]\(([^\)]+$)/, '$1')
+        // images: not drawing untill it is finished
+        .replace(/(^|[\s]+)\!\[([^\]]+)$/, '$1')
+        .replace(/(^|[\s]+)\!\[([^\]]+)\]$/, '$1')
+        .replace(/(^|[\s]+)\!\[([^\]]+)\]\(([^\)]+$)/, '$1')
+
+        // codes: autoclose
+        .replace(/(^|\s+)(\`+)([^\`]+)$/, '$1$2$3$2')
+        
+        // bolds italics striketrough: autoclose
+        .replace(/(^|\s+)(\*+)([^\s][^\*]+)(\*+)?$/, (_, p1,p2,p3) => {
+          return `${p1}${p2}${p3.replace(/\s+$/,'')}${p2}`
+        })
+        .replace(/(^|\s+)(\_+)([^\_]+)(\_+)?$/, (_, p1,p2,p3) => {
+          return `${p1}${p2}${p3.replace(/\s+$/,'')}${p2}`
+        })
+        .replace(/(^|\s+)(\~+)([^\~]+)(\~+)?$/, (_, p1,p2,p3) => {
+          return `${p1}${p2}${p3.replace(/\s+$/,'')}${p2}`
+        })
+        
+        .replace(/(^|\s+)([\_\~]+)(\*+)([^\s][^\*\_\~]+)((\*+)?([\_\~]+)?)$/g, (_, p1,p2,p3,p4) => {
+          return `${p1}${p2}${p3}${p4.replace(/\s+$/,'')}${p3}${p2}`
+        })
+        .replace(/(^|\s+)([\*\~]+)(\_+)([^\s][^\*\_\~]+)((\_+)?([\*\~]+)?)$/g, (_, p1,p2,p3,p4) => {
+          return `${p1}${p2}${p3}${p4.replace(/\s+$/,'')}${p3}${p2}`
+        })
+        .replace(/(^|\s+)([\*\_]+)(\~+)([^\s][^\*\_\~]+)((\~+)?([\*\_]+)?)$/g, (_, p1,p2,p3,p4) => {
+          return `${p1}${p2}${p3}${p4.replace(/\s+$/,'')}${p3}${p2}`
+        })
+
+        : ''
+
+
+    })
 
   ).then(v => {
     postMessage(v)
