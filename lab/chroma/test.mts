@@ -43,13 +43,6 @@ try{
 
 // collections
 try{
-  const collectionByName = await zlFetch(url + `${PREFIX}/collections/asdf`, {
-    query: {
-      tenant: TENANT,
-      database: DBNAME
-    }
-  })
-  console.log('collectionByName', collectionByName.body)
 
   const collection = await zlFetch.post(url + `${PREFIX}/collections`, {
     body: {

@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFileUpload } from "./fileUploadStore";
 import { createPortal } from "react-dom";
 import styles from './style.module.css'
+import { useEmbedding } from "./useEmbedding";
 
 export function Files({
   className,
@@ -14,11 +15,13 @@ export function Files({
 
   const worker = useRef<Worker|null>(null)
   const files = useRef<(File|null)[]>([])
-  const add = useFileUpload(s => s.add)
+  const addFileUpload = useFileUpload(s => s.add)
   const onDraggedIn = useFileUpload(s => s.onDraggedIn)
   const onDraggedOut = useFileUpload(s => s.onDraggedOut)
   const draggedIn = useFileUpload(s => s.draggedIn)
   const addFileInQueue = useFileUpload(s => s.addFileInQueue)
+  const { addFileEmbeddings } = useEmbedding()
+  
 
   useEffect(() => {
 
@@ -32,7 +35,14 @@ export function Files({
       }
 
       else {
-        add({
+
+        addFileEmbeddings({
+          data: msg.data.data,
+          mime: msg.data.type,
+          name: files.current[msg.data.index]?.name || ''
+        })
+
+        addFileUpload({
           data: msg.data.data,
           mime: msg.data.type,
           name: files.current[msg.data.index]?.name || ''

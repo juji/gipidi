@@ -104,7 +104,7 @@ export async function enabled(tenant?:string, dbname?:string){
   return true
 }
 
-async function getCollection( name: string, tenant?:string, dbname?:string ){
+export async function getCollection( name: string, tenant?:string, dbname?:string ){
   const url = getChromaDbURL()
   const collection = await zlFetch.post(url + `${PREFIX}/collections`, {
     body: {
@@ -120,31 +120,56 @@ async function getCollection( name: string, tenant?:string, dbname?:string ){
   return collection.body
 }
 
+export async function updateCollectionName( collectionId: string, name: string ){
+  const url = getChromaDbURL()
+  const collection = await zlFetch.put(url + `${PREFIX}/collections/${collectionId}`, {
+    body: {
+      new_name: name,
+    },
+  })
+
+  return collection.body
+}
+
+// remove embeddings
+export async function remove(
+  collectionId: string,
+  insertId:string
+){
+
+  const url = getChromaDbURL()
+  await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/delete`,{
+    body: {
+      "ids": [insertId]
+    }
+  })
+
+}
+
+// create / add embeddings
 async function addCollectionItem( 
   collectionId: string, 
   item: (ConvoAttachment & { embedding: number[] }),
 ){
 
   const url = getChromaDbURL()
-  const res = await zlFetch.post(url + `${PREFIX}/collections/${collectionId}`,{
+  const id = nanoid()
+  await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/add`,{
     body: {
       embeddings: [item.embedding],
       metadatas: [{ mime: item.mime, name: item.name }],
       documents: [item.data],
-      ids: [nanoid()]
+      ids: [id]
     }
   })
 
-  return res.body
+  return id
 
 }
 
-// create embeddings
-export async function process( 
+export async function insert( 
   files: ConvoAttachment[], 
-  convoId: string,
-  tenant?:string, 
-  dbname?:string
+  collectionId: string,
 ){
 
   const ollama = await getOllama()
@@ -165,8 +190,6 @@ export async function process(
       })
   )
 
-  const collection = await getCollection(convoId, tenant, dbname)
-
   const data = await Promise.all(
     [ ...pdf, ...text, ...html, ...json, ].map(async v => {
 
@@ -175,19 +198,27 @@ export async function process(
         prompt: v.data
       })
   
-      const insert = await addCollectionItem(
-        collection.id,
+      const insertId = await addCollectionItem(
+        collectionId,
         {
           ...v,
           embedding: resp.embedding
         },
       )
 
-      return insert
+      return {
+        id: insertId,
+        name: v.name,
+        mime: v.mime
+      }
 
     })
   )
 
   return data
 
+}
+
+export async function prompt(str: string){
+  
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { Convo, ConvoAttachment, ConvoDetail, GPTProvider } from '../idb/types'
+import { Convo, ConvoAttachment, ConvoDetail, ConvoEmbeddingsMetadata, GPTProvider } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 
@@ -18,6 +18,8 @@ import { addGPTText } from './addGPTText'
 import { onCreateChat } from './onCreateChat'
 import { search } from './search'
 import { loadAll } from './loadAll'
+import { addEmbeddings } from './addEmbeddings'
+
 import { WritableDraft } from 'immer'
 
 export type ChatCreationData = {
@@ -61,6 +63,14 @@ export type ConvoStore = {
 
   fileUploadEnabled: boolean
   setFileUpload: (b: boolean) => void
+  processAttachments: boolean
+  setAttachmentsProcessing: (b: boolean) => void
+
+  addEmbeddings: (
+    activeConvoId: string, 
+    collectionId: string, 
+    metadatas: ConvoEmbeddingsMetadata[]
+  ) => Promise<void>
 
 }
 
@@ -121,7 +131,14 @@ export function createConvoStore(){
           fileUploadEnabled: false,
           setFileUpload: (b: boolean) => {
             set({ fileUploadEnabled: b })
-          }
+          },
+
+          processAttachments: false,
+          setAttachmentsProcessing: (b: boolean) => {
+            set({ processAttachments: b })
+          },
+
+          addEmbeddings: addEmbeddings(set, get)
 
         })
       )

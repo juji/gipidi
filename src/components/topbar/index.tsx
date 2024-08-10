@@ -31,27 +31,36 @@ export function TopBar(){
   const loading = useGPT(s => s.loading)
 
   const activeConvo = useConvo(s => s.activeConvo)
-  const setFileUpload = useConvo(s => s.setFileUpload)
   const convos = useConvo(s => s.convos)
   const onCreateChat = useConvo(s => s.onCreateChat)
   const setCurrentTitle = useConvo(s => s.setCurrentTitle)
-
+  
   const convo = useMemo(() => {
     if(!activeConvo) return null
     const convo = convos.find(v => v.id === activeConvo.id)
     return convo
   },[ activeConvo, convos ])
-
+  
+  const setFileUpload = useConvo(s => s.setFileUpload)
+  const setAttachmentsProcessing = useConvo(s => s.setAttachmentsProcessing)
+  
   // send info to chat creator
   // also set if file upload is enabled
   useEffect(() => {
 
     if(provider){
       loadAll().then(async all => {
+        
         all[provider].attachmentEnabled()
           .then((b: boolean) => {
             setFileUpload(b)
           })
+
+        all[provider].processAttchments()
+          .then((b: boolean) => {
+            setAttachmentsProcessing(b)
+          })
+          
       })
     }
 
