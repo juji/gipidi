@@ -1,7 +1,8 @@
 TODO:
   + download llava-llama3:latest on setup
   + remove chroma-db
-  - add a stop button
+  + add a stop button
+  - search
 
 features:
 

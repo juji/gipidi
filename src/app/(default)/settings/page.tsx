@@ -1,6 +1,6 @@
 'use client'
 import { Page } from "@/components/page"
-import { getQueryString } from "@/lib/getQueryString"
+import { getQueryString } from "@/lib/get-query-string"
 import { showNote } from "@/lib/toast"
 import { useEffect } from "react"
 import dynamic from 'next/dynamic'

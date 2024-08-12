@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import styles from './style.module.css'
 import { useGoogleSearchStore } from '@/lib/googleSearchStore'
+import { searchGoogle } from '@/lib/search-google'
 
 export function GoogleSearch(){
 
@@ -13,19 +14,23 @@ export function GoogleSearch(){
 
   useEffect(() => {
     if(loading) return () => {}
+    console.log('data', data)
     data?.apiKey && setApiKey(data?.apiKey)
     data?.id && setId(data?.id)
   },[ loading ])
 
   useEffect(() => {
-    if(!data || data.apiKey !== apiKey)
-      set(id, apiKey)
-  },[ apiKey ])
+    if(!id || !apiKey) return;
 
-  useEffect(() => {
-    if(!data || data.id !== id)
-      set(id, apiKey)
-  },[ id ])
+    searchGoogle('awesome', id, apiKey)
+      .then(res => {
+        console.log('google saerch result', res)
+        set(id, apiKey)
+      }).catch(e => {
+        console.log('google saerch error', e)
+      })
+
+  },[ id, apiKey ])
 
   return <div className={styles.gs}>
     <h4>Google Search API</h4>
