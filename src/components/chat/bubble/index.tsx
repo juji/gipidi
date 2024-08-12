@@ -18,10 +18,12 @@ function Bubble({
   className,
   profilePict,
   data,
+  isLast
 }:{ 
   className: string 
   profilePict: string
   data: ConvoData
+  isLast?: boolean
 }){
 
   const [ text, setText ] = useTextStream()
@@ -34,7 +36,7 @@ function Bubble({
   
   // this is set only once
   const isNewText = useRef(
-    data.role === 'assistant' && 
+    data.role === 'assistant' && isLast &&
     (new Date().valueOf() - data.lastUpdate.valueOf()) < 1000 // kira-kira aja
   )
 
@@ -113,7 +115,11 @@ function Bubble({
     <div className={styles.cloud}>
       { content ? 
         <>
-          <div className={cx(styles.content, 'bubble-content', (result || !disableInput) && 'noblimk')}>
+          <div className={cx(
+            styles.content, 
+            'bubble-content', 
+            (result || !disableInput || !isNewText.current) && 'noblimk'
+          )}>
             {content}
             {stopped ? <p className={styles.stopped}>You stopped this response</p> : null}
           </div>
@@ -163,7 +169,7 @@ export function UserBubble({ data }: { data: ConvoData }) {
 
 }
 
-export function BotBubble({ data }: { data: ConvoData }){
+export function BotBubble({ data, isLast }: { data: ConvoData, isLast: boolean }){
 
   const [icon, setIcon] = useState('/bot.webp')
   const activeConvo = useConvo(s => s.activeConvo)
@@ -177,6 +183,7 @@ export function BotBubble({ data }: { data: ConvoData }){
   return <Bubble 
     className={styles.bot} 
     data={data}
+    isLast={isLast}
     profilePict={icon}
   />
 

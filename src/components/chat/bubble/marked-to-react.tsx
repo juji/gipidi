@@ -51,24 +51,23 @@ export function markedToReact(str: string){
 
   return <Fragment>
     {parse(
-      str.replace(/❙⦀❙/,'<span class="blinking-cursor-gipidi">H</span>'),
+      str.replace(/❙⦀❙/,'<span class="blinking-cursor-gipidi" />'),
       {
         replace(domNode) {
           // @ts-expect-error
           if(domNode.name === 'span' && domNode.attribs.class === 'blinking-cursor-gipidi') {
+
+            // setup position of cursor
             return <span ref={(r) => {
-              const b = r?.closest('.bubble-content') as HTMLDivElement
-              const rb = r?.getBoundingClientRect()
-              const bb = b?.getBoundingClientRect()
-                b?.style.setProperty(
-                  '--cursor-left', 
-                  ((rb?.left || 0) - bb.left) + 'px'
-                )
-                b?.style.setProperty(
-                  '--cursor-bottom', 
-                  ((bb?.bottom || 0) - (rb?.bottom || 0) - 3) + 'px'
-                )
-            }} className="blinking-cursor-gipidi">H</span>
+              if(!r) return;
+              const b = r.closest('.bubble-content') as HTMLDivElement
+              if(!b) return;
+              const rb = r.getBoundingClientRect()
+              const bb = b.getBoundingClientRect()
+              b.style.setProperty('--cursor-left', ((rb?.left || 0) - bb.left) + 'px')
+              // why 3? i don't know
+              b.style.setProperty('--cursor-bottom', ((bb?.bottom || 0) - (rb?.bottom || 0) - 3) + 'px')
+            }} className="blinking-cursor-gipidi" />
           }
           
           // @ts-expect-error

@@ -38,12 +38,12 @@ export function useTextStream(): [ s: string, t: (s: string) => void]{
       convert(current.current).then(v => {
         setResult(v)
         started.current = false
-        start()
+        setTimeout(() => start(), 1) // to make lighter load, lesser error
       }).catch(e => {
         console.error('Error from convert')
         console.error(e)
         started.current = false
-        start()
+        setTimeout(() => start(), 1)
       })
     })
   }
