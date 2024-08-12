@@ -6,8 +6,7 @@ import { defaultSysPrompt, encloseUserRequirement } from "./system";
 
 
 export const icon = '/gpt/gemini.svg'
-export const attachmentEnabled = async () => true
-export const processAttchments = async () => false
+export const processAttchments = false
 
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )
@@ -49,10 +48,16 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
   client: GoogleGenerativeAI, 
   convoDetail: ConvoDetail,
   onResponse: (str: string, end?: boolean) => void,
-  onError: (e: any)   => void
+  onError: (e: any)   => void,
+  onStopSignal?: (fn: () => void) => void
 ){
 
   try{
+
+    let stopped = false
+    onStopSignal && onStopSignal(() => {
+      stopped = true
+    })
 
     const isGemini1 = getDefaultModel().id === convoDetail.model
     const systemInstruction = defaultSysPrompt + (
@@ -92,7 +97,13 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
         },
       }))
     ] : last.content)
-    for await (const chunk of result.stream) onResponse(chunk.text() || '')
+
+    let next = result.stream.next()
+    while((await next).value){
+      if(stopped) result.stream.throw('stopped')
+      onResponse((await next).value.text() || '')
+      next = result.stream.next()
+    }
     onResponse('', true)
 
   }catch(e){

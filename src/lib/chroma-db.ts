@@ -1,3 +1,4 @@
+// for the future
 
 import zlFetch from '@juji/zl-fetch'
 import { saveChromaDbURL, getChromaDbURL } from './local-storage'
@@ -180,7 +181,7 @@ export async function insert(
   const pdf = await Promise.all(
     files.filter(v => mime.getExtension(v.mime) === 'pdf')
       .map(async v => {
-        return { ...v, data: await pdfToText(v.data) }
+        return { ...v, data: await pdfToText(v) }
       })
   )
   const html = await Promise.all(

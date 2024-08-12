@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { convert } from './marked';
 import cx from 'classix'
 import styles from './style.module.css'
@@ -26,9 +26,11 @@ function Bubble({
 
   const [ text, setText ] = useTextStream()
   const [ result, setResult ] = useState('')
+  const disableInput = useConvo(s => s.disableInput)
 
   const attachments = useRef(data.attachments)
   const isUser = data.role === 'user'
+  const stopped = data.stopped
   
   // this is set only once
   const isNewText = useRef(
@@ -38,7 +40,7 @@ function Bubble({
 
   useEffect(() => {
     
-    if(isNewText.current){
+    if(isNewText.current && !stopped){
       setText(data.content)
     }else{
       Promise.resolve(convert(data.content)).then((res:string) => {
@@ -48,7 +50,7 @@ function Bubble({
       })
     }
     
-  },[ data.content ])
+  },[ data.content, stopped ])
   
   const [ autoScroll, setAutoScroll ] = useState(!!isNewText.current)
   const container = useRef<HTMLDivElement|null>(null)
@@ -111,7 +113,10 @@ function Bubble({
     <div className={styles.cloud}>
       { content ? 
         <>
-          <div className={cx(styles.content, 'bubble-content')}>{content}</div>
+          <div className={cx(styles.content, 'bubble-content', (result || !disableInput) && 'noblimk')}>
+            {content}
+            {stopped ? <p className={styles.stopped}>You stopped this response</p> : null}
+          </div>
           
           {attachments.current && attachments.current.length ? <ChatAttachment
             columnNumber={attachments.current.length < 4 ? attachments.current.length : 4}

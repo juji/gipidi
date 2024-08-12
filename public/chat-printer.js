@@ -78,9 +78,9 @@ const parser = marked.use(
 
 onmessage = (e) => {
   parser.parse(
-    e.data.replace(/(.*)$/, (_, lastLine) => {
+    e.data.replace(/.*$/, (lastLine) => {
 
-      // console.log(lastLine)
+      // console.debug(lastLine)
 
       return lastLine ? lastLine
 
@@ -122,7 +122,7 @@ onmessage = (e) => {
         })
         .replace(/(^|\s+)([\*\_]+)(\~+)([^\s][^\*\_\~]+)((\~+)?([\*\_]+)?)$/g, (_, p1,p2,p3,p4) => {
           return `${p1}${p2}${p3}${p4.replace(/\s+$/,'')}${p3}${p2}`
-        })
+        }) + '❙⦀❙'
 
         : ''
 

@@ -1,9 +1,10 @@
+import { ConvoAttachment } from "./idb/types";
 
 declare var pdfjsLib: any;
 
-export async function pdfToText( pdfUrl: string ) {
+export async function pdfToText( attachment: ConvoAttachment ) {
 
-  const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+  const pdf = await pdfjsLib.getDocument(`data:${attachment.mime};base64,${attachment.data}`).promise;
   const totalPageCount = pdf.numPages;
   const texts = await Promise.all(
     new Array(totalPageCount).fill(0).map(async (_,i) => {

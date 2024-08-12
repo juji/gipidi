@@ -1,5 +1,5 @@
 import { useConvo } from "@/lib/convoStore"
-import { useEffect } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useGPT } from "@/lib/gptStore"
 import { showError } from "../toast"
 
@@ -11,16 +11,70 @@ export function useGptListener(){
   const activeConvo = useConvo(s => s.activeConvo)
   const addGPTText = useConvo(s => s.addGPTText)
   const setStreaming = useConvo(s => s.setStreaming)
+  const setStopSignal = useConvo(s => s.setStopSignal)
   const setInputAvailable = useConvo(s => s.setInputAvailable)
   const providers = useGPT(s => s.providers)
+  const attachmentReady = useConvo(s => s.attachmentReady)
+
+  const loadedVendor = useRef<null|any>(null)
+
+  function startChat(){
+
+    loadedVendor.current.chat({
+      convoDetail: activeConvo,
+      onResponse: (str: string, end?: boolean) => {
+        addGPTText(str)
+        if(end) {
+          addGPTText('')
+          setStreaming(false)
+          loadedVendor.current = false
+          setStopSignal(null)
+        }
+      },
+      onError: (e: Error) => {
+        console.error(e)
+        if(e.message.match('aborted')){
+          addGPTText('')
+          setStreaming(false)
+          loadedVendor.current = false
+        }else{
+          showError(e.message)
+          addGPTText(' [ERROR]')
+          setStreaming(false)
+          loadedVendor.current = false
+          setStopSignal(null)
+        }
+      },
+      onStopSignal: (fn: () => void) => {
+        setStopSignal(fn)
+      }
+    }).catch((e: Error) => {
+      console.error(e)
+      showError(e.message)
+      addGPTText(' [INITIALIZATION ERROR]')
+      setStreaming(false)
+      setStopSignal(null)
+      loadedVendor.current = false
+    })
+  }
+
+  useEffect(() => {
+    if(attachmentReady && loadedVendor.current){
+      startChat()
+    }
+  },[attachmentReady])
 
   useEffect(() => {
 
     if(!activeConvo || !isInitializing) return;
+    if(loadedVendor.current) return;
 
     const currentProvider = activeConvo.provider
     const provider = providers.find(v => v.id === currentProvider)
-    if(!provider) return () => {}
+    if(!provider) {
+      loadedVendor.current = null
+      return () => {}
+    }
 
     // when starting, 
     // we set this two
@@ -30,36 +84,15 @@ export function useGptListener(){
     setInputAvailable(false)
 
     loadVendor(provider).then(vendor => {
-      
       addGPTText('')
-      vendor.chat({
-        convoDetail: activeConvo,
-        onResponse: (str: string, end?: boolean) => {
-          addGPTText(str)
-          if(end) {
-            addGPTText('')
-            setStreaming(false)
-          }
-        },
-        onError: (e) => {
-          console.error(e)
-          showError(e.message)
-          addGPTText(' [ERROR]')
-          setStreaming(false)
-        }
-      })
-
-    }).catch(e => {
-      console.error(e)
-      showError(e.message)
-      addGPTText(' [ERROR]')
-      setStreaming(false)
+      loadedVendor.current = vendor
+      if(attachmentReady) startChat()
     })
 
   },[ 
     providers, 
-    activeConvo, 
-    isInitializing 
+    activeConvo?.provider, 
+    isInitializing,
   ])
 
   return null

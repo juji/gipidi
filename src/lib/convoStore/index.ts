@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { Convo, ConvoAttachment, ConvoDetail, ConvoEmbeddingsMetadata, GPTProvider } from '../idb/types'
+import { Convo, ConvoAttachment, ConvoDetail, GPTProvider } from '../idb/types'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
 
@@ -18,7 +18,7 @@ import { addGPTText } from './addGPTText'
 import { onCreateChat } from './onCreateChat'
 import { search } from './search'
 import { loadAll } from './loadAll'
-import { addEmbeddings } from './addEmbeddings'
+import { setAttachmentReady } from './setAttachmentReady'
 
 import { WritableDraft } from 'immer'
 
@@ -61,16 +61,14 @@ export type ConvoStore = {
   setStreaming: (b: boolean) => void
   setInputAvailable: (b: boolean) => void
 
-  fileUploadEnabled: boolean
-  setFileUpload: (b: boolean) => void
-  processAttachments: boolean
-  setAttachmentsProcessing: (b: boolean) => void
+  onReadyListener: null | (() => void)
+  onReady: (fn: null | (() => void)) => void
 
-  addEmbeddings: (
-    activeConvoId: string, 
-    collectionId: string, 
-    metadatas: ConvoEmbeddingsMetadata[]
-  ) => Promise<void>
+  attachmentReady: boolean
+  setAttachmentReady: (attachments: boolean|{[key: string]: ConvoAttachment}) => void
+
+  stopSignal: () => void
+  setStopSignal: (fn: null | (() => void)) => void
 
 }
 
@@ -128,17 +126,38 @@ export function createConvoStore(){
             set({ disableInput:!b })
           },
 
-          fileUploadEnabled: false,
-          setFileUpload: (b: boolean) => {
-            set({ fileUploadEnabled: b })
+          onReadyListener: null,
+          onReady: (fn: null | (() => void)) => {
+            set({ onReadyListener: fn })
+            if(get().attachmentReady && fn) fn()
           },
 
-          processAttachments: false,
-          setAttachmentsProcessing: (b: boolean) => {
-            set({ processAttachments: b })
-          },
+          attachmentReady: false,
+          setAttachmentReady: setAttachmentReady(set),
 
-          addEmbeddings: addEmbeddings(set, get)
+          stopSignal: () => {},
+          setStopSignal: (fn: null | (() => void)) => {
+            set(s => {
+
+              s.stopSignal = fn ? () => {
+                fn()
+                set(ss => {
+                  if(ss.activeConvo){
+                    console.log(ss.activeConvo.data[ss.activeConvo.data.length -1])
+                    ss.activeConvo.data[ss.activeConvo.data.length -1].stopped = true
+                  }
+                })
+              } : () => {
+                set(ss => {
+                  if(ss.activeConvo){
+                    console.log(ss.activeConvo.data[ss.activeConvo.data.length -1])
+                    ss.activeConvo.data[ss.activeConvo.data.length -1].stopped = true
+                  }
+                })
+              }
+
+            })
+          }
 
         })
       )

@@ -17,6 +17,7 @@ async function downloadImage(str: any) {
   const mime = data[0].split(';').shift().split(':').pop()
 
   download({
+    id: Math.random()+'',
     data: data[1],
     mime,
     name: 'asdf.' + mime.split('/').pop()

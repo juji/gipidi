@@ -11,46 +11,47 @@
 
   --aside-width: 1.8em;
   --row-gap: .8em;
+  --nav-width: 0px;
 
   padding: 1em 0;
   display: grid;
   gap: var(--row-gap);
   scroll-margin-top: 62px;
   position: relative;
-  
+
+  --max-width-cloud: calc(
+      min(100vw - var(--nav-width),  var(--content-max-width)) -
+      calc( 2 * var(--aside-width) ) - 
+      calc( 2 * var(--content-padding-lr) ) - 
+      calc( 2 * var(--row-gap) ) - 
+      calc( 2px + var(--scrollbar-width)) /*  why 2px? i don't know */
+    );
 
   @media(min-width: 500px){
     --aside-width: 2.9em;
     --row-gap: 1em;
   }
-
-  --max-width-cloud: calc(
-      min(100vw,  var(--content-max-width)) -
-      var(--content-padding-lr) -
-      var(--aside-width) - 
-      var(--aside-width) -
-      calc( 2 * var(--content-padding-lr) ) - 
-      calc( 1 * var(--row-gap) )
-      /* 
-        two --content-padding-lr padding for outside padding,
-        one --row-gap for.. i don't know why it's one.. but it is
-      */
-    );
-
+  
   @media (min-width: 900px){
-    --max-width-cloud: calc(
-      min(100vw - var(--content-nav-width),  var(--content-max-width)) -
-      var(--content-padding-lr) -
-      var(--aside-width) - 
-      var(--aside-width) -
-      calc( 2 * var(--content-padding-lr) ) - 
-      calc( 1 * var(--row-gap) )
-    );
+    --nav-width: var(--content-nav-width);
+  }
+
+  .cursor{
+    background-color: white;
+    margin-left: 1em;
+    width: 1em;
+  }
+
+  .stopped{
+    margin-top: 1em;
+    font-style: italic;
+    color: #999;
   }
   
   & > .cloud{
     grid-area: cloud;
     max-width: var(--max-width-cloud);
+    box-sizing: border-box;
   }
 
   & > .pict{
@@ -67,6 +68,29 @@
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
+
+    & > .stop{
+      display: none;
+      position: sticky;
+      bottom: 144px;
+      background: var(--fg-color);
+      color: var(--bg-color);
+      padding: 0.2em;
+      border-radius: 50%;
+      @media(min-width: 500px){
+        padding: 0.4em;
+      }
+
+      opacity: 0.7;
+      &:hover{
+        opacity: 1;
+      }
+
+      &:active{
+        opacity: 0.7;
+      }
+
+    }
 
     & > .down{
       position: sticky;

@@ -143,6 +143,31 @@
 
   }
 
+  .stop{
+    outline: none;
+    align-self: end;
+    border-radius: 50%;
+    padding: auto auto;
+    width: 2.9em;
+    height: 2.9em;
+    border: 1px solid var(--fg-color);
+    color: var(--bg-color);
+    background-color: var(--fg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0.5;
+    &:hover{
+      opacity: 1;
+    }
+
+    &:active{
+      opacity: 0.7;
+    }
+    
+  }
+
   .warning{
     grid-column-start: 1;
     grid-column-end: 3;

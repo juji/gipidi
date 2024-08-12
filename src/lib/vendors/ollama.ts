@@ -1,14 +1,10 @@
 import { Ollama } from 'ollama/browser'
 import type { GPTModel, ChatFn, GetClientFromProvider } from './types'
 import { ConvoDetail, GPTProvider, OllamaSetting } from '../idb/types'
-import { defaultSysPrompt, encloseUserRequirement } from "./system";
-import { 
-  chromaDbEnabled,
-} from "../chroma-db";
+import { defaultSysPrompt, encloseUserRequirement, createConvoWithAttachment } from "./system";
 
 export const icon = '/gpt/ollama.png'
-export const attachmentEnabled = async () => !!(await chromaDbEnabled())
-export const processAttchments = async () => !!(await chromaDbEnabled())
+export const processAttchments = true
 
 export function getClient( host: string ){
   const ollama = new Ollama({ host })
@@ -36,7 +32,8 @@ export const chat: ChatFn<Ollama> = async function(
   client: Ollama, 
   convoDetail: ConvoDetail,
   onResponse: (str: string, end?: boolean) => void,
-  onError: (e: any)   => void
+  onError: (e: any)   => void,
+  onStopSignal?: (fn: () => void) => void
 ){
 
   let convo = structuredClone(convoDetail.data)
@@ -44,29 +41,37 @@ export const chat: ChatFn<Ollama> = async function(
     convo[0].content = defaultSysPrompt + encloseUserRequirement(convo[0].content)
   }else{
     convo.unshift({
-      id: 'asdf',
+      id: 'auto-system',
       lastUpdate: new Date(),
       role: 'system', 
       content: defaultSysPrompt
     })
   }
+
+
   
   try{
+
+    let stopped = false
+    onStopSignal && onStopSignal(() => {
+      stopped = true
+    })
+    
     const resp = await client.chat({
       model: convoDetail.model,
       messages: convo.map((v, i) => {
         return {
           role: v.role,
-          content: v.content,
-          ...v.attachments && v.attachments.length ? {
-            images: v.attachments.filter(v => v.mime.match('image/')).map(atta => `${atta.data}`)
-          } : {}
+          content: createConvoWithAttachment(v.content, v.attachments)
         }
       }),
       stream: true
     })
-  
-    for await (const chunk of resp) onResponse(chunk.message.content)
+    
+    for await (const chunk of resp) {
+      if(stopped) resp.abort()
+      onResponse(chunk.message.content)
+    }
     onResponse('', true)
   }catch(e){
     onError(e)

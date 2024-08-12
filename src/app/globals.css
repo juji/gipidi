@@ -11,6 +11,8 @@
   --content-nav-width: 340px;
   --content-nav-width-sm: 240px;
 
+  --scrollbar-width: 5px;
+
   color-scheme: dark;
 
 }
@@ -37,8 +39,8 @@ body {
 }
 
 *::-webkit-scrollbar{
-  width: 5px;
-  height: 5px;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
   background: transparent;
 }
 
@@ -49,6 +51,7 @@ body {
 
 *::-webkit-scrollbar-track{
   background-color: transparent;
+  overflow: auto;
 }
 
 ::-webkit-file-upload-button {

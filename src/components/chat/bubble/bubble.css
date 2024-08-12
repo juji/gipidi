@@ -1,4 +1,13 @@
 
+@keyframes blink {
+  from{
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .bubble-content{
 
   line-height: 1.7em;
@@ -9,6 +18,26 @@
 
   & > :last-child{
     margin-bottom: 0em;
+  }
+
+  position: relative;
+
+  .blinking-cursor-gipidi{
+    opacity: 0;
+  }
+
+  &:after{
+    animation-duration: 500ms;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    content: '❙';
+    position: absolute;
+    left: var(--cursor-left, 0);
+    bottom: var(--cursor-bottom, 999999px);
+  }
+
+  &.noblimk:after{
+    display: none;
   }
 
   .highlighted-code{

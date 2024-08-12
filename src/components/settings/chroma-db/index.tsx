@@ -1,3 +1,5 @@
+// for the future
+
 import styles from './style.module.css'
 import cx from 'classix'
 import Link from 'next/link'
@@ -27,8 +29,6 @@ export function ChromaDB(){
 
 
   // downloading embed models
-  // this will keep downloading even if we change page.
-  // therefore, if(!progressRef.current) return;
   const progressRef = useRef<HTMLDivElement|null>(null)
   const [ embedModelDlStatus, setEmbedModelDlStatus ] = useState('')
   async function downloadOllamaEmbed(){
@@ -36,6 +36,8 @@ export function ChromaDB(){
     if(r) {
       for await (let progress of r){
         
+        // this will keep downloading even if we change page.
+        // therefore,
         if(!progressRef.current) return;
         
         setEmbedModelDlStatus('Downloading model: ' + progress.status)

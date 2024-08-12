@@ -51,9 +51,26 @@ export function markedToReact(str: string){
 
   return <Fragment>
     {parse(
-      str,
+      str.replace(/❙⦀❙/,'<span class="blinking-cursor-gipidi">H</span>'),
       {
         replace(domNode) {
+          // @ts-expect-error
+          if(domNode.name === 'span' && domNode.attribs.class === 'blinking-cursor-gipidi') {
+            return <span ref={(r) => {
+              const b = r?.closest('.bubble-content') as HTMLDivElement
+              const rb = r?.getBoundingClientRect()
+              const bb = b?.getBoundingClientRect()
+                b?.style.setProperty(
+                  '--cursor-left', 
+                  ((rb?.left || 0) - bb.left) + 'px'
+                )
+                b?.style.setProperty(
+                  '--cursor-bottom', 
+                  ((bb?.bottom || 0) - (rb?.bottom || 0) - 3) + 'px'
+                )
+            }} className="blinking-cursor-gipidi">H</span>
+          }
+          
           // @ts-expect-error
           if(domNode.name === 'button' && domNode.attribs.class === 'btn-copy') {
 

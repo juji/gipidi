@@ -7,7 +7,8 @@ export type ModelsFn = () => Promise<GPTModel[]>
 export type ChatFn = (params: {
   convoDetail: ConvoDetail
   onResponse: (str: string, end?: boolean) => void
-  onError: (e: any)   => void
+  onError: (e: any) => void
+  onStopSignal?: (fn: () => void) => void
 }) => Promise<void>
 
 export type CreateTitleFn = (convoDetail: ConvoDetail) => Promise<string>
@@ -26,12 +27,14 @@ function getMethods( loaded: any, client: any ){
   const chat: ChatFn = async({
     convoDetail,
     onResponse,
-    onError
+    onError,
+    onStopSignal
   }) => await loaded.chat(
     client,
     convoDetail,
     onResponse,
-    onError
+    onError,
+    onStopSignal
   )
 
   const createTitle: CreateTitleFn = async (convoDetail: ConvoDetail) => await loaded.createTitle(
@@ -43,8 +46,7 @@ function getMethods( loaded: any, client: any ){
     client,
     models,
     chat,
-    attachmentEnabled: loaded.attachmentEnabled as () => Promise<boolean>,
-    processAttchments: loaded.processAttchments as () => Promise<boolean>,
+    processAttchments: loaded.processAttchments as boolean,
     createTitle,
     getDefaultModel: loaded.getDefaultModel ? loaded.getDefaultModel as GetDefaultFn : null,
     test: loaded.test as TestFn,

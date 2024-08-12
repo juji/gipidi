@@ -8,15 +8,14 @@
   /* padding: 0px; */
   margin: 0 auto;
 
-  @media(min-width: 800px){
+  @media(min-width: 900px){
     margin: 3em auto;
   }
 
   .heading{
-    margin-bottom: 1em;
+    margin-bottom: 0.39em; /* so it aligns with sidebar */
     
-    @media(min-width: 800px){
-      margin-bottom: calc(0.39em); /* so it aligns with sidebar */
+    @media(min-width: 900px){
       margin-top: 0.39em; /* well, 1px diff */
     }
   }

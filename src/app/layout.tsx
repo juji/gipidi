@@ -24,7 +24,7 @@ export default function RootLayout({
           const int = setInterval(() => {
             if(pdfjsLib) {
               clearInterval(int)
-              pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/build/pdf.worker.js'
+              pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/build/pdf.worker.mjs'
             }
           },500)
         `}} />

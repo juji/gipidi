@@ -8,21 +8,9 @@ export type Convo = {
   deleted: Date
 }
 
-export type ConvoEmbeddingsMetadata = {
-  id: string,
-  name: string,
-  mime: string,
-}
-
-export type ConvoEmbeddings = {
-  collectionId: string,
-  metadatas: ConvoEmbeddingsMetadata[]
-}
-
 export type ConvoDetail = {
   id: string
   data: ConvoData[]
-  embeddings?: ConvoEmbeddings,
   provider: GPTProvider['id'],
   systemPrompt: string,
   model: string
@@ -32,7 +20,10 @@ export type ConvoDetail = {
 }
 
 export type ConvoAttachment = {
+  id: string
   data: string, // base64
+  text?: string,
+  loading?: boolean
   mime: string,
   name: string
 }
@@ -41,8 +32,8 @@ export type ConvoData = {
   id: string
   lastUpdate: Date
   role: 'user' | 'assistant' | 'system'
-  embeddings?: ConvoEmbeddingsMetadata['id'][]
   content: string
+  stopped?: boolean
   attachments?: ConvoAttachment[]
 }
 

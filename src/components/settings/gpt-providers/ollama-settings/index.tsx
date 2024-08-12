@@ -1,7 +1,10 @@
 'use client'
+
+import { Ollama } from 'ollama/browser'
 import { OllamaSetting } from "@/lib/idb/types"
-import { useEffect, useState } from "react"
-import styles from './style.module.css'
+import { useEffect, useRef, useState } from "react"
+import styles from '../style.module.css'
+import stylesDownload from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
@@ -59,6 +62,60 @@ export function OllamaSettings(){
 
   },[ url, loading ])
 
+  // downloading llava model to enable images in Chat
+  // this works when gemini is not around. But it will be slower.
+  const progressRef = useRef<HTMLDivElement|null>(null)
+  const downloading = useRef(false)
+  const [ llavaStatus, setLlavaStatus ] = useState('')
+  async function getLlava(){
+
+    const ollama = new Ollama({ host: url })
+    const list = await ollama.list()
+    const llava = list && list.models.find(v => v.name === 'llava-llama3:latest')
+    if(llava) {
+      if(progressRef.current) progressRef.current.style.width = '100%'
+      setLlavaStatus('Downloaded: llava-llama3:latest')
+      return;
+    }
+    if(downloading.current) return;
+    downloading.current = true
+    
+    const pull = await ollama.pull({
+      model: 'llava-llama3:latest',
+      stream: true
+    })
+
+    if(pull) {
+      for await (let progress of pull){
+        
+        // this will keep downloading even if we change page.
+        // therefore,
+        if(!progressRef.current) return;
+        
+        setLlavaStatus('Downloading Llava: ' + progress.status)
+        if(progressRef.current){
+          progressRef.current.style.width = Math.min(
+            100,
+            Math.round(100 * progress.completed / progress.total)
+          ) + '%'
+        }
+
+      }
+      if(progressRef.current) progressRef.current.style.width = '100%'
+      setLlavaStatus('Downloaded: llava-llama3:latest')
+      downloading.current = false
+    }else{
+      if(progressRef.current) progressRef.current.style.width = '100%'
+      setLlavaStatus('Downloaded: llava-llama3:latest')
+      downloading.current = false
+    }
+  }
+
+  useEffect(() => {
+    if(!isOn) return () => {};
+    getLlava()
+  },[ isOn ])
+
   return <>
     <h6 className={styles.heading}>
       Ollama
@@ -77,6 +134,12 @@ export function OllamaSettings(){
           value={url}
         />
       </label>
+      <div className={stylesDownload.download}>
+        <div className={stylesDownload.downloadProgress}>
+          <div ref={progressRef}></div>
+        </div>
+        <div className={stylesDownload.downloadInfo}>{llavaStatus}</div>
+      </div>
       {err ? <div className={styles.error}>{err}</div> : null}
     </div>
   </>

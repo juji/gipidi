@@ -1,14 +1,10 @@
 import Groq from "groq-sdk"
 import type { GPTModel, ChatFn, GetClientFromProvider } from "./types"
 import { ConvoDetail, GenericSetting, GPTProvider } from "../idb/types"
-import { defaultSysPrompt, encloseUserRequirement } from "./system"
-import { 
-  chromaDbEnabled,
-} from "../chroma-db";
+import { defaultSysPrompt, encloseUserRequirement, createConvoWithAttachment } from "./system"
 
 export const icon = '/gpt/groq.svg'
-export const attachmentEnabled = async () => !!(await chromaDbEnabled())
-export const processAttchments = async () => !!(await chromaDbEnabled())
+export const processAttchments = true
 
 export function getClient( apiKey: string ){
   const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true })
@@ -39,7 +35,8 @@ export const chat: ChatFn<Groq> = async function(
   client: Groq, 
   convoDetail: ConvoDetail,
   onResponse: (str: string, end?: boolean) => void,
-  onError: (e: any)   => void
+  onError: (e: any)   => void,
+  onStopSignal?: (fn: () => void) => void
 ){
 
   let convo = structuredClone(convoDetail.data)
@@ -56,18 +53,27 @@ export const chat: ChatFn<Groq> = async function(
 
   try{
 
+    let stopped = false
+    onStopSignal && onStopSignal(() => {
+      stopped = true
+    })
+
     const resp = await client.chat.completions.create({
       model: convoDetail.model,
       messages: convoDetail.data.map(v => {
         return {
           role: v.role,
-          content: v.content
+          content: createConvoWithAttachment(v.content, v.attachments)
         }
       }),
       stream: true
     })
-  
-    for await (const chunk of resp) onResponse(chunk.choices[0].delta.content || '')
+
+    
+    for await (const chunk of resp) {
+      if(stopped) resp.controller.abort() 
+      onResponse(chunk.choices[0].delta.content || '')
+    }
     onResponse('', true)
 
   }catch(e){

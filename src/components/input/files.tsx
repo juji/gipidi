@@ -5,7 +5,9 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFileUpload } from "./fileUploadStore";
 import { createPortal } from "react-dom";
 import styles from './style.module.css'
-// import { useEmbedding } from "./useEmbedding";
+import { useConvo } from "@/lib/convoStore";
+import { GPTProvider } from "@/lib/idb/types";
+import { nanoid } from "nanoid";
 
 export function Files({
   className,
@@ -20,7 +22,14 @@ export function Files({
   const onDraggedOut = useFileUpload(s => s.onDraggedOut)
   const draggedIn = useFileUpload(s => s.draggedIn)
   const addFileInQueue = useFileUpload(s => s.addFileInQueue)
-  // const { addFileEmbeddings } = useEmbedding()
+  const createChatListener = useConvo(s => s.createChatListener)
+
+  const provider = useRef<GPTProvider['id']|null>(null)
+  useEffect(() => {
+    if(!createChatListener) return () => {}
+    provider.current = createChatListener().provider
+  },[createChatListener])
+
 
   useEffect(() => {
 
@@ -35,17 +44,22 @@ export function Files({
 
       else {
 
-        // addFileEmbeddings({
-        //   data: msg.data.data,
-        //   mime: msg.data.type,
-        //   name: files.current[msg.data.index]?.name || ''
-        // })
-
-        addFileUpload({
-          data: msg.data.data,
-          mime: msg.data.type,
-          name: files.current[msg.data.index]?.name || ''
-        })
+        if(provider.current === 'gemini')
+          addFileUpload({
+            id: nanoid(),
+            data: msg.data.data,
+            mime: msg.data.type,
+            name: files.current[msg.data.index]?.name || ''
+          })
+        else{
+          addFileUpload({
+            id: nanoid(),
+            data: msg.data.data,
+            mime: msg.data.type,
+            name: files.current[msg.data.index]?.name || '',
+            loading: true
+          })
+        }
         files.current[msg.data.index] = null
       }
 
