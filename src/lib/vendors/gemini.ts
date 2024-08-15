@@ -61,19 +61,22 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
 
     const isGemini1 = getDefaultModel().id === convoDetail.model
     const systemInstruction = defaultSysPrompt + (
-      convoDetail.data[0].role === 'system' && !isGemini1 ? 
-      encloseUserRequirement(convoDetail.data[0].content) : null
+      convoDetail.data[0].role === 'system' ? 
+      encloseUserRequirement(convoDetail.data[0].content) : ''
     )
 
     const model = client.getGenerativeModel({ 
       model: convoDetail.model,
-      systemInstruction
+      ...isGemini1 ? {} : {
+        systemInstruction
+      }
     })
 
     const history = convoDetail.data.filter(v => v.role !== 'system')
-      .map(v => ({
+      .map((v, i) => ({
         role: v.role === 'user' ? 'user' : 'model',
         parts: [
+          ...!i && isGemini1 ? [{ text: systemInstruction }] : [],
           { text: v.content },
           ...v.attachments && v.attachments.length ? v.attachments.map(atta => ({
             inlineData: {
@@ -98,11 +101,11 @@ export const chat: ChatFn<GoogleGenerativeAI> = async function(
       }))
     ] : last.content)
 
-    let next = result.stream.next()
-    while((await next).value){
+    let next = await result.stream.next()
+    while(next.value){
       if(stopped) result.stream.throw('stopped')
-      onResponse((await next).value.text() || '')
-      next = result.stream.next()
+      onResponse(next.value.text() || '')
+      next = await result.stream.next()
     }
     onResponse('', true)
 
