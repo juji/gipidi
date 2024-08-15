@@ -1,11 +1,9 @@
 import { useConvo } from "@/lib/convoStore"
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useGPT } from "@/lib/gptStore"
 import { showError } from "../toast"
 
-// import { loadVendor } from '@/lib/vendors/load'
-import { chat } from '@/lib/langchain/loader'
-import { GPTProvider } from "../idb/types"
+import { loadVendor } from '@/lib/vendors/load'
 
 export function useGptListener(){
 
@@ -18,19 +16,18 @@ export function useGptListener(){
   const providers = useGPT(s => s.providers)
   const attachmentReady = useConvo(s => s.attachmentReady)
 
-  function startChat(provider: GPTProvider){
+  const loadedVendor = useRef<null|any>(null)
 
-    if(!activeConvo) return;
+  function startChat(){
 
-    chat({
-      provider, 
+    loadedVendor.current.chat({
       convoDetail: activeConvo,
-      
       onResponse: (str: string, end?: boolean) => {
         addGPTText(str)
         if(end) {
           addGPTText('')
           setStreaming(false)
+          loadedVendor.current = false
           setStopSignal(null)
         }
       },
@@ -39,66 +36,64 @@ export function useGptListener(){
         if(e.message.match('aborted')){
           addGPTText('')
           setStreaming(false)
+          loadedVendor.current = false
         }else{
           showError(e.message)
           addGPTText(' [ERROR]')
           setStreaming(false)
+          loadedVendor.current = false
           setStopSignal(null)
         }
       },
       onStopSignal: (fn: () => void) => {
         setStopSignal(fn)
       }
-
     }).catch((e: Error) => {
       console.error(e)
       showError(e.message)
       addGPTText(' [INITIALIZATION ERROR]')
       setStreaming(false)
       setStopSignal(null)
-      setInputAvailable(true)
+      loadedVendor.current = false
     })
   }
 
   useEffect(() => {
-
-    if(activeConvo?.id && providers.length && isWaitingResponse){
-      const provider = providers.find(v => v.id === activeConvo.provider)
-      if(!provider) {
-        showError('Provider is undefined')
-        return () => {}
-      }
-
-      // when starting, 
-      // we set this two
-      // but, the input will be enabled when the UI finish rendering the text
-      // see: src/components/chat/bubble/useTextStream.ts
-      setStreaming(true)
-      setInputAvailable(false)
-
-      // initial gpt text to show the bot avatar
-      // with loader
-      addGPTText('') 
-
-      if(attachmentReady) startChat(provider)
-      else onAttachmentReady(() => {
-        startChat(provider)
-      })
+    if(attachmentReady && loadedVendor.current){
+      startChat()
     }
-  },[activeConvo?.id, providers.length, isWaitingResponse])
-
-  const whenAttachmentReady = useRef<(() => void)|null>(null)
-  function onAttachmentReady(fn: () => void){
-    whenAttachmentReady.current = fn
-  }
+  },[attachmentReady])
 
   useEffect(() => {
-    if(attachmentReady && whenAttachmentReady.current){
-      const fn = whenAttachmentReady.current
-      whenAttachmentReady.current = null
-      fn()
+
+    if(!activeConvo || !isWaitingResponse) return;
+    if(loadedVendor.current) return;
+
+    const currentProvider = activeConvo.provider
+    const provider = providers.find(v => v.id === currentProvider)
+    if(!provider) {
+      loadedVendor.current = null
+      return () => {}
     }
-  },[ attachmentReady ])
+
+    // when starting, 
+    // we set this two
+    // but, the input will be enabled when the UI finish rendering the text
+    // see: src/components/chat/bubble/useTextStream.ts
+    setStreaming(true)
+    setInputAvailable(false)
+
+    loadVendor(provider).then(vendor => {
+      addGPTText('')
+      loadedVendor.current = vendor
+      if(attachmentReady) startChat()
+    })
+
+  },[ 
+    providers, 
+    activeConvo?.provider, 
+    isWaitingResponse,
+  ])
 
   return null
 

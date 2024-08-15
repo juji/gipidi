@@ -30,11 +30,11 @@ export function useTextStream(): [ s: string, t: (s: string) => void]{
         started.current = false
         inputAvailTo.current = setTimeout(() => {
           setInputAvailable(true)
-        },300)
+        },500)
         return;
       }
 
-      current.current = text.current.substring(0,current.current.length+3)
+      current.current = text.current.substring(0,current.current.length+64)
       convert(current.current).then(v => {
         setResult(v)
         started.current = false

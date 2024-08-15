@@ -60,6 +60,7 @@
     height: auto;
     border-radius: 50%;
     overflow: hidden;
+    width: 100%;
   }
 
   & > .gap{

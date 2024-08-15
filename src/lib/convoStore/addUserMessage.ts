@@ -25,7 +25,8 @@ export function addUserMessage(set: Set, get: Get){
     set(state => { 
       if(state.activeConvo)
         state.activeConvo.data = data
-      state.isInitializing = true
+      
+      state.isWaitingResponse = true
     })
 
     await updateConvoDetail(activeConvo)

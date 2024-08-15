@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef } from "react";
 import { useConvo } from "@/lib/convoStore";
 import { useGPT } from "@/lib/gptStore";
 import { useTypeWriter } from '@/lib/hooks/useTypeWriter'
+import { createTitle } from '@/lib/langchain/loader'
 
 export function useTitleCreator(){
 
   const isStreaming = useConvo(s => s.isStreaming)
-  const isInitializing = useConvo(s => s.isInitializing)
+  const isWaitingResponse = useConvo(s => s.isWaitingResponse)
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
   const loading = useConvo(s => s.loading)
@@ -15,7 +16,10 @@ export function useTitleCreator(){
   const { result: title, setText: setTitle } = useTypeWriter('')
   
   // prevent overflow (when many multiple updates happening)
-  const convoLength = useMemo(() => (activeConvo?.data || []).length >= 2,[activeConvo?.data])
+  const convoLength = useMemo(() => {
+    return (activeConvo?.data || []).filter(v => v.role !== 'system').length >= 2
+  },[activeConvo?.data])
+
   const currentTitle = useMemo(() => {
     if(loading) return 'a'
     if(!activeConvo?.id) return 'a'
@@ -23,34 +27,33 @@ export function useTitleCreator(){
     return convo?.title
   },[activeConvo?.id, convos, loading])
 
+  const currentProvider = useMemo(() => {
+    if(!providers.length) return null;
+    if(!activeConvo?.provider) return null;
+    const provider = providers.find(v => v.id === activeConvo?.provider)
+    return provider
+  },[ activeConvo?.provider, providers.length ])
+
   const canceled = useRef(false)
-  const createTitle = useMemo(() => {
+  const createTitleBool = useMemo(() => {
     return !!(
-      convoLength && 
-      !isInitializing && 
+      convoLength &&
+      currentProvider && 
+      !isWaitingResponse && 
       !isStreaming &&
       !currentTitle
     )
-  }, [ convoLength, isStreaming, isInitializing, currentTitle ])
+  }, [ convoLength, isStreaming, isWaitingResponse, currentTitle, currentProvider ])
 
   async function createTitleFn(){
     
     if(!activeConvo) return;
     const convo = convos.find(v => v.id === activeConvo.id)
     if(convo?.title) return;
-
-    console.debug('CREATING TITLE')
-    const currentProvider = activeConvo.provider
-    const provider = providers.find(v => v.id === currentProvider) || null
-
-    const {
-      createTitle,
-      getClientFromProvider
-    } = await import(`@/lib/vendors/${currentProvider}`)
-    if(canceled.current) return;
+    if(!currentProvider) return;
     
-    const client = getClientFromProvider(provider)
-    const title = await createTitle(client, activeConvo)
+    console.debug('CREATING TITLE')
+    const title = await createTitle({ convoDetail: activeConvo, provider: currentProvider })
     if(canceled.current) return;
     
     setTitle(title)
@@ -59,18 +62,19 @@ export function useTitleCreator(){
 
   useEffect(() => {
     if(!activeConvo) return;
-    if(!createTitle) {
+    if(!createTitleBool) {
       canceled.current = true
       return;
     }
 
     canceled.current = false
+    // wait if canceled
     setTimeout(() => {
       if(canceled.current) return;
       createTitleFn()
     },3000)
 
-  },[ createTitle ])
+  },[ createTitleBool ])
   
   useEffect(() => {
     if(!title) return () => {}

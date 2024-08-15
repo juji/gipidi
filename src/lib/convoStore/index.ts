@@ -38,7 +38,7 @@ export type ConvoStore = {
 
   isStreaming: boolean
   disableInput: boolean
-  isInitializing: boolean
+  isWaitingResponse: boolean
 
   updateConvo: ( convo: Convo ) => void
   deleteConvo: ( convo: Convo ) => void
@@ -95,7 +95,7 @@ export function createConvoStore(){
 
           isStreaming: false,
           disableInput: false,
-          isInitializing: false,
+          isWaitingResponse: false,
 
           updateConvo: updateConvo(set),
           deleteConvo: deleteConvo(set),

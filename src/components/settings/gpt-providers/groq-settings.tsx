@@ -5,8 +5,7 @@ import styles from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
-
-import { loadFromId } from "@/lib/vendors/load"
+import { test } from '@/lib/langchain/groq'
 
 const PROVIDER = 'groq'
 
@@ -34,22 +33,20 @@ export function GroqSettings(){
 
   useEffect(() => {
     if(loading) return () => {}
-    if(!apiKey) return () => {}
+    if(!apiKey) {
+      setisOn(false)
+      setErr('Api Key is empty')
+      return () => {}
+    }
     
-    setisOn(false)
-    setErr('')
-
-    loadFromId(PROVIDER, { apiKey }).then(provider => {
-      
-      provider.test(apiKey).then(() => {
-        saveProvider(PROVIDER, { apiKey })
-        setisOn(true)
-      }).catch((e:any) => {
-        removeProvider(PROVIDER)
-        console.error(e)
-        setErr(e.toString())
-      })
-
+    test(apiKey).then(() => {
+      saveProvider(PROVIDER, { apiKey })
+      setisOn(true)
+      setErr('')
+    }).catch((e:any) => {
+      removeProvider(PROVIDER)
+      console.error(e)
+      setErr(e.toString())
     })
 
   },[ apiKey, loading ])

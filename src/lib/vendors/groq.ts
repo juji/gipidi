@@ -22,12 +22,10 @@ export const getClientFromProvider: GetClientFromProvider<Groq> = function ( pro
 
 export async function models( client: Groq ): Promise<GPTModel[]>{
   return await client.models.list().then(models => {
-
     return models.data.map(v => ({
       id: v.id,
       name: v.id + ' (' + v.owned_by + ')'
     }))
-
   })
 }
 

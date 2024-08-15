@@ -1,6 +1,6 @@
 'use client'
 
-import { Ollama } from 'ollama/browser'
+import { test, downloadLlava } from '@/lib/langchain/ollama'
 import { OllamaSetting } from "@/lib/idb/types"
 import { useEffect, useRef, useState } from "react"
 import styles from '../style.module.css'
@@ -8,7 +8,6 @@ import stylesDownload from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
-import { loadFromId } from "@/lib/vendors/load"
 
 const PROVIDER = 'ollama'
 
@@ -40,24 +39,29 @@ export function OllamaSettings(){
     }
   },[ loading, providers ])
 
+  const [downloadingLlava, setDownloadingLlava] = useState<any|null>(false)
   useEffect(() => {
     if(loading) return () => {}
-    if(!url) return () => {}
+    if(!url) {
+      setisOn(false)
+      setErr('URL is empty')
+      return () => {}
+    }
     
     setisOn(false)
     setErr('')
 
-    loadFromId(PROVIDER, { url }).then(provider => {
+    test(url).then(async models => {
       
-      provider.test(url).then(() => {
-        saveProvider(PROVIDER, { url })
-        setisOn( true )
-      }).catch((e:any) => {
-        removeProvider(PROVIDER)
-        console.error(e)
-        setErr(e.toString())
-      })
+      saveProvider(PROVIDER, { url })
+      setisOn( true )
+      const res = await downloadLlava(models, url)
+      setDownloadingLlava(res)
 
+    }).catch((e:any) => {
+      removeProvider(PROVIDER)
+      console.error(e)
+      setErr(e.toString())
     })
 
   },[ url, loading ])
@@ -67,31 +71,19 @@ export function OllamaSettings(){
   const progressRef = useRef<HTMLDivElement|null>(null)
   const downloading = useRef(false)
   const [ llavaStatus, setLlavaStatus ] = useState('')
-  async function getLlava(){
-
-    const ollama = new Ollama({ host: url })
-    const list = await ollama.list()
-    const llava = list && list.models.find(v => v.name === 'llava-llama3:latest')
-    if(llava) {
-      if(progressRef.current) progressRef.current.style.width = '100%'
-      setLlavaStatus('Downloaded: llava-llama3:latest')
-      return;
-    }
+  async function getLlavaProgress(){
+    if(!downloadingLlava) return;
     if(downloading.current) return;
     downloading.current = true
-    
-    const pull = await ollama.pull({
-      model: 'llava-llama3:latest',
-      stream: true
-    })
 
-    if(pull) {
-      for await (let progress of pull){
+
+    if(downloadingLlava) {
+      for await (let progress of downloadingLlava){
         
         // this will keep downloading even if we change page.
         // therefore,
         if(!progressRef.current) return;
-        
+
         setLlavaStatus('Downloading Llava: ' + progress.status)
         if(progressRef.current){
           progressRef.current.style.width = Math.min(
@@ -112,9 +104,9 @@ export function OllamaSettings(){
   }
 
   useEffect(() => {
-    if(!isOn) return () => {};
-    getLlava()
-  },[ isOn ])
+    if(!downloadingLlava) return () => {};
+    getLlavaProgress()
+  },[ downloadingLlava ])
 
   return <>
     <h6 className={styles.heading}>

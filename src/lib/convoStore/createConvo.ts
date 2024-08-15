@@ -38,7 +38,7 @@ export function createConvo(set: Set, get: Get){
     set(state => {
       state.convos.unshift(convo)
       state.activeConvo = convoDetail
-      state.isInitializing = true
+      state.isWaitingResponse = true
     })
 
   }

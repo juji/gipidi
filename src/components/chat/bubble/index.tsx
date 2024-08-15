@@ -41,6 +41,12 @@ function Bubble({
   )
 
   useEffect(() => {
+    isNewText.current = data.role === 'assistant' && isLast &&
+    (new Date().valueOf() - data.lastUpdate.valueOf()) < 1000 // kira-kira aja
+  },[ isLast ])
+
+
+  useEffect(() => {
     
     if(isNewText.current && !stopped){
       setText(data.content)

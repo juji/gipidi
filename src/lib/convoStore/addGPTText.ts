@@ -35,7 +35,7 @@ export function addGPTText(set: Set, get: Get){
         }
       }
 
-      state.isInitializing = false
+      state.isWaitingResponse = false
     })
 
   }

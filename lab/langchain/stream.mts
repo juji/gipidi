@@ -8,17 +8,17 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 
 try{
-  // const model = new ChatGroq({
-  //   model: "llama-3.1-70b-versatile"
-  // });
+  const model = new ChatGroq({
+    model: "llama-3.1-70b-versatile"
+  });
   
   // const model = new ChatOllama({
   //   model: "llama3.1:latest"
   // });
 
-  const model = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-flash",
-  });
+  // const model = new ChatGoogleGenerativeAI({
+  //   model: "gemini-1.5-flash",
+  // });
   
   const messages = [
     new SystemMessage({ content: 'You are a helpfull AI Assistant'}),
@@ -43,14 +43,14 @@ try{
   // console.log('res', res)
   const stream = await model.stream(messages);
   let v = await stream.next()
-  let n = 0
+  // let n = 0
   while(v){
-    n++;
-    if(n === 5) {
-      stream.throw('canceledbyuser');
-      break;
-    }
-    console.log(v.value.content);
+    // n++;
+    // if(n === 5) {
+    //   stream.throw('canceledbyuser');
+    //   break;
+    // }
+    console.log(v.value?.content);
     v = await stream.next()
   }
 
