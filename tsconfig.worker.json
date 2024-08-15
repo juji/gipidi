@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./public/pglite",
+    "module": "ES6",
+    "noEmit": false
+  },
+  "include": [
+    "./src/lib/pglite/worker.ts"
+  ]
+}

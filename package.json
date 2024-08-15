@@ -9,9 +9,12 @@
     "lint": "next lint",
     "dev": "tauri dev",
     "build": "tauri build",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "build:workers": "tsc -p tsconfig.worker.json",
+    "watch:workers": "tsc -p tsconfig.worker.json --watch"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.2.1",
     "@google/generative-ai": "^0.16.0",
     "@juji/jsstore": "^4.8.4",
     "@juji/langchain-google-genai": "^0.0.27",
