@@ -6,10 +6,11 @@ export function saveProvider( set: Set){
 
   return async (
     id: GPTProvider['id'],
-    setting: GPTProvider['setting']
+    setting: GPTProvider['setting'],
+    icon: string
   ) => {
 
-    const provider = await upsertGPTProvider(id, setting)
+    const provider = await upsertGPTProvider(id, setting, icon)
 
     set(s => {
 

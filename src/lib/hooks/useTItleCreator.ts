@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useConvo } from "@/lib/convoStore";
 import { useGPT } from "@/lib/gptStore";
 import { useTypeWriter } from '@/lib/hooks/useTypeWriter'
-import { createTitle } from '@/lib/langchain/loader'
+import { createTitle } from '@/lib/vendor/loader'
 
 export function useTitleCreator(){
 

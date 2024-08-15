@@ -3,8 +3,7 @@ import { useEffect, useRef } from "react"
 import { useGPT } from "@/lib/gptStore"
 import { showError } from "../toast"
 
-// import { loadVendor } from '@/lib/vendors/load'
-import { chat } from '@/lib/langchain/loader'
+import { chat } from '@/lib/vendor/loader'
 import { GPTProvider } from "../idb/types"
 
 export function useGptListener(){

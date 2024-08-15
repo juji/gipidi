@@ -5,7 +5,7 @@ import styles from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
-import { test } from '@/lib/langchain/groq'
+import { test } from '@/lib/vendor/groq'
 
 const PROVIDER = 'groq'
 
@@ -40,7 +40,7 @@ export function GroqSettings(){
     }
     
     test(apiKey).then(() => {
-      saveProvider(PROVIDER, { apiKey })
+      saveProvider(PROVIDER, { apiKey }, '/gpt/groq.svg')
       setisOn(true)
       setErr('')
     }).catch((e:any) => {

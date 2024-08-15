@@ -6,6 +6,7 @@ import { GPTProvider } from '../types';
 export async function upsertGPTProvider(
   id: GPTProvider['id'],
   setting: GPTProvider['setting'],
+  icon: string,
   connection?: Connection 
 ){
 
@@ -13,6 +14,7 @@ export async function upsertGPTProvider(
 
   const gptProvider: GPTProvider = {
     id,
+    icon,
     setting,
     created: new Date(),
     updated: new Date(),

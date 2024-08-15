@@ -1,16 +1,15 @@
 import { Get } from ".";
-import { loadVendor } from "../vendors/load";
+import { modelsByProvider } from "@/lib/vendor/loader";
 
 export function getAllModels( get: Get ){
 
   return async () => {
 
     return await Promise.all(get().providers.map(async provider => {
-      const vendor = provider ? await loadVendor(provider) : null
-      const models = vendor ? await vendor.models() : null
+      const result = await modelsByProvider(provider)
       return {
         provider,
-        models
+        models: result
       }
     }))
 

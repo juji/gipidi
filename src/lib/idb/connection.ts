@@ -46,6 +46,7 @@ function getDatabase(){
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
       data: { dataType: DATA_TYPE.Array },
+      icon: { dataType: DATA_TYPE.String }
     }
   }
 
@@ -59,7 +60,7 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 7,
+    version: 8,
     tables: [
       convo,
       convoDetail,

@@ -1,3 +1,4 @@
+import { GPTProvider, OllamaSetting } from "@/lib/idb/types";
 import { GPTModel } from "../types";
 import { Ollama } from "ollama/browser";
 
@@ -13,6 +14,10 @@ export async function models( url: string ): Promise<GPTModel[]>{
     id: v.name,
     name: v.name + ' (' + v.details.parameter_size + ')'
   }))
+}
+
+export async function modelsByProvider( provider: GPTProvider ): Promise<GPTModel[]>{
+  return await models((provider.setting as OllamaSetting).url)
 }
 
 export async function test( url: string ){

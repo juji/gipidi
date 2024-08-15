@@ -12,7 +12,8 @@ export type ConvoDetail = {
   id: string
   data: ConvoData[]
   provider: GPTProvider['id'],
-  systemPrompt: string,
+  providerIcon: string
+  systemPrompt: string
   model: string
   created: Date
   updated?: Date
@@ -42,6 +43,7 @@ export type GenericSetting = { apiKey: string }
 
 export type GPTProvider = {
   id: 'ollama' | 'groq' | 'gemini'
+  icon: string
   setting: OllamaSetting | GenericSetting
   created: Date
   updated?: Date

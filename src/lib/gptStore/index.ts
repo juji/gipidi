@@ -8,17 +8,17 @@ import { saveProvider } from './saveProvider'
 import { removeProvider } from './removeProvider'
 import { getAllModels } from './getAllModels'
 import { getModels } from './getModels'
-import { GPTModel } from '../vendors/types'
+import { GPTModel } from '@/lib/vendor/types'
 
 export type GPTStore = {
   loading: boolean
   providers: GPTProvider[]
-  saveProvider: (id: GPTProvider['id'], setting: GPTProvider['setting']) => void
+  saveProvider: (id: GPTProvider['id'], setting: GPTProvider['setting'], icon: string) => void
   removeProvider: (id: GPTProvider['id']) => void
-  getModels: ( provider: GPTProvider ) => Promise<GPTModel[]|null>
+  getModels: ( provider: GPTProvider ) => Promise<GPTModel[]>
   getAllModels: () => Promise<{
     provider: GPTProvider 
-    models: GPTModel[]|null
+    models: GPTModel[]
   }[]>
 }
 

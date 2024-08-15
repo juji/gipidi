@@ -24,6 +24,7 @@ import { WritableDraft } from 'immer'
 
 export type ChatCreationData = {
   provider: GPTProvider['id'] 
+  providerIcon: string
   model: string 
   systemPrompt: string
   title: string

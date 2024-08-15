@@ -1,6 +1,7 @@
 import { ChatGoogleGenerativeAI } from "@juji/langchain-google-genai";
 import { GPTModel } from "../types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GenericSetting, GPTProvider } from "@/lib/idb/types";
 
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )
@@ -22,6 +23,10 @@ export async function models(): Promise<GPTModel[]>{
       name: 'Gemini 1.0 Pro'
     },
   ]
+}
+
+export async function modelsByProvider( provider: GPTProvider ): Promise<GPTModel[]>{
+  return await models()
 }
 
 export async function test( apiKey: string ){

@@ -1,6 +1,6 @@
 'use client'
 
-import { test, downloadLlava } from '@/lib/langchain/ollama'
+import { test, downloadLlava } from '@/lib/vendor/ollama'
 import { OllamaSetting } from "@/lib/idb/types"
 import { useEffect, useRef, useState } from "react"
 import styles from '../style.module.css'
@@ -53,7 +53,7 @@ export function OllamaSettings(){
 
     test(url).then(async models => {
       
-      saveProvider(PROVIDER, { url })
+      saveProvider(PROVIDER, { url }, '/gpt/ollama.png')
       setisOn( true )
       const res = await downloadLlava(models, url)
       setDownloadingLlava(res)

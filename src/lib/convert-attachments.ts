@@ -2,7 +2,6 @@
 import { ConvoAttachment } from "./idb/types"
 import mime from 'mime'
 import { pdfToText } from './pdf-to-text';
-import { htmlToText } from './html-to-text';
 import { imageToText } from "./image-to-text";
 
 async function base64ToString(file: ConvoAttachment){
@@ -22,10 +21,10 @@ export async function convertAttachment(
     mime.getExtension(file.mime) === 'pdf' ? 
       await pdfToText(file) :
     mime.getExtension(file.mime) === 'html' ? 
-      await htmlToText(file) :
+      await base64ToString(file) :
     file.mime.match(/^image\//) ? 
       await imageToText(file) :
-    null
+    await base64ToString(file)
 
   console.debug('Convert Attachment: ', {
     ...file, 

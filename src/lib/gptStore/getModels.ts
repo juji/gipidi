@@ -1,5 +1,5 @@
 import { GPTProvider } from "../idb/types";
-import { loadVendor } from "../vendors/load";
+import { modelsByProvider } from "@/lib/vendor/loader";
 
 export function getModels(){
 
@@ -7,9 +7,8 @@ export function getModels(){
     provider: GPTProvider
   ) => {
 
-    const vendor = await loadVendor(provider)
-    const models = await vendor.models()
-    return models
+    const result = await modelsByProvider(provider)
+    return result
 
   }
 

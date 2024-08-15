@@ -5,18 +5,9 @@ import useOnClickOutside from 'use-onclickoutside'
 import cx from 'classix'
 import { getDefaultProvider, getDefaultModel } from '@/lib/local-storage'
 import { useGPT } from '@/lib/gptStore'
-import { GPTModel } from '@/lib/vendors/types'
 import { useConvo } from '@/lib/convoStore'
 import { GPTProvider } from '@/lib/idb/types'
-
-import { loadAll } from '@/lib/vendors/load'
-
-const defaultPrompt = ''
-// const defaultPrompt = `You are a friendly chatbot built on top of large language models. 
-// You are currently accessed via an app called Gipidi'. 
-
-// You support websearch and other capabilities using /<command>, ex /youtube <link>
-// `
+import { type GPTModel } from '@/lib/vendor/types'
 
 export function TopBar(){
 
@@ -27,8 +18,10 @@ export function TopBar(){
   const [ model, setModel ] = useState<string|null>(null)
   const [ icon, setIcon ] = useState<string|null>(null)
 
-  const [ systemPrompt, setSystemPrompt ] = useState(defaultPrompt)
+  const [ systemPrompt, setSystemPrompt ] = useState('')
   const loading = useGPT(s => s.loading)
+  const providers = useGPT(s => s.providers)
+  const getAllModels = useGPT(s => s.getAllModels)
 
   const activeConvo = useConvo(s => s.activeConvo)
   const convos = useConvo(s => s.convos)
@@ -43,11 +36,12 @@ export function TopBar(){
   
   // send info to chat creator
   useEffect(() => {
-    if(provider && model)
+    if(provider && model && icon)
       onCreateChat(() => ({
-        title, provider, model, systemPrompt
+        title, provider, model, systemPrompt, 
+        providerIcon: icon
       }))
-  },[title, provider, model, systemPrompt])
+  },[title, provider, model, systemPrompt, icon])
 
   // title
   function setTitleLocal( str: string ){
@@ -62,22 +56,25 @@ export function TopBar(){
   },[ convo?.title ])
 
   useEffect(() => {
+    if(loading) return () => {}
     if(activeConvo) {
       setProvider(activeConvo.provider)
       setModel(activeConvo.model)
       activeConvo.systemPrompt && setSystemPrompt(activeConvo.systemPrompt)
       convo && setTitle(convo.title)
+      const provider = providers.find(v => v.id === activeConvo.provider)
+      provider && setIcon(provider.icon)
     }else{
       setTitle('')
+      setSystemPrompt('')
 
       const defaultProvider = getDefaultProvider()
       setProvider(defaultProvider)
       setModel(getDefaultModel())
-      defaultProvider && loadAll().then(async all => {
-        setIcon(all[defaultProvider].icon)
-      })
+      const provider = providers.find(v => v.id === defaultProvider)
+      provider && setIcon(provider.icon)
     }
-  },[ activeConvo ])
+  },[ activeConvo, loading ])
   
   // open close
   function openMenu(e: MouseEvent){
@@ -92,36 +89,14 @@ export function TopBar(){
   const ref = useRef<HTMLDivElement|null>(null)
   useOnClickOutside(ref, onCloseMenu)
 
-  // activate deactivate system prompt
-  const [ systemPromptSel, setSystemPromptSel ] = useState(true)
-  useEffect(() => {
-    if(model === 'gemini-1.0-pro'){
-      setSystemPromptSel(false)
-      setSystemPrompt('')
-    }else{
-      setSystemPromptSel(true)
-    }
-  },[ model ])
-
-  const icons = useRef<{[key:string]: string}>()
   const [modelSelection, setModelSelection] = useState<any|null>(null)
   useEffect(() => {
     if(loading) return () => {}
 
-    loadAll().then(async all => {
-      
-      const models = await Promise.all(Object.values(all).map(v => v.models()))
-      
-      // this is crazy
-      // to have to define a type of key in a reduce
-      // with 'keyof typeof'
-      icons.current = Object.keys(all).reduce((a,b) => {
-        a[b as keyof typeof all] = all[b as keyof typeof all].icon
-        return a
-      },{} as {[key in keyof typeof all]: string})
+    getAllModels().then(providerModels => {
 
-      setModelSelection(Object.keys(all).reduce((a,b,i) => {
-        a[b as GPTProvider['id']] = models[i]
+      setModelSelection(providerModels.reduce((a,b) => {
+        a[b.provider.id] = b.models
         return a  
       },{} as {[key in GPTProvider['id']]: GPTModel[]}))
 
@@ -152,8 +127,11 @@ export function TopBar(){
   },[ provider, model, modelSelection ])
 
   useEffect(() => {
-    icons.current && provider && setIcon(icons.current[provider])
-  },[ provider ])
+    if(!provider || !providers) setIcon(null)
+    
+    const p = providers.find(v => v.id === provider)
+    p && setIcon(p.icon)
+  },[ provider, providers ])
 
 
   return <div className={styles.topbar}>
@@ -205,16 +183,14 @@ export function TopBar(){
             </select>
             <svg className={styles.chevronDown} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.34317 7.75732L4.92896 9.17154L12 16.2426L19.0711 9.17157L17.6569 7.75735L12 13.4142L6.34317 7.75732Z" fill="currentColor" /></svg>
           </div>
-
-          { systemPromptSel ? <>
-            <h4 className={styles.menuHeader}>System Prompt</h4>
-            <textarea 
-              value={systemPrompt}
-              disabled={!!activeConvo}
-              rows={5}
-              onChange={e => setSystemPrompt(e.target.value)}
-              className={styles.systemPrompt}></textarea>
-          </> : <p className={styles.systemPromptDisabled}>System prompt disabled for this model</p>}
+          
+          <h4 className={styles.menuHeader}>System Prompt</h4>
+          <textarea 
+            value={systemPrompt}
+            disabled={!!activeConvo}
+            rows={5}
+            onChange={e => setSystemPrompt(e.target.value)}
+            className={styles.systemPrompt}></textarea>
           
         </div>
       </div>

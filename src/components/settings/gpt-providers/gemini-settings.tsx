@@ -5,7 +5,7 @@ import styles from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
-import { test } from "@/lib/langchain/gemini"
+import { test } from "@/lib/vendor/gemini"
 
 const PROVIDER = 'gemini'
 
@@ -43,7 +43,7 @@ export function GeminiSettings(){
     setErr('')
 
     test(apiKey).then(() => {
-      saveProvider(PROVIDER, { apiKey })
+      saveProvider(PROVIDER, { apiKey }, '/gpt/gemini.svg')
       setisOn(true)
       setErr('')
     }).catch((e:any) => {

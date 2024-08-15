@@ -1,5 +1,14 @@
 import { GPTProvider } from "../idb/types";
-import { ChatFn, ChatFnParams, CreateTitleFn, CreateTitleParams } from "./types";
+import { ChatFn, ChatFnParams, CreateTitleFn, CreateTitleParams, GPTModel } from "./types";
+
+export async function modelsByProvider( provider : GPTProvider ) {
+
+  const { modelsByProvider }: { 
+    modelsByProvider: (provider : GPTProvider) => Promise<GPTModel[]> 
+  } = await import(`./${provider.id}`)
+  return await modelsByProvider(provider)
+
+}
 
 export async function chat( params : ChatFnParams ) {
 

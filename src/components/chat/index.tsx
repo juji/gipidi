@@ -12,7 +12,10 @@ export function ChatBubbles({ activeConvo }:{ activeConvo: ConvoDetail }){
       return v.role === 'user' ?
           <UserBubble key={v.id} data={v} /> :
         v.role === 'assistant' ? 
-          <BotBubble key={v.id} isLast={i === (a.length-1)} data={v} /> : 
+          <BotBubble key={v.id} 
+            icon={activeConvo.providerIcon} 
+            isLast={i === (a.length-1)} 
+            data={v} /> : 
         null
 
     })}

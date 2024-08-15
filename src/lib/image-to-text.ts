@@ -15,6 +15,7 @@ export async function imageToText(file: ConvoAttachment){
     if(!o) throw new Error('ollama returns empty')
     return o
   }).catch(e => {
+    console.error(e)
     return null
   })
 }
@@ -42,7 +43,6 @@ Reply with JSON, using the following JSON schema:
     generationConfig: { responseMimeType: "application/json" }  
   })
 
-  const d = new Date().valueOf()
   const result = await model.generateContent([
     'Tell me about this image',
     {
@@ -52,7 +52,6 @@ Reply with JSON, using the following JSON schema:
       },
     }
   ]);
-  console.log('time', new Date().valueOf() - d)
   
   const text = result.response.text()
   let description = ''
@@ -81,7 +80,6 @@ Reply with JSON, using the following JSON schema:
   if(!host) return null
   const ollama = new Ollama({ host })
 
-  const d = new Date().valueOf()
   const resp = await ollama.generate({
     model: 'llava-llama3:latest',
     prompt: 'Tell me about this image',
@@ -90,8 +88,6 @@ Reply with JSON, using the following JSON schema:
     stream: false,
     system,
   })
-
-  console.log('time', new Date().valueOf() - d)
 
   let description = ''
   try{

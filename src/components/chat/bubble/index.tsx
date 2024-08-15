@@ -11,7 +11,7 @@ import { ChatAttachment } from '@/components/chat-attachment';
 import { useTextStream } from './useTextStream';
 import { markedToReact } from './marked-to-react';
 import { useConvo } from '@/lib/convoStore';
-import { loadAll } from '@/lib/vendors/load';
+import { useGPT } from '@/lib/gptStore';
 
 
 function Bubble({ 
@@ -175,22 +175,17 @@ export function UserBubble({ data }: { data: ConvoData }) {
 
 }
 
-export function BotBubble({ data, isLast }: { data: ConvoData, isLast: boolean }){
-
-  const [icon, setIcon] = useState('/bot.webp')
-  const activeConvo = useConvo(s => s.activeConvo)
-  useEffect(() => {
-    if(!activeConvo?.provider) return () => {}
-    loadAll().then(all => {
-      setIcon(all[activeConvo.provider].icon)
-    })
-  },[ activeConvo?.provider ])
+export function BotBubble({ data, isLast, icon }: { 
+  data: ConvoData, 
+  isLast: boolean,
+  icon: string 
+}){
 
   return <Bubble 
     className={styles.bot} 
     data={data}
     isLast={isLast}
-    profilePict={icon}
+    profilePict={icon || '/bot.webp'}
   />
 
 }

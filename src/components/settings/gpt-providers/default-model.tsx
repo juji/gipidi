@@ -2,7 +2,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import styles from './style.module.css'
 import type { GPTProvider } from "@/lib/idb/types";
-import type { GPTModel } from "@/lib/vendors/types";
+import type { GPTModel } from "@/lib/vendor/types";
 import { titleCase } from 'title-case'
 import { useGPT } from "@/lib/gptStore";
 import { 
