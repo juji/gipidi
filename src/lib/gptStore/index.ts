@@ -2,7 +2,7 @@
 
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import { GPTProvider } from '../idb/types'
+import { GPTProvider } from '../pglite/types'
 import { initialize } from './initialize'
 import { saveProvider } from './saveProvider'
 import { removeProvider } from './removeProvider'

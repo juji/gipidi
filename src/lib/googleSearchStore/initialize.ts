@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand'
-import { getSetting } from '../idb/settings/get'
+import { getSetting } from '../pglite/settings/get'
 import { ID } from '.'
 
 export type IDbStorageType = <T>(f: StateCreator<T, [], any[]>) => StateCreator<T, [], any[]>
@@ -13,13 +13,17 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
 
   getSetting(ID).then(async (setting:any) => {
 
-    set({
+    if(setting) set({
       loading: false,
       data: setting.data,
     } as unknown as Partial<T>)
+
+    else set({
+      loading: false,
+    } as unknown as Partial<T>)
     
   }).catch(e => {
-    console.error('error on setting up')
+    console.error('error on setting up GoogleSearchStore')
     console.error(e)
   })
 

@@ -1,6 +1,8 @@
 import { Set } from ".";
-import { GPTProvider } from "../idb/types";
-import { upsertGPTProvider } from "../idb/gpt/upsertGPTProvider";
+// import { GPTProvider } from "../idb/types";
+// import { upsertGPTProvider } from "../idb/gpt/upsertGPTProvider";
+import { GPTProvider } from "@/lib/pglite/types";
+import { upsertGPTProvider } from "@/lib/pglite/gpt/upsertGPTProvider";
 
 export function saveProvider( set: Set){
 

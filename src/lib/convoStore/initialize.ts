@@ -22,7 +22,7 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
     } as unknown as Partial<T>)
     
   }).catch(e => {
-    console.error('error on setting up')
+    console.error('error on setting up ConvoStore')
     console.error(e)
   })
 

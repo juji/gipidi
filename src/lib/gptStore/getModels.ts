@@ -1,4 +1,4 @@
-import { GPTProvider } from "../idb/types";
+import { GPTProvider } from "../pglite/types";
 import { modelsByProvider } from "@/lib/vendor/loader";
 
 export function getModels(){

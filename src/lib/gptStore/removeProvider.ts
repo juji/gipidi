@@ -1,6 +1,6 @@
 import { Set } from ".";
-import { GPTProvider } from "../idb/types";
-import { removeGPTProvider } from "../idb/gpt/removeGPTProvider";
+import { GPTProvider } from "../pglite/types";
+import { removeGPTProvider } from "../pglite/gpt/removeGPTProvider";
 
 export function removeProvider( set: Set){
 

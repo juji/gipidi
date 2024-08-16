@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand'
-import { getAllProvider } from '../idb/gpt/getAllProvider'
+// import { getAllProvider } from '../idb/gpt/getAllProvider'
+import { getAllProvider } from '@/lib/pglite/gpt/getAllProvider'
 
 export type IDbStorageType = <T>(f: StateCreator<T, [], any[]>) => StateCreator<T, [], any[]>
 
@@ -27,7 +28,7 @@ export const initialize: IDbStorageType = (f) => (set, get, store) => {
     }
     
   }).catch(e => {
-    console.error('error on setting up')
+    console.error('error on setting up GPTStore')
     console.error(e)
   })
 

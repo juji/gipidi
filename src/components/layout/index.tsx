@@ -13,7 +13,8 @@ import { usePathname } from 'next/navigation';
 import { removeHistory } from '@/lib/removeHistory';
 import { getCC } from '@/lib/get-country-code';
 import { saveCountryCode } from '@/lib/local-storage';
-import { getCurrentPosition, watchPosition } from "@tauri-apps/plugin-geolocation";
+import { watchPosition } from "@tauri-apps/plugin-geolocation";
+import { migrate } from '@/lib/pglite'
 
 
 const montserrat = Montserrat({
@@ -49,18 +50,6 @@ export function Layout({ children }: PropsWithChildren){
     if(isWatching.current) return;
     isWatching.current = true
 
-    // getCurrentPosition(
-    //   { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 }
-    // ).then(v => console.log('v', v))
-
-    // navigator.permissions.query({ name: "geolocation" }).then((result) => {
-    //   console.log('geolocation permission', result)
-    //   navigator.geolocation.getCurrentPosition(
-    //     (pos) => { console.log('navigator', pos) },
-    //     err => console.error(err)
-    //   )
-    // })
-
     // this is currently not working
     watchPosition(
       { enableHighAccuracy: false, timeout: 5000, maximumAge: 1000 },
@@ -72,6 +61,20 @@ export function Layout({ children }: PropsWithChildren){
   },[])
 
   useTitleCreator()
+
+  const migrating = useRef(false)
+  function migrateDb(){
+    if(migrating.current) return;
+    migrating.current = true
+    console.debug('Migrating db')
+    migrate().catch(e => {
+      migrating.current = false
+      setTimeout(() => migrateDb(),1000)
+    })
+  }
+  useEffect(() => {
+    migrateDb()
+  },[])
 
   function addNote(){
     if(isHome) window.location.reload()

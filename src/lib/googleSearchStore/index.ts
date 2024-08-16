@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { initialize } from './initialize'
-import { setSetting } from '../idb/settings/set'
+import { setSetting } from '../pglite/settings/set'
 
 export const ID = 'google-search'
 

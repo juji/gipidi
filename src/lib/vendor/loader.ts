@@ -1,4 +1,4 @@
-import { GPTProvider } from "../idb/types";
+import { GPTProvider } from "../pglite/types";
 import { ChatFn, ChatFnParams, CreateTitleFn, CreateTitleParams, GPTModel } from "./types";
 
 export async function modelsByProvider( provider : GPTProvider ) {
