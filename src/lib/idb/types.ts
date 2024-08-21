@@ -50,11 +50,18 @@ export type GPTProvider = {
   deleted: Date
 }
 
+export type ChromaSettings = {
+  tenant: string,
+  database: string,
+  distance: string
+}
+
 export type Embeddings = {
   id: string
   name: string
   type: 'chromadb' | 'postgres' | 'redis'
-  connectionUri: string
+  url: string
+  additionalSettings: ChromaSettings | object
   created: Date
   updated?: Date
   deleted: Date

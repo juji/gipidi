@@ -19,7 +19,10 @@ export default function Create(){
 
   const DatabaseSetting = useMemo(() => {
     return type === 'chromadb' ? ChromaDb : 
-    () => <p>Type not selected</p>
+    () => <div className={styles.notype}>
+      Type not selected
+      <input type="text" required name="type" />
+    </div>
   },[ type ])
 
   return <Page title="Create Embedding">
@@ -28,11 +31,11 @@ export default function Create(){
     <form className={styles.form}>
       <label htmlFor={name}>
         <span>Name</span>
-        <input type="text" id={name} name="name" />
+        <input required type="text" id={name} name="name" />
       </label>
       <label htmlFor={vendor}>
         <span>Type</span>
-        <select id={vendor} name="type" value={type} 
+        <select required id={vendor} name="type" value={type} 
           onChange={(e) => setType(e.target.value)}>
           <option value=""></option>
           <option value="chromadb">ChromaDB</option>
@@ -41,6 +44,7 @@ export default function Create(){
         </select>
       </label>
       <DatabaseSetting />
+      <button type="submit">Submit</button>
     </form>
 
   </Page>
