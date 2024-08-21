@@ -49,3 +49,13 @@ export type GPTProvider = {
   updated?: Date
   deleted: Date
 }
+
+export type Embeddings = {
+  id: string
+  name: string
+  type: 'chromadb' | 'postgres' | 'redis'
+  connectionUri: string
+  created: Date
+  updated?: Date
+  deleted: Date
+}

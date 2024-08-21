@@ -5,7 +5,8 @@ export const TABLES = {
   CONVO: 'convo',
   CONVO_DETAIL: 'convoDetail',
   GPT_PROVIDER: 'gptProvider',
-  SETTINGS: 'settings'
+  SETTINGS: 'settings',
+  EMBEDDINGS: 'embeddings'
 }
 
 
@@ -58,14 +59,28 @@ function getDatabase(){
     }
   }
 
+  const embeddings:ITable = {
+    name: TABLES.EMBEDDINGS,
+    columns: {
+      id: { dataType: DATA_TYPE.String, primaryKey: true },
+      name: { dataType: DATA_TYPE.String },
+      type: { dataType: DATA_TYPE.String },
+      connectionUri: { dataType: DATA_TYPE.String },
+      created: { dataType: DATA_TYPE.DateTime },
+      updated: { dataType: DATA_TYPE.DateTime },
+      deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED }
+    }
+  }
+
   const database: IDataBase = {
     name: 'gipidi',
-    version: 8,
+    version: 9,
     tables: [
       convo,
       convoDetail,
       gptProvider,
-      settings
+      settings,
+      embeddings
     ]
   }
 

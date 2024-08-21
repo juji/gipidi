@@ -17,7 +17,7 @@ const DBNAME = 'iamplaying'
 
 async function getOllama(){
   const ollamaSettings = await getGPTProvider('ollama')
-  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url) 
+  if(!ollamaSettings || !(ollamaSettings.setting as OllamaSetting).url)
     throw new Error('test: ollama is not set')
   const ollama = new Ollama({ host: (ollamaSettings.setting as OllamaSetting).url })
   return ollama
