@@ -43,23 +43,14 @@ export function Files({
       }
 
       else {
-
-        if(provider.current === 'gemini')
-          addFileUpload({
-            id: nanoid(),
-            data: msg.data.data,
-            mime: msg.data.type,
-            name: files.current[msg.data.index]?.name || ''
-          })
-        else{
-          addFileUpload({
-            id: nanoid(),
-            data: msg.data.data,
-            mime: msg.data.type,
-            name: files.current[msg.data.index]?.name || '',
-            loading: true
-          })
-        }
+        console.log('provider.current', provider.current)
+        addFileUpload({
+          id: nanoid(),
+          data: msg.data.data,
+          mime: msg.data.type,
+          name: files.current[msg.data.index]?.name || '',
+          loading: provider.current !== 'gemini'
+        })
         files.current[msg.data.index] = null
       }
 

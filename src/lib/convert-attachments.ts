@@ -26,11 +26,11 @@ export async function convertAttachment(
       await imageToText(file) :
     await base64ToString(file)
 
-  console.debug('Convert Attachment: ', {
-    ...file, 
-    loading: false,
-    text: content
-  })
+  // console.debug('Convert Attachment: ', {
+  //   ...file, 
+  //   loading: false,
+  //   text: content
+  // })
 
   return content ? {
     ...file, 

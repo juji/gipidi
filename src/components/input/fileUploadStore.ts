@@ -15,6 +15,8 @@ export type FileUploadStore = {
   onDraggedIn: () => void
   onDraggedOut: () => void
   add: (file: ConvoAttachment) => void
+  setFileState: (file: ConvoAttachment) => void
+  removeByFile: (file: ConvoAttachment) => void
   remove: (index: number) => void
   removeAll: () => void
 }
@@ -38,6 +40,23 @@ export const useFileUpload = create<FileUploadStore>()(
         set(store => {
           store.files.push(file)
           store.filesInQueue -= 1
+        })
+      },
+      setFileState(file:ConvoAttachment){
+        set(store => {
+          const index = store.files.findIndex(v => v.id === file.id)
+          if(index<0) return;
+          store.files[index] = {
+            ...store.files[index],
+            ...file
+          }
+        })
+      },
+      removeByFile(file:ConvoAttachment){
+        set(store => {
+          const index = store.files.findIndex(v => v.id === file.id)
+          if(index<0) return;
+          store.files.splice(index,1)
         })
       },
       remove(index: number) {

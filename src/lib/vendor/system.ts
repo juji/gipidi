@@ -27,15 +27,15 @@ export function createConvoWithAttachment(content: string, attachments?: ConvoAt
 [attachment]
 name: ${v.name}
 mime: ${v.mime}
-${v.mime === 'text/markdown' ? `content:
+${v.mime.match(/^image\//) ? `description:
+\`\`\`\`\`\`
 ${v.text}
-` : v.mime === 'text/html' ? `content:
-\`\`\`
+\`\`\`\`\`\`
+` : `content:
+\`\`\`\`\`\`
 ${v.text}
-\`\`\`` : `description:
-\`\`\`
-${v.text}
-\`\`\``}
+\`\`\`\`\`\`
+`}
 [/attachment]`).join('') + '\n\n' + content : content
 
 }
