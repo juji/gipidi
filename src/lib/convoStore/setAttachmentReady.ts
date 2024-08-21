@@ -18,9 +18,7 @@ export function setAttachmentReady(set: Set){
       if(typeof attachments !== 'boolean'){
         const att = userData.attachments
         s.activeConvo.data[userDataIndex].attachments = att ? 
-          att.map(v =>  {
-            return attachments[v.id]
-          }) : 
+          att.map(v =>  attachments[v.id]) : 
           Object.keys(attachments).map(v => attachments[v])
       }
       
