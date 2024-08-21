@@ -36,6 +36,8 @@ export function Inputform(){
   },[])
 
   const files = useFileUpload(s => s.files)
+  const setFileState = useFileUpload(s => s.setFileState)
+  const removeByFile = useFileUpload(s => s.removeByFile)
   const remove = useFileUpload(s => s.remove)
   const removeAll = useFileUpload(s => s.removeAll)
   const filesInQueue = useFileUpload(s => s.filesInQueue)
@@ -76,9 +78,11 @@ export function Inputform(){
 
       if(convertion.current[file.id] && res){
         convertion.current[file.id] = res as ConvoAttachment
+        setFileState(convertion.current[file.id])
       }
       else if(convertion.current[file.id] && !res){
         delete convertion.current[file.id]
+        removeByFile(file)
       }
 
       const notDone = Object.keys(convertion.current)
@@ -98,14 +102,14 @@ export function Inputform(){
 
     if(!activeConvo){
       createConvo( content, 
-        attachmentReady && convertion.current ? // @ts-ignore
-        Object.keys(convertion.current).map(v => convertion.current[v]) :
+        attachmentReady && typeof attachmentReady !== 'boolean' ?
+        Object.keys(attachmentReady).map(v => attachmentReady[v]) :
         [...files] 
       )
     }else{
       addUserMessage( content,  
-        attachmentReady && convertion.current ? // @ts-ignore
-        Object.keys(convertion.current).map(v => convertion.current[v]) :
+        attachmentReady && typeof attachmentReady !== 'boolean' ?
+        Object.keys(attachmentReady).map(v => attachmentReady[v]) :
         [...files] 
       )
     }
