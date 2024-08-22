@@ -1,0 +1,74 @@
+
+
+.withIndicator{
+  
+  display: flex;
+  gap: 1em;
+  align-items: center;
+
+  .indicator{
+    display: block;
+    background-color: tomato;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+
+    &.ok{
+      background-color: greenyellow;
+    }
+  }
+
+}
+
+.showDocker{
+  margin: 1em 0;
+  text-decoration: dotted underline;
+}
+
+.dockerCommand{
+
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 200ms ease-out;
+  margin: 0.5em 0;
+
+  &.visible{
+    grid-template-rows: 1fr;
+  }
+
+  .container{
+    overflow: hidden;
+  }
+
+  .pre{
+  
+    position: relative;
+    
+    display: block;
+    overflow: auto;
+    width: 100%;
+    max-width: min(400px, calc(100vw - 4.4em));
+    padding: 1em;
+    background-color: #222;
+    margin-bottom: 1em;
+  
+    & > code{
+      width: 100%;
+    }
+  
+    & > button{
+      position: absolute;
+      right: 0.5em;
+      top: 0.5em;
+      font-size: small;
+      padding: 0.5em 0.7em ;
+      border-radius: 0.3em;
+      background-color: #111;
+  
+      &:hover{
+        background-color: #333;
+      }
+    }
+  
+  }
+}

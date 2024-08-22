@@ -56,7 +56,7 @@ export function DefaultModel(){
       <Select label="Provider" 
         value={defaultProvider}
         onChange={changeDefaultProvider}>
-        <option value=""></option>
+        <option value="">Select Provider</option>
         {providers.map(v => {
           return <option key={v.id} value={v.id}>{titleCase(v.id)}</option>
         })}
@@ -65,7 +65,7 @@ export function DefaultModel(){
       <Select label="Model" 
         value={defaultModel}
         onChange={changeDefaultModel}>
-        <option value=""></option>
+        <option value="">Select Model</option>
         {models.map(v => {
           return <option key={v.id} value={v.id}>{v.name}</option>
         })}

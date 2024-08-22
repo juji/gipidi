@@ -1,4 +1,6 @@
 import zlFetch from '@juji/zl-fetch'
+import { ChromaDBAuthSetting } from '../idb/types'
+
 const PREFIX = '/api/v1'
 
 export async function test( url: string ){
@@ -8,17 +10,44 @@ export async function test( url: string ){
 
 }
 
+function getHeaderWithAuth(
+  authType?: ChromaDBAuthSetting['type'], 
+  authToken?: string
+){
+
+  if(!authType || !authToken) return {}
+
+  else if(authType === 'auth-bearer') return {
+    headers: {
+      'Authentication': `Bearer ${authToken}`
+    }
+  }
+
+  else if(authType === 'x-chroma-token') return {
+    headers: {
+      'X-Chroma-Token': `${authToken}`
+    }
+  }
+
+  else return {}
+
+}
+
 export async function getCreateTenant({
-  url, tenant
+  url, tenant,
+  authType,
+  authToken
 }:{
-  url: string, 
+  url: string
   tenant: string
+  authType?: ChromaDBAuthSetting['type']
+  authToken?: string
 }){
 
   // get 
   try{
     const res = await zlFetch(url + `${PREFIX}/tenants/${tenant}`,{
-      headers: { 'X-Chroma-Token': 'mycredential' }
+      ... getHeaderWithAuth(authType, authToken)
     })
     return res.body.name
   }catch(e){}
@@ -28,7 +57,7 @@ export async function getCreateTenant({
     body: {
       name: tenant
     },
-    headers: { 'X-Chroma-Token': 'mycredential' }
+    ... getHeaderWithAuth(authType, authToken)
   })
 
   return tenant
@@ -40,18 +69,22 @@ export async function getCreateDb(
 {
   url, 
   tenant, 
-  database
+  database,
+  authType,
+  authToken
 }:{
-  url: string, 
-  tenant: string, 
+  url: string 
+  tenant: string
   database: string
+  authType?: ChromaDBAuthSetting['type']
+  authToken?: string
 }){
 
   // get 
   try{
     const res = await zlFetch(url + `${PREFIX}/databases/${database}`, {
       query: { tenant },
-      headers: { 'X-Chroma-Token': 'mycredential' }
+      ... getHeaderWithAuth(authType, authToken)
     })
     return res.body.name
   }catch(e){}
@@ -60,7 +93,7 @@ export async function getCreateDb(
   await zlFetch.post(url + `${PREFIX}/databases`,{
     body: { name: database },
     query: { tenant },
-    headers: { 'X-Chroma-Token': 'mycredential' }
+    ... getHeaderWithAuth(authType, authToken)
   })
 
   return database
@@ -71,17 +104,21 @@ export async function getCollection({
   url, 
   tenant, 
   database,
-  collection
+  collection,
+  authType,
+  authToken
 }:{
-  url: string, 
-  tenant: string, 
-  database: string,
+  url: string 
+  tenant: string
+  database: string
   collection: string
+  authType?: ChromaDBAuthSetting['type']
+  authToken?: string
 }){
 
   const res = await zlFetch(url + `${PREFIX}/collections/${collection}`, {
     query: { tenant, database },
-    headers: { 'X-Chroma-Token': 'mycredential' }
+    ... getHeaderWithAuth(authType, authToken)
   })
 
   return res.body
@@ -93,13 +130,17 @@ export async function createCollection({
   tenant, 
   database,
   collection,
-  distance
+  distance,
+  authType,
+  authToken,
 }:{
-  url: string, 
-  tenant: string, 
-  database: string,
-  collection: string,
+  url: string 
+  tenant: string 
+  database: string
+  collection: string
   distance: string
+  authType?: ChromaDBAuthSetting['type']
+  authToken?: string
 }){
 
   const res = await zlFetch.post(url + `${PREFIX}/collections`, {
@@ -109,7 +150,9 @@ export async function createCollection({
       metadata: { "hnsw:space": distance },
       get_or_create: false
     },
-    headers: { 'X-Chroma-Token': 'mycredential' }
+    ... getHeaderWithAuth(authType, authToken)
   })
+
+  return res.body
 
 }

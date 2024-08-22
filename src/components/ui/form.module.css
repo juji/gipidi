@@ -1,0 +1,13 @@
+
+
+.form{
+
+  & [type=submit]{
+    opacity: 0.5;
+  }
+
+  &:valid [type=submit]{
+    opacity: 1;
+  }
+
+}
