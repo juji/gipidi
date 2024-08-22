@@ -1,4 +1,22 @@
 
+.errorButton{
+  background-color: tomato;
+  color: var(--bg-color);
+  padding: 0.5em 0.7em;
+  border-radius: 0.3em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.successButton{
+  background-color: greenyellow;
+  color: var(--bg-color);
+  padding: 0.5em 0.7em;
+  border-radius: 0.3em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 .notype{
   margin-bottom: 1em;
   color: #999;
@@ -7,20 +25,39 @@
   }
 }
 
+.red{
+  color: tomato;
+}
+
 .form{
+
+  &.noDisplay{
+    display: none;
+  }
+
   & label{
     display: block;
     margin-bottom: 1em;
 
     & span{
-      display: block;
+      display: flex;
       margin-bottom: 0.2em;
+      align-items: center;
+      gap: 1em;
     }
 
     & input, & select{
       padding: 0.2em 0.5em;
       background-color: #333;
       border-radius: 0.3em;
+
+      &:user-invalid{
+        outline: 1px solid tomato;
+      }
+    }
+
+    & select{
+      overflow: hidden;
     }
   }
 

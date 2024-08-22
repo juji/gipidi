@@ -11,6 +11,7 @@ import {
   saveDefaultModel, 
   saveDefaultProvider 
 } from "@/lib/local-storage";
+import { Select } from '@/components/ui/input'
 
 export function DefaultModel(){
 
@@ -51,46 +52,25 @@ export function DefaultModel(){
       Default Model
     </h6>
     <div className={styles.form}>
-      <label className={styles.label}>
-        <span className={styles.info}>Provider</span>
-        <select
-          className={styles.select}
-          value={defaultProvider}
-          onChange={changeDefaultProvider}
-        >
-          <option value="">Select Provider</option>
-          {providers.map(v => {
-            return <option key={v.id} value={v.id}>{titleCase(v.id)}</option>
-          })}
-        </select>
-      </label>
-      <label className={styles.label}>
-        <span className={styles.info}>Model</span>
 
-        <select
-          className={styles.select}
-          value={defaultModel}
-          onChange={changeDefaultModel}
-        >
-          <option value="">Select Model</option>
-          {models.map(v => {
-            return <option key={v.id} value={v.id}>{v.name}</option>
-          })}
-        </select>
+      <Select label="Provider" 
+        value={defaultProvider}
+        onChange={changeDefaultProvider}>
+        <option value=""></option>
+        {providers.map(v => {
+          return <option key={v.id} value={v.id}>{titleCase(v.id)}</option>
+        })}
+      </Select>
 
-        {/* <input
-          className={styles.input}
-          type="text"
-          list="modelsselection"
-          value={defaultModel}
-          onChange={changeDefaultModel}
-        />
-        <datalist id="modelsselection">
-          {models.map(v => {
-            return <option key={v.id} value={v.id}>{v.name}</option>
-          })}
-        </datalist> */}
-      </label>
+      <Select label="Model" 
+        value={defaultModel}
+        onChange={changeDefaultModel}>
+        <option value=""></option>
+        {models.map(v => {
+          return <option key={v.id} value={v.id}>{v.name}</option>
+        })}
+      </Select>
+
     </div>
   </>
 

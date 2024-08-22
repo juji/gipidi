@@ -1,0 +1,54 @@
+
+
+
+.status{
+
+  margin-top: 2em;
+
+  .iconOk{
+    color: greenyellow;
+  }
+
+  .iconError{
+    color: tomato;
+  }
+
+  .text{
+    display: flex;
+    gap: 0.6em;
+    align-items: center;
+    & > svg{
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+
+  .statusText{
+    color: #999;
+
+    &.isError{
+      color: tomato;
+    }
+  }
+
+  .bar{
+    background-color: dimgrey;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.2em;
+    height: 0.3em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    width: 100%;
+    max-width: 21rem;
+    
+    .perc{
+      background-color: greenyellow;
+      position: absolute;
+      top:0;
+      left:0;
+      height: 100%;
+    }
+  }
+
+}

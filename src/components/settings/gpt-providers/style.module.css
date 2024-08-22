@@ -37,45 +37,6 @@
 }
 
 .form{
-
-  .label{
-    display: block;
-    
-    .info{
-      display: block;
-      font-size: smaller;
-      margin-bottom: 0.2em;
-      margin-top: 0.5em;
-    }
-
-    .input{
-      all: unset;
-      background: #333;
-      padding: 0.5em 1em;
-      border-radius: 0.5em;
-      display: block;
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .select{
-      all: unset;
-      background: #333;
-      padding: 0.5em 1em;
-      border-radius: 0.5em;
-      width: 100%;
-      display: block;
-      box-sizing: border-box;
-      max-width: 400px;
-      cursor: pointer;
-
-      .nullValue[value=""]{
-        color: #999;
-      }
-    }
-  }
-
   .error{
     padding: 0.5em 0;
     color: rgb(255, 100, 100);

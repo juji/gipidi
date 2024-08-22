@@ -12,12 +12,38 @@
     margin: 3em auto;
   }
 
-  .heading{
-    margin-bottom: 0.39em; /* so it aligns with sidebar */
-    
+  .headingContainer{
+    display: flex;
+    gap: 1em;
+    align-items: top;
+    margin-bottom: 1.8em;
     @media(min-width: 900px){
       margin-top: 0.39em; /* well, 1px diff */
+      margin-bottom: 2.8em; /* so it aligns with sidebar */
+    }
+
+    & button{
+      opacity: 0.5;
+      display: flex;
+      align-items: top;
+      padding-top: 0.6em;
+      @media(min-width: 900px){
+        padding-top: 0.7em;
+      }
+
+      &:hover{
+        opacity: 1;
+      }
+
+      &:active{
+        opacity: 0.7;
+      }
+    }
+
+    .heading{
+      line-height: 1.1em;;
     }
   }
+
 
 }

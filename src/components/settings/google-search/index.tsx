@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import styles from './style.module.css'
 import { useGoogleSearchStore } from '@/lib/googleSearchStore'
 import { searchGoogle } from '@/lib/search-google'
+import { Input } from '@/components/ui/input'
 
 export function GoogleSearch(){
 
@@ -39,27 +40,17 @@ export function GoogleSearch(){
       Also, the <a className={styles.link} href="https://developers.google.com/custom-search/v1/introduction" target="_blank">docs</a>.
     </p>
     
-    <div className={styles.form}>
-      <label className={styles.label}>
-        <span className={styles.info}>Search engine ID</span>
-        <input type="text" 
-          className={styles.input}
-          placeholder='Search engine ID'
-          onInput={(e) => setId((e.target as HTMLInputElement).value)}
-        />
-      </label>
-    </div>
+    <Input label="Search engine ID"
+      type="text" 
+      placeholder='Search engine ID'
+      onInput={(e) => setId((e.target as HTMLInputElement).value)}
+    />
 
-    <div className={styles.form}>
-      <label className={styles.label}>
-        <span className={styles.info}>API Key</span>
-        <input type="text" 
-          className={styles.input}
-          placeholder='Custom Search JSON Api Key'
-          onInput={(e) => setApiKey((e.target as HTMLInputElement).value)}
-        />
-      </label>
-    </div>
+    <Input label="API Key"
+      type="text" 
+      placeholder='Custom Search JSON Api Key'
+      onInput={(e) => setApiKey((e.target as HTMLInputElement).value)}
+    />
     
   </div>
 

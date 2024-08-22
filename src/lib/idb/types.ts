@@ -50,19 +50,39 @@ export type GPTProvider = {
   deleted: Date
 }
 
-export type ChromaSettings = {
+export type ChromaDBSettings = {
   tenant: string,
   database: string,
-  distance: string
+  auth?: {
+    type: 'auth-bearer' | 'x-chroma-token'
+    token: string
+  }
+}
+
+export type EmbeddingsDb = {
+  id: string
+  name: string
+  type: 'chromadb' | 'postgres' | 'redis'
+  url: string
+  settings: ChromaDBSettings | object
+  isDefault: boolean
+  created?: Date
+  updated?: Date
+  deleted?: Date
+}
+
+export type ChromaDBEmbeddings = {
+  distance?: string,
 }
 
 export type Embeddings = {
   id: string
   name: string
-  type: 'chromadb' | 'postgres' | 'redis'
-  url: string
-  additionalSettings: ChromaSettings | object
-  created: Date
+  vendor: 'ollama' | 'gemini'
+  model: string
+  db: string
+  settings: ChromaDBEmbeddings | object
+  created?: Date
   updated?: Date
-  deleted: Date
+  deleted?: Date
 }

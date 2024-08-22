@@ -8,6 +8,7 @@ import stylesDownload from './style.module.css'
 import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
+import { Input } from '@/components/ui/input'
 
 const PROVIDER = 'ollama'
 
@@ -56,7 +57,11 @@ export function OllamaSettings(){
       saveProvider(PROVIDER, { url }, '/gpt/ollama.png')
       setisOn( true )
       const res = await downloadLlava(models, url)
-      setDownloadingLlava(res)
+      if(res) setDownloadingLlava(res)
+      else {
+        if(progressRef.current) progressRef.current.style.width = '100%'
+        setLlavaStatus('Downloaded: llava-llama3:latest')
+      }
 
     }).catch((e:any) => {
       removeProvider(PROVIDER)
@@ -76,31 +81,25 @@ export function OllamaSettings(){
     if(downloading.current) return;
     downloading.current = true
 
+    for await (let progress of downloadingLlava){
+      
+      // this will keep downloading even if we change page.
+      // therefore,
+      if(!progressRef.current) return;
 
-    if(downloadingLlava) {
-      for await (let progress of downloadingLlava){
-        
-        // this will keep downloading even if we change page.
-        // therefore,
-        if(!progressRef.current) return;
-
-        setLlavaStatus('Downloading Llava: ' + progress.status)
-        if(progressRef.current){
-          progressRef.current.style.width = Math.min(
-            100,
-            Math.round(100 * progress.completed / progress.total)
-          ) + '%'
-        }
-
+      setLlavaStatus('Downloading Llava: ' + progress.status)
+      if(progressRef.current){
+        progressRef.current.style.width = Math.min(
+          100,
+          Math.round(100 * progress.completed / progress.total)
+        ) + '%'
       }
-      if(progressRef.current) progressRef.current.style.width = '100%'
-      setLlavaStatus('Downloaded: llava-llama3:latest')
-      downloading.current = false
-    }else{
-      if(progressRef.current) progressRef.current.style.width = '100%'
-      setLlavaStatus('Downloaded: llava-llama3:latest')
-      downloading.current = false
+
     }
+    if(progressRef.current) progressRef.current.style.width = '100%'
+    setLlavaStatus('Downloaded: llava-llama3:latest')
+    downloading.current = false
+    
   }
 
   useEffect(() => {
@@ -117,15 +116,11 @@ export function OllamaSettings(){
       </Link>
     </h6>
     <div className={styles.form}>
-      <label className={styles.label}>
-        <span className={styles.info}>Url</span>
-        <input type="text" 
-          className={styles.input}
-          placeholder='Ollama URL'
-          onInput={(e) => setUrl((e.target as HTMLInputElement).value)}
-          value={url}
-        />
-      </label>
+      <Input label='Url' 
+        type="text" 
+        placeholder='Ollama URL'
+        onInput={(e) => setUrl((e.target as HTMLInputElement).value)}
+        value={url} />
       <div className={stylesDownload.download}>
         <div className={stylesDownload.downloadProgress}>
           <div ref={progressRef}></div>

@@ -6,6 +6,7 @@ import Link from "next/link"
 import cx from "classix"
 import { useGPT } from "@/lib/gptStore"
 import { test } from '@/lib/vendor/groq'
+import { Input } from '@/components/ui/input'
 
 const PROVIDER = 'groq'
 
@@ -60,14 +61,13 @@ export function GroqSettings(){
       </Link>
     </h6>
     <div className={styles.form}>
-      <label className={styles.label}>
-        <span className={styles.info}>API Key</span>
-        <input type="text" 
-          className={styles.input}
-          placeholder='Groq API Key'
-          onInput={(e) => setApiKey((e.target as HTMLInputElement).value)}
-        />
-      </label>
+
+      <Input label={"API Key"}
+        type="text" 
+        placeholder='Groq API Key'
+        onInput={(e) => setApiKey((e.target as HTMLInputElement).value)}
+      />
+      
       {err ? <div className={styles.error}>{err}</div> : null}
     </div>
   </>
