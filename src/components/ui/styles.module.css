@@ -1,3 +1,27 @@
+
+.button{
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  background-color: var(--fg-color);
+  color: var(--bg-color);
+
+  &:active{
+    opacity: 0.7;
+  }
+  
+  &.danger{
+    background-color: tomato;
+    color: var(--bg-color);
+  }
+
+  &.success{
+    background-color: greenyellow;
+    color: var(--bg-color);
+  }
+}
+
+
+
 .label{
   display: block;
   margin-bottom: 1em;

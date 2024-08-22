@@ -1,5 +1,5 @@
 
-import { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react'
 import styles from './styles.module.css'
 import cx from 'classix'
 
@@ -32,6 +32,18 @@ export function Select({
     <span className={styles.info}>{label}</span>
     <select {...rest} className={cx(styles.select, className)}>{children}</select>
   </label>
+
+}
+
+export function Button({ 
+  className,
+  color,
+  ...rest
+}: {
+  color?: 'success' | 'danger'
+} & ButtonHTMLAttributes<HTMLButtonElement>){
+
+  return <button {...rest} className={cx(className, styles.button, color && styles[color])} />
 
 }
 

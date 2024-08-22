@@ -4,6 +4,7 @@ import styles from './style.module.css'
 import cx from 'classix'
 import { drop } from '@/lib/idb/drop'
 import { removeAll } from '@/lib/local-storage'
+import { Button } from '@/components/ui/input'
 
 export function DangerZone(){
 
@@ -21,18 +22,11 @@ export function DangerZone(){
     <div className={styles.dangerContainer}>
       { confirm ? <>
         <p className={styles.note}>This will remove all data</p>
-        <button
-          className={cx(styles.button, styles.cancel)}
-          onClick={() => setConfirm(false)}
-        >Cancel</button>
-        <button
-          className={cx(styles.button, styles.danger)}
-          onClick={() => onRemove()}
-        >Confirm Removal</button>
-      </> : <button
-        className={cx(styles.button, styles.danger)}
-        onClick={() => setConfirm(true)}
-      >Remove All Data</button>}
+        <Button className={styles.cancel} onClick={() => setConfirm(false)}>Cancel</Button>
+        <Button color='danger' onClick={() => onRemove()}>Confirm Removal</Button>
+      </> : <Button color='danger' onClick={() => setConfirm(true)}>
+        Remove All Data
+      </Button>}
     </div>
   </>
 
