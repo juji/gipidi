@@ -7,7 +7,7 @@ export const TABLES = {
   GPT_PROVIDER: 'gptProvider',
   SETTINGS: 'settings',
   EMBEDDINGS: 'embeddings',
-  EMBEDDINGS_DB: 'embeddingsDB'
+  EMBEDDINGS_DB: 'embeddingsDb'
 }
 
 
@@ -68,8 +68,10 @@ function getDatabase(){
       vendor: { dataType: DATA_TYPE.String },
       model: { dataType: DATA_TYPE.String },
       db: { dataType: DATA_TYPE.String },
+      dbVendor: { dataType: DATA_TYPE.String },
+      dbObject: { dataType: DATA_TYPE.Object },
       settings: { dataType: DATA_TYPE.Object },
-      created: { dataType: DATA_TYPE.DateTime, default: () => new Date() },
+      created: { dataType: DATA_TYPE.DateTime },
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED }
     }
@@ -92,7 +94,7 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 13,
+    version: 16,
     tables: [
       convo,
       convoDetail,

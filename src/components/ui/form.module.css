@@ -2,12 +2,21 @@
 
 .form{
 
-  & [type=submit]{
+  &.hidden{
+    display: none;
+  }
+
+  & [type=submit],
+  & [type=submit]:disabled{
     opacity: 0.5;
   }
 
   &:valid [type=submit]{
     opacity: 1;
+  }
+
+  &:valid [type=submit]:disabled{
+    opacity: 0.5;
   }
 
 }

@@ -1,7 +1,6 @@
-import { ChatGoogleGenerativeAI } from "@juji/langchain-google-genai";
 import { GPTModel } from "../types";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { GenericSetting, GPTProvider } from "@/lib/idb/types";
+import { GPTProvider } from "@/lib/idb/types";
 
 export function getClient( apiKey: string ){
   const gemini = new GoogleGenerativeAI( apiKey )

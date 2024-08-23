@@ -3,48 +3,53 @@ import { data } from './data'
 import { Ollama } from 'ollama/browser'
 import { nanoid } from 'nanoid'
 import zlFetch from '@juji/zl-fetch'
+import { uuidv7 } from "uuidv7";
 
 const ollama = new Ollama({ host: 'http://localhost:11434' })
 const chromaUrl = 'http://localhost:8000'
 
 
-;(async () => {
-
+async function insert(){
   const t = new Date(). valueOf()
-  // for (let idx in data){
+  for (let idx in data){
   
-  //   // console.log('idx', data[idx])
-  //   const resp = await ollama.embeddings({
-  //     model: 'mxbai-embed-large',
-  //     prompt: data[idx]
-  //   })
+    // console.log('idx', data[idx])
+    const resp = await ollama.embeddings({
+      model: 'mxbai-embed-large',
+      prompt: data[idx]
+    })
   
-  //   const id = nanoid()
-  //   await zlFetch.post(chromaUrl + `/api/v1/collections/f7215834-a4ef-4aef-a4cc-97ce043f1589/add`,{
-  //     body: {
-  //       embeddings: [resp.embedding],
-  //       metadatas: [{ index: idx }],
-  //       documents: [data[idx]],
-  //       ids: [nanoid()]
-  //     }
-  //   })
-  
-  // }
+    const id = nanoid()
+    await zlFetch.post(chromaUrl + `/api/v1/collections/a7e953f3-a303-497e-a45c-dc0bb0709eef/add`,{
+      body: {
+        embeddings: [resp.embedding],
+        documents: [data[idx]],
+        ids: [uuidv7()]
+      }
+    })
 
-  // console.log('elapsed:', new Date().valueOf() - t, 'ms')
-  const prompt = "Give me something about roses?"
+    console.log('embedding', resp.embedding.length)
+  
+  }
+
+  console.log('done inserting')
+}
+
+async function prompt(){
+
+  const prompt = "lorem"
   
   const resp = await ollama.embeddings({
     model: 'mxbai-embed-large',
     prompt: prompt
   })
 
-  console.log('The Embedding Result:', resp)
+  // // console.log('The Embedding Result:', resp)
 
-  const result = await zlFetch.post(chromaUrl + `/api/v1/collections/f7215834-a4ef-4aef-a4cc-97ce043f1589/query`,{
+  const result = await zlFetch.post(chromaUrl + `/api/v1/collections/a7e953f3-a303-497e-a45c-dc0bb0709eef/query`,{
     body: {
       query_embeddings: [resp.embedding],
-      n_result: 1,
+      n_results: 2,
       // include: [
       //   "metadatas",
       //   "documents",
@@ -55,12 +60,12 @@ const chromaUrl = 'http://localhost:8000'
 
   console.log(result.body)
 
-  const r = await ollama.generate({
-    model: 'llama3.1:latest',
-    prompt: `Using this data: ${result.body.documents[0][0]}. Respond to this prompt: ${prompt}`
-  })
+}
 
-  console.log(r.response)
+;(async () => {
+
+  await insert()
+  // await prompt()
 
 })().catch(e => {
 

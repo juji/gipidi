@@ -9,6 +9,8 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+
+  // marked-to-react
   webpack: (config, {isServer}) => {
     config.plugins.push(new webpack.NormalModuleReplacementPlugin(/node:/, (resource) => {
       resource.request = resource.request.replace(/^node:/, "");

@@ -73,8 +73,12 @@ export type EmbeddingsDb = {
   deleted?: Date
 }
 
+export type EmbeddingsDbWithCount = EmbeddingsDb & {
+  count: number
+}
+
 export type ChromaDBEmbedding = {
-  distance?: string,
+  distance: string,
 }
 
 export type Embeddings = {
@@ -83,6 +87,8 @@ export type Embeddings = {
   vendor: 'ollama' | 'gemini'
   model: string
   db: string
+  dbVendor?: EmbeddingsDb['type']
+  dbObject?: any
   settings: ChromaDBEmbedding | object
   created?: Date
   updated?: Date

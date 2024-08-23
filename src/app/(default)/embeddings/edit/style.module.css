@@ -1,0 +1,109 @@
+
+.details{
+  .button{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .detailsContent{
+    margin-top: 0em;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: 
+      grid-template-rows 200ms ease-out,
+      margin-top 200ms ease-out
+    ;
+
+    &.open{
+      grid-template-rows: 1fr;
+      margin-top: 1em;
+    }
+
+    & > div{
+      overflow: hidden;
+      & > pre{
+        padding: 1em;
+        background-color: #333;
+        border-radius: 0.5em;
+        overflow: auto;
+      }
+    }
+  }
+}
+
+.input{
+
+  display: none;
+  &.on{
+    display: block;
+  }
+
+  .controls{
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+
+    & > label{
+      margin: 0;
+    }
+  }
+
+}
+
+.contentsTab{
+  display: none;
+  &.on{
+    display: block;
+  }
+}
+
+.contents{
+
+  border-radius: 0.5em;
+  border: 1px solid #555;
+  min-height: 13em;
+  resize: vertical;
+  overflow: auto;
+  max-height: 60%;
+
+  & .nocontent{
+    color: #999;
+    margin: 1em;
+  }
+
+  & .result{
+    padding: 1em 1.6em;
+    border-bottom: 1px solid #333;
+
+    .content{
+      display: block;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:last-child{
+      border-bottom: 0px solid #333;
+    }
+  }
+}
+
+.tabs{
+  margin: 1em auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+
+  & > button{
+    display: flex;
+    justify-content: center;
+
+    opacity: 0.4;
+
+    &.on{
+      opacity: 1;
+    }
+  }
+}

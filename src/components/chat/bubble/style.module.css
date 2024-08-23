@@ -19,14 +19,6 @@
   scroll-margin-top: 62px;
   position: relative;
 
-  --max-width-cloud: calc(
-      min(100vw - var(--nav-width),  var(--content-max-width)) -
-      calc( 2 * var(--aside-width) ) - 
-      calc( 2 * var(--content-padding-lr) ) - 
-      calc( 2 * var(--row-gap) ) - 
-      calc( 2px + var(--scrollbar-width)) /*  why 2px? i don't know */
-    );
-
   @media(min-width: 500px){
     --aside-width: 2.9em;
     --row-gap: 1em;
@@ -50,8 +42,9 @@
   
   & > .cloud{
     grid-area: cloud;
-    max-width: var(--max-width-cloud);
     box-sizing: border-box;
+    /* this prevents pre tag from overflowing */
+    min-width: 0; 
   }
 
   & > .pict{

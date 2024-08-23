@@ -1,5 +1,5 @@
 'use client'
-import { ButtonHTMLAttributes, InputHTMLAttributes, forwardRef, ReactNode, RefObject, SelectHTMLAttributes, useId, ForwardedRef } from 'react'
+import { ButtonHTMLAttributes, InputHTMLAttributes, forwardRef, ReactNode, RefObject, SelectHTMLAttributes, useId, ForwardedRef, TextareaHTMLAttributes } from 'react'
 import styles from './styles.module.css'
 import cx from 'classix'
 
@@ -7,7 +7,6 @@ import cx from 'classix'
 export const Input = forwardRef(function Input(
   { 
     label,
-    className, 
     ...rest 
   }:{ 
     label: ReactNode 
@@ -19,9 +18,27 @@ export const Input = forwardRef(function Input(
 
   return <label htmlFor={id} className={styles.label}>
     <span className={styles.info}>{label}</span>
-    <input {...rest} ref={ref} id={id} className={cx(styles.input, className)} />
+    <NakedInput {...rest} ref={ref} id={id} />
   </label>
 
+})
+
+export const NakedInput = forwardRef(function NakedInput(
+  props: { full?: boolean } & InputHTMLAttributes<HTMLInputElement>,
+  ref: ForwardedRef<HTMLInputElement>
+){
+  const { className, full, ...rest } = props
+  return <input {...rest} ref={ref} 
+    className={cx(styles.input, className, full && styles.full)} />
+})
+
+export const NakedTextarea = forwardRef(function NakedInput(
+  props: { full?: boolean } & TextareaHTMLAttributes<HTMLTextAreaElement>,
+  ref: ForwardedRef<HTMLTextAreaElement>
+){
+  const { className, full, ...rest } = props
+  return <textarea {...rest} ref={ref} 
+    className={cx(styles.textarea, className, full && styles.full)}></textarea>
 })
 
 
@@ -67,7 +84,7 @@ export const Button = forwardRef(function Button(
     color,
     ...rest
   }: {
-    color?: 'success' | 'danger'
+    color?: 'success' | 'danger' | 'dark'
   } & ButtonHTMLAttributes<HTMLButtonElement>, 
   ref: ForwardedRef<HTMLButtonElement>
 ){
@@ -91,7 +108,7 @@ export const Checkbox = forwardRef(function Checkbox(
   const id = useId()
 
   return <label htmlFor={id} className={styles.labelCheckbox}>
-    <input {...rest} ref={ref} id={id} type="checkbox" className={cx(styles.input, className)} />
+    <input {...rest} ref={ref} id={id} type="checkbox" className={cx(className)} />
     <span className={styles.info}>{label}</span>
   </label>
 

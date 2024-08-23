@@ -1,15 +1,17 @@
 'use client'
 import styles from './style.module.css'
 import './style.css'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, ReactNode } from 'react'
 
 export function Page({
   title,
   backButton,
+  link,
   children
 }: PropsWithChildren<{
   title: string
   backButton?: boolean
+  link?: ReactNode
 }>){
 
   return <div className={styles.page}>
@@ -21,6 +23,7 @@ export function Page({
       </svg>
       </button> : null}
       <h1 className={styles.heading}>{title}</h1>
+      {link ? <span className={styles.link}>{link}</span> : null}
     </div>
     <hr />
     {children}

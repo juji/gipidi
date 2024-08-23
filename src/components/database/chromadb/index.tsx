@@ -103,7 +103,7 @@ export function ChromaDb(){
       name="auth.token"
     />
 
-    <button className={styles.showDocker} onClick={toggleDocker}>
+    <button className={styles.showDocker} type="button" onClick={toggleDocker}>
       {docker ? 'Hide Example Docker Command' : 'Show Example Docker Command'}
     </button>
 

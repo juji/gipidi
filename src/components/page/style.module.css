@@ -5,8 +5,9 @@
   width: 100%;
   max-width: var(--content-max-width);
   padding: 0 calc( 2 * var(--content-padding-lr));
-  /* padding: 0px; */
+
   margin: 0 auto;
+  min-width: 0; /* this prevents pre tag from overflowing */
 
   @media(min-width: 900px){
     margin: 3em auto;
@@ -42,6 +43,23 @@
 
     .heading{
       line-height: 1.1em;;
+    }
+
+    .link{
+      align-self: flex-end;
+
+      & > a {
+        text-decoration: dotted underline;
+        opacity: 0.7;
+
+        &:hover{
+          opacity: 1;
+        }
+
+        &:active{
+          opacity: 0.7;
+        }
+      }
     }
   }
 

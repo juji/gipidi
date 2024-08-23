@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useState } from "react"
-import { Status } from "./status"
+import { useEffect, useRef, useState } from "react"
+import { Status } from "@/components/ui/status"
 import { downloadModel } from "@/lib/vendor/ollama"
 import { getGPTProvider } from "@/lib/idb/gpt/getGPTProvider"
 import { GPTProvider, OllamaSetting } from "@/lib/idb/types"
@@ -9,17 +9,21 @@ export function DownloadModel({
   vendor, 
   model,
   onSuccess,
+  onError,
 }:{ 
-  vendor: string, 
-  model: string,
+  vendor: string
+  model: string
   onSuccess: () => void 
+  onError?: () => void
 }){
 
   const [ percentage, setPercentage ] = useState(0)
   const [ status, setStatus ] = useState('')
   const [ error, setError ] = useState(false)
 
-  async function downloadEmbeddingModel(){
+  const isDrawn = useRef(true)
+  useEffect(() => () => { isDrawn.current = false },[])
+  async function downloadOllamaModel(){
     const provider = await getGPTProvider(vendor as GPTProvider['id'])
     const download = await downloadModel(model, (provider.setting as OllamaSetting).url)
 
@@ -27,6 +31,10 @@ export function DownloadModel({
 
       try{
         for await (let progress of download){
+          
+          // when this is unmounted
+          if(!isDrawn.current) continue;
+
           let perc = Math.min(
             100,
             Math.round(100 * progress.completed / progress.total)
@@ -35,6 +43,8 @@ export function DownloadModel({
           setStatus(progress.status)
           setPercentage(perc)
         }
+
+        if(!isDrawn.current) return;
   
         setStatus(`Downloaded: ${model}`)
         setPercentage(100)
@@ -42,7 +52,9 @@ export function DownloadModel({
       }catch(e){
         setStatus((e as Error).toString())
         setError(true)
+        onError && onError()
       }
+      
     }else{
       setStatus(`Downloaded: ${model}`)
       setPercentage(100)
@@ -59,12 +71,15 @@ export function DownloadModel({
     }
 
     else if(vendor === 'ollama'){
-      downloadEmbeddingModel()
+      downloadOllamaModel()
     }
+
     else{
-      throw new Error(`unknown vendor: ${vendor}`)
+      setStatus(`unknown vendor: ${vendor}`)
+      setError(true)
     }
-  },[ vendor, model ])
+
+  },[ vendor ])
 
   return <Status
     text="Downloading Embedding Model"

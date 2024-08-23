@@ -5,8 +5,11 @@ import { EmbeddingsDb } from "@/lib/idb/types"
 
 import { FormEvent, useMemo, useState } from "react"
 import formStyles from '@/components/ui/form.module.css'
-import { ChromaDb } from '@/components/database/chromadb'
 import { nanoid } from "nanoid"
+import cx from "classix"
+
+import { ChromaDb } from '@/components/database/chromadb'
+import { CheckSubmitChroma } from "@/components/database/chromadb/check-submit"
 
 export default function CreateDb(){
 
@@ -26,6 +29,7 @@ export default function CreateDb(){
       id: nanoid(),
       name: data.name,
       type: data.vendor,
+      url: data.url,
       settings: {
         tenant: data.tenant,
         database: data.database,
@@ -46,7 +50,11 @@ export default function CreateDb(){
   return <Page title="Create Database" backButton={true}>
 
     <br />
-    <form onSubmit={onSubmit} className={formStyles.form}>
+    { dbSetting ? <CheckSubmitChroma 
+      goBack={() => setDbSetting(null)}
+      data={dbSetting}
+    /> : null }
+    <form onSubmit={onSubmit} className={cx(formStyles.form, dbSetting && formStyles.hidden)}>
       <Input label="Name" required type="text" name="name" />
       <Select label="Vendor"
         value={type || ''}
@@ -67,6 +75,7 @@ export default function CreateDb(){
       <br />
       <Button color="success" type="submit">Submit</Button>
     </form>
+    
     
   </Page>
 

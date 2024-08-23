@@ -1,5 +1,7 @@
+
 import zlFetch from '@juji/zl-fetch'
-import { ChromaDBAuthSetting } from '../idb/types'
+import { ChromaDBAuthSetting, ChromaDBSetting, Embeddings, EmbeddingsDb } from '../idb/types'
+import { metadata } from '@/app/layout'
 
 const PREFIX = '/api/v1'
 
@@ -25,7 +27,7 @@ function getHeaderWithAuth(
 
   else if(authType === 'x-chroma-token') return {
     headers: {
-      'X-Chroma-Token': `${authToken}`
+      'X-Chroma-Token': authToken
     }
   }
 
@@ -153,6 +155,144 @@ export async function createCollection({
     ... getHeaderWithAuth(authType, authToken)
   })
 
+  return res.body
+
+}
+
+
+export async function deleteCollection({
+  url, 
+  tenant, 
+  database,
+  collection,
+  authType,
+  authToken,
+}:{
+  url: string 
+  tenant: string 
+  database: string
+  collection: string
+  authType?: ChromaDBAuthSetting['type']
+  authToken?: string
+}){
+
+  const res = await zlFetch.delete(url + `${PREFIX}/collections/${collection}`, {
+    query: { tenant, database },
+    ... getHeaderWithAuth(authType, authToken)
+  })
+
+  return res.body
+
+}
+
+export async function query({
+  embedding,
+  database,
+  vector,
+  nResults = 3
+}:{
+  embedding: Embeddings
+  database: EmbeddingsDb
+  vector: any
+  nResults?: number
+}){
+
+  const url = database.url
+  const { tenant, database: db, auth } = database.settings as ChromaDBSetting
+  const collectionId = embedding.dbObject.id
+
+  const res = await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/query`, {
+    query: { tenant, database: db },
+    body: {
+      query_embeddings: [vector],
+      n_results: nResults
+    },
+    ... getHeaderWithAuth(auth?.type, auth?.token)
+  })
+
+  return res.body
+
+}
+
+export async function count({
+  embedding,
+  database,
+}:{
+  embedding: Embeddings
+  database: EmbeddingsDb
+}){
+
+  const url = database.url
+  const { tenant, database: db, auth } = database.settings as ChromaDBSetting
+  const collectionId = embedding.dbObject.id
+
+  const res = await zlFetch.get(url + `${PREFIX}/collections/${collectionId}/count`, {
+    query: { tenant, database: db },
+    ... getHeaderWithAuth(auth?.type, auth?.token)
+  })
+
+  return res.body
+
+}
+
+
+export async function get({
+  embedding,
+  database,
+  limit = 10,
+  offset = 0
+}:{
+  embedding: Embeddings
+  database: EmbeddingsDb
+  limit?: number
+  offset?: number
+}){
+
+  const url = database.url
+  const { tenant, database: db, auth } = database.settings as ChromaDBSetting
+  const collectionId = embedding.dbObject.id
+
+  const res = await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/get`, {
+    query: { tenant, database: db },
+    body: {
+      limit,
+      offset
+    },
+    ... getHeaderWithAuth(auth?.type, auth?.token)
+  })
+
+  return res.body
+
+}
+
+export async function add({
+  embedding,
+  database,
+  ids,
+  vectors,
+  documents
+}:{
+  embedding: Embeddings
+  database: EmbeddingsDb
+  ids: string[]
+  vectors: number[][]
+  documents: string[]
+}){
+
+  const url = database.url
+  const { tenant, database: db, auth } = database.settings as ChromaDBSetting
+  const collectionId = embedding.dbObject.id
+
+  const res = await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/add`, {
+    query: { tenant, database: db },
+    body: {
+      ids: ids,
+      embeddings: vectors,
+      documents: documents
+    },
+    ... getHeaderWithAuth(auth?.type, auth?.token)
+  })
+  
   return res.body
 
 }

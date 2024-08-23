@@ -1,147 +1,190 @@
 'use client'
 
 import { Page } from "@/components/page"
-import dynamic from "next/dynamic"
-import { FormEvent, useId, useMemo, useRef, useState } from "react"
 import styles from './style.module.css'
-import { EmbeddingModels } from "@/components/embeddings/embedding-models"
-import { ChromaDBSettings, Embeddings } from "@/lib/idb/types"
+import formStyles from '@/components/ui/form.module.css'
 import { nanoid } from "nanoid";
-import { DownloadModel } from "@/components/embeddings/create/download-model"
-import { CreateChromaDb } from "@/components/embeddings/chromadb/create"
+import { Select, Input, Button } from "@/components/ui/input"
 import cx from "classix"
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { getAllDatabase } from "@/lib/idb/embedding-database/getAllDatabase";
+import { Embeddings, EmbeddingsDb } from "@/lib/idb/types";
+import Link from "next/link";
 
-const ChromaDb = dynamic(
-  () => import('@/components/embeddings/chromadb').then(v => v.ChromaDb), 
-  { ssr: false }
-)
+import { ChromaDbOptions } from "@/components/embeddings/chromadb/options";
+import { EmbeddingModels } from "@/components/embeddings/embedding-models";
+
+import { CreateEmbeddings } from "@/components/embeddings/create";
+import { getEmbeddingByName } from "@/lib/idb/embedding/getEmbeddingByName";
+import { createEmbedding } from "@/lib/idb/embedding/createEmbedding";
 
 export default function Create(){
 
-  const name = useId()
-  const vendor = useId()
-
-  const [ type, setType ] = useState('')
-
-  const DatabaseSetting = useMemo(() => {
-    return type === 'chromadb' ? ChromaDb : 
-    () => <div className={styles.notype}>
-      Type not selected
-      <input type="text" required name="type" />
-    </div>
-  },[ type ])
-
-  const currentData = useRef<Embeddings|null>(null)
-  const [ creating, setCreating ] = useState(false)
+  const [ data, setData ] = useState<Embeddings|null>(null)
+  const [ db, setDb ] = useState<EmbeddingsDb|null>(null)
   function onSubmit(e: FormEvent<HTMLFormElement>){
     e.preventDefault()
-    const d = new FormData(e.target as HTMLFormElement);
-    const data = Object.fromEntries(d.entries());
-
-    currentData.current = {
-      id: nanoid(),
-      name: data.name as string,
-      vendor: (data.model as string).split('/')[0] as Embeddings['vendor'],
-      model: (data.model as string).split('/')[1],
-      db: data.db as Embeddings['db'],
-      dbUrl: data.url as string,
-      dbSettings: {
-        tenant: data.tenant,
-        database: data.database,
-        distance: data.distance
-      } as ChromaDBSettings,
-    }
-
-    setCreating(true)
     
+    const data = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries())
+    const embeddingModel = (data.model as string).split('/')
+
+    const db = database?.find(v => v.id === data.database)
+    if(!db) throw new Error('db not found')
+
+    const embedding = {
+      id: nanoid() as string,
+      name: data.name as string,
+      vendor: embeddingModel[0],
+      model: embeddingModel[1],
+      db: data.database as string,
+      dbVendor: db.type,
+      settings: {
+        distance: data.distance as string
+      }
+    } as Embeddings
+
+    setDb(db)
+    setData(embedding)
   }
 
-  const [ modelSuccess, setModelSuccess ] = useState(false)
-  function onModelSuccess(){
-    setModelSuccess(true)
+  const [database, setDatabase] = useState<EmbeddingsDb[]|null>(null)
+  useEffect(() => {
+    getAllDatabase().then(v => setDatabase(v))
+  },[])
+
+  function onDbChange(e: ChangeEvent<HTMLSelectElement>){
+    const embedding = database?.find(v => v.id === e.target.value)
+    if(!embedding) setEmbeddingType(null);
+    else setEmbeddingType(embedding.type)
   }
 
-  const [ success, setSuccess ] = useState(false)
-  function onSuccessAll(){
-    setSuccess(true)
+  const [embeddingType, setEmbeddingType] = useState<EmbeddingsDb['type']|null>(null)
+  const Options = useMemo(() => {
+    return embeddingType === 'chromadb' ? ChromaDbOptions : () => null
+  },[embeddingType])
+
+  function onChangeName(e: ChangeEvent<HTMLInputElement>){
+    if(e.target.validity.patternMismatch){
+      e.target.setCustomValidity('Should only be lowercase and underscore')
+      e.target.reportValidity()
+    }else{
+      const input = e.target
+      const val = input.value
+      getEmbeddingByName(val).then(v => {
+        if(v) input.setCustomValidity('Name already exist')
+        else input.setCustomValidity('')
+        input.reportValidity()
+      })
+    }
   }
 
-  const [ error, setError ] = useState(false)
-  function onError(){
-    setError(true)
+  const [result, setResult] = useState<{
+    success?: any
+    existing?: any
+    error?: boolean
+  }|null>(null)
+
+  function reportSuccess( collection: any ){
+    setResult({ success: collection })
+  }
+  function reportExisting( collection: any ){
+    setResult({ existing: collection })
+  }
+  function reportError(){
+    setResult({ error: true })
   }
 
-  function returnToForm(){
-    setError(false)
-    setSuccess(false)
-    setCreating(false)
+  function backToForm(){
+    setData(null)
+    setDb(null)
+    setResult(null)
   }
 
+  useEffect(() => {
+    if(!result?.success) return;
+    if(!data) return;
+
+    createEmbedding({
+      ...data,
+      dbObject: result.success
+    }).then(v => {
+      console.log(v)
+      setData(v)
+    })
+  },[ result?.success, data ])
+
+  function continueWithExisting(){
+    if(!data) return;
+    if(!result?.existing) return;
+    createEmbedding({
+      ...data,
+      dbObject: result.existing
+    }).then(v => {
+      console.log(v)
+      setData(v)
+    })
+  }
 
   return <Page title="Create Embedding" backButton={true}>
 
     <br />
-    {creating ? <div className={styles.creating}>
 
-      <h3>Creating Records</h3>
-      {success || error ? null : <p className={styles.red}>Do not move away from this page</p>}
+    { data && db ? <>
+      <CreateEmbeddings 
+        data={data as Embeddings} 
+        db={db as EmbeddingsDb}
+        reportSuccess={reportSuccess}
+        reportExisting={reportExisting}
+        reportError={reportError}
+      />
+      <br /><br />
+      {result && result.error ? <Button onClick={backToForm} color="danger">Back</Button> : null}
+      {result && result.existing ? <>
+          <p style={{margin: '1em 0'}}>Colection already exist, use this collection instead?</p>
+          <Button onClick={backToForm} color="danger">Back</Button>&nbsp;&nbsp;&nbsp;
+          <Button onClick={continueWithExisting} color="success">Continue</Button>
+        </> : null}
+      {data.dbObject ? <Button onClick={() => history.back()} color="success">Continue</Button> : null}
+    </> : null }
+    
 
-      {currentData.current ? <>
-        <DownloadModel 
-          vendor={currentData.current.vendor} 
-          model={currentData.current.model} 
-          onSuccess={onModelSuccess}
-        />
-        {modelSuccess ? (currentData.current.db === 'chromadb' ? (
-          <CreateChromaDb 
-            url={currentData.current.dbUrl}
-            collection={currentData.current.name}
-            tenant={(currentData.current.dbSettings as ChromaDBSettings).tenant}
-            database={(currentData.current.dbSettings as ChromaDBSettings).database}
-            distance={(currentData.current.dbSettings as ChromaDBSettings).distance}
-            onSuccess={onSuccessAll}
-            onError={onError}
-          />
-        ) : null) : null}
-
-        {success ? <button className={styles.successButton}>Continue</button> : null}
-        {error ? <button onClick={() => returnToForm()} className={styles.errorButton}>Back</button> : null}
-      </> : null}
+    <form className={cx(styles.form, formStyles.form, data && formStyles.hidden)} onSubmit={onSubmit}>
       
+      <Input label="Name"
+        onChange={onChangeName}
+        pattern={'^[a-z_]+$'} 
+        disabled={!database || !database.length} 
+        required type="text" name="name" />
 
+      <EmbeddingModels disabled={!database || !database.length} />
 
-    </div> : null }
+      { database && database.length ? (<>
+        <Select 
+          onChange={onDbChange}
+          required label="Database" name="database">
+          <option value="">Select Database</option>
+          {database.map(v => <option key={v.id} value={v.id}>{v.name} - {v.type}</option>)}
+        </Select>
+        <Link 
+          className={styles.link} 
+          href="/embeddings/databases/create">Create new database</Link>
+        <br /><br />
+      </>) 
+      
+      : database && !database.length ? (
+        <p className={styles.empty}>
+          Empty database. <Link 
+            className={styles.link} 
+            href="/embeddings/databases/create">Create one</Link>
+        </p>
+      ) 
+      
+      : <p className={styles.loading}>Loading databases...</p> }
 
-    <form className={cx(styles.form, creating && styles.noDisplay)} onSubmit={onSubmit}>
-      <label htmlFor={name}>
-        <span>Name</span>
-        <input pattern="^[a-z_]+$" 
-        onChange={e => {
-          const val = e.target.value
-          const match = val.match(/^[a-z_]+$/)
-          if(!match) {
-            e.target.setCustomValidity(`lowercase and underscore only`)
-            e.target.reportValidity()
-          }else{
-            e.target.setCustomValidity('')
-          }
-        }}
-        required type="text" id={name} name="name" />
-      </label>
-      <EmbeddingModels />
+      <Options />
+      <br />
+      <Button disabled={!database || !database.length} type="submit">Submit</Button>
 
-      <label htmlFor={vendor}>
-        <span>Database</span>
-        <select required id={vendor} name="db" value={type} 
-          onChange={(e) => setType(e.target.value)}>
-          <option value=""></option>
-          <option value="chromadb">ChromaDB</option>
-          <option value="postgres">Postgres</option>
-          <option value="redis">Redis</option>
-        </select>
-      </label>
-      <DatabaseSetting />
-      <button type="submit">Submit</button>
     </form>
     
 

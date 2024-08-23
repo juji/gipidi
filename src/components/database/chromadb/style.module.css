@@ -47,7 +47,7 @@
     display: block;
     overflow: auto;
     width: 100%;
-    max-width: min(400px, calc(100vw - 4.4em));
+    max-width: 400px;
     padding: 1em;
     background-color: #222;
     margin-bottom: 1em;

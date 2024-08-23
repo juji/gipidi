@@ -4,9 +4,16 @@
   border-radius: 0.5em;
   background-color: var(--fg-color);
   color: var(--bg-color);
+  display: inline-flex;
+  align-items: center;
 
   &:active{
     opacity: 0.7;
+  }
+
+  &.dark{
+    background-color: hsl(from var(--bg-color) h s calc(l + 10%));
+    color: var(--fg-color);
   }
   
   &.danger{
@@ -28,9 +35,103 @@
   width: 100%;
   max-width: 400px;
   margin: 1em 0;
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
+.textarea{
+  all: unset;
+  background: #333;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+  resize: vertical;
+  min-height: 5em;
+  
+  &.full{
+    max-width: unset;
+  }
+
+  &:focus{
+    outline: 2px solid rgb(from greenyellow r g b / 0.7 );
+  }
+
+  &:user-invalid{
+    outline: 2px solid tomato;
+  }
+}
+
+.input{
+  all: unset;
+  background: #333;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+  cursor: text;
+
+  &.full{
+    max-width: unset;
+  }
+
+  &:focus{
+    outline: 2px solid rgb(from greenyellow r g b / 0.7 );
+  }
+
+  &:user-invalid{
+    outline: 2px solid tomato;
+  }
+}
+
+.selectWrapper{
+  position: relative;
+  max-width: 400px;
+  .select{
+    all: unset;
+    background: #333;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    max-width: 400px;
+    cursor: pointer;
+
+    &:focus{
+      outline: 2px solid rgb(from greenyellow r g b / 0.7 );
+    }
+
+    &:user-invalid{
+      outline: 2px solid tomato;
+    }
+
+    &:has(option[value=""]:checked){
+      color: #999;
+    }
+  }
+
+  .chevron{
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%) rotateX(0deg);
+    opacity: 0.5;
+    transition: transform 500ms ease-out;
+    pointer-events: none;
+  }
+
+  &:hover .chevron{
+    opacity: 1;
+  }
+
+  &:has(select:active) .chevron{
+    transform: translateY(-50%) rotateX(180deg);
+  }
+}
 
 .label{
   display: block;
@@ -40,72 +141,6 @@
     display: block;
     margin-bottom: 0.3em;
     margin-top: 0.5em;
-  }
-
-  .input{
-    all: unset;
-    background: #333;
-    padding: 0.5em 1em;
-    border-radius: 0.5em;
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 400px;
-    cursor: text;
-
-    &:focus{
-      outline: 2px solid rgb(from greenyellow r g b / 0.7 );
-    }
-
-    &:user-invalid{
-      outline: 2px solid tomato;
-    }
-  }
-
-  .selectWrapper{
-    position: relative;
-    max-width: 400px;
-    .select{
-      all: unset;
-      background: #333;
-      padding: 0.5em 1em;
-      border-radius: 0.5em;
-      width: 100%;
-      display: block;
-      box-sizing: border-box;
-      max-width: 400px;
-      cursor: pointer;
-  
-      &:focus{
-        outline: 2px solid rgb(from greenyellow r g b / 0.7 );
-      }
-  
-      &:user-invalid{
-        outline: 2px solid tomato;
-      }
-  
-      &:has(option[value=""]:checked){
-        color: #999;
-      }
-    }
-  
-    .chevron{
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%) rotateX(0deg);
-      opacity: 0.5;
-      transition: transform 500ms ease-out;
-      pointer-events: none;
-    }
-
-    &:hover .chevron{
-      opacity: 1;
-    }
-
-    &:has(select:active) .chevron{
-      transform: translateY(-50%) rotateX(180deg);
-    }
   }
 
 }
