@@ -9,7 +9,7 @@ import { Embeddings, EmbeddingsDb } from '@/lib/idb/types'
 import { createVector } from '@/lib/embeddings/createVector'
 import { uuidv7 } from "uuidv7";
 import { Button, Checkbox, NakedInput, NakedTextarea } from '@/components/ui/input'
-import { add, count, get, query } from '@/lib/embeddings/chromadb'
+import { add, get, query } from '@/lib/embeddings/chromadb'
 import cx from 'classix'
 import { showError, showNote } from '@/lib/toast'
 
