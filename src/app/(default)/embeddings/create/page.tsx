@@ -108,7 +108,6 @@ export default function Create(){
       ...data,
       dbObject: result.success
     }).then(v => {
-      console.log(v)
       setData(v)
     })
   },[ result?.success, data ])
@@ -120,7 +119,6 @@ export default function Create(){
       ...data,
       dbObject: result.existing
     }).then(v => {
-      console.log(v)
       setData(v)
     })
   }

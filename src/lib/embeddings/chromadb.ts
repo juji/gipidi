@@ -296,3 +296,30 @@ export async function add({
   return res.body
 
 }
+
+
+export async function remove({
+  embedding,
+  database,
+  id,
+}:{
+  embedding: Embeddings
+  database: EmbeddingsDb
+  id: string
+}){
+
+  const url = database.url
+  const { tenant, database: db, auth } = database.settings as ChromaDBSetting
+  const collectionId = embedding.dbObject.id
+
+  const res = await zlFetch.post(url + `${PREFIX}/collections/${collectionId}/delete`, {
+    query: { tenant, database: db },
+    body: {
+      ids: [id],
+    },
+    ... getHeaderWithAuth(auth?.type, auth?.token)
+  })
+  
+  return res.body
+
+}

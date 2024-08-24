@@ -74,11 +74,26 @@
   & .result{
     padding: 1em 1.6em;
     border-bottom: 1px solid #333;
+    position: relative;
+
+    .remove{
+      position: absolute;
+      display: none;
+      top: 0.5em;
+      right: 0.5em;
+    }
+
+    &:hover{
+      .remove{
+        display: inline-block;
+      }
+    }
+
 
     .content{
       display: block;
       display: -webkit-box;
-      -webkit-line-clamp: 5;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
