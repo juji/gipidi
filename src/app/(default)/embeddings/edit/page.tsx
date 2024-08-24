@@ -64,6 +64,7 @@ export default function Edit(){
       database: data.database,
       vector: v
     }).then(v => {
+      console.log(v)
       setResult(getResults(v, data.embedding))
     }).catch(e => {
       console.error(e)

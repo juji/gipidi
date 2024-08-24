@@ -1,7 +1,6 @@
 
 import zlFetch from '@juji/zl-fetch'
 import { ChromaDBAuthSetting, ChromaDBSetting, Embeddings, EmbeddingsDb } from '../idb/types'
-import { metadata } from '@/app/layout'
 
 const PREFIX = '/api/v1'
 
@@ -189,12 +188,14 @@ export async function query({
   embedding,
   database,
   vector,
-  nResults = 3
+  nResults = 10,
+  distanceLimit = 305
 }:{
   embedding: Embeddings
   database: EmbeddingsDb
   vector: any
   nResults?: number
+  distanceLimit?: number
 }){
 
   const url = database.url
@@ -210,7 +211,17 @@ export async function query({
     ... getHeaderWithAuth(auth?.type, auth?.token)
   })
 
-  return res.body
+  const filtered = res.body.distances[0]?.map(
+    (v:number, i:number) => v < distanceLimit ? i+1 : null
+  ) || []
+
+  return {
+    ...res.body,
+    distances: res.body.distances[0]?.filter((_:any,i:number) => filtered[i]) || [],
+    ids: res.body.ids[0]?.filter((_:any,i:number) => filtered[i]) || [],
+    documents: res.body.documents[0]?.filter((_:any,i:number) => filtered[i]) || [],
+    metadatas: res.body.metadatas[0]?.filter((_:any,i:number) => filtered[i]) || [],
+  }
 
 }
 
