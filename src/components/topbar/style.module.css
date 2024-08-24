@@ -1,0 +1,68 @@
+
+
+.topbar{
+
+  padding: 1em 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1em;
+
+  .title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+
+    .titleInput{
+      all: unset;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+
+  .menu{
+    
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 1em;
+
+    .model{
+
+      .menuButton{
+
+        display: flex;
+        gap: 0.5em;
+        align-items: center;
+        
+        .name{
+          display: none;
+          @media(min-width: 600px){
+            display: block;
+          }
+        }
+  
+        .icon{
+          .image{
+            height: 24px;
+            width: auto;
+            border-radius: 50%;
+            overflow: hidden;
+          }
+        }
+
+        &:active{
+          opacity: 0.5;
+        }
+      }
+
+    }
+
+    
+  }
+
+}

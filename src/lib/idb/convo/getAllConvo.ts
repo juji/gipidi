@@ -5,7 +5,6 @@ import type { Convo } from '../types';
 
 export async function getAllConvo( connection?: Connection ){
 
-  await new Promise(r => setTimeout(r, 5000))
   const conn = connection ? connection : createConnection()
   const results = await conn.select<Convo>({
     from: TABLES.CONVO,
