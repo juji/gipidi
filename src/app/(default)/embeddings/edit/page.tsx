@@ -231,7 +231,7 @@ export default function Edit(){
       >
         <NakedTextarea name="content" disabled={submitting} required rows={10} full={true} placeholder="add your text" />
         <div className={styles.controls}>
-          <Checkbox disabled={submitting} name="split" label="Split by paragraph" />
+          <Checkbox disabled={submitting} name="split" label="Split by new line" />
           <Button type="submit" disabled={submitting}>{submitting ? '...' : 'Submit'}</Button>
         </div>
       </form>
