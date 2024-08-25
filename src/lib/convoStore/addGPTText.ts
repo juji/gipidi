@@ -4,7 +4,7 @@ import { updateConvoDetail } from "../idb/convo/updateConvoDetail";
 
 export function addGPTText(set: Set, get: Get){
   
-  return async ( text: string, setWaitingResponse = true ) => {
+  return async ( text: string, changeWaitingResponse = true ) => {
 
     const { activeConvo } = get()
   
@@ -35,7 +35,7 @@ export function addGPTText(set: Set, get: Get){
         }
       }
 
-      if(setWaitingResponse) state.isWaitingResponse = false
+      if(changeWaitingResponse) state.isWaitingResponse = false
     })
 
   }

@@ -54,7 +54,7 @@ export type ConvoStore = {
 
   createConvo: ( initialContent: string, files: ConvoAttachment[] ) => void
   addUserMessage: ( str: string, files: ConvoAttachment[] ) => void
-  addGPTText: ( str: string, setWaitingResponse?: boolean ) => void
+  addGPTText: ( str: string, changeWaitingResponse?: boolean ) => void
   updateEmbedding: ( id?: string ) => void
 
   createChatListener: null | (() => ChatCreationData)
