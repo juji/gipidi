@@ -39,11 +39,9 @@ export function TopBar(){
 
   useEffect(() => {
     if(!menuData) return;
-    const { icon, modelName, ...rest } = menuData
     onCreateChat(() => ({
       title,
-      providerIcon: icon,
-      ...rest
+      ...menuData
     }))
   },[title, menuData ])
   

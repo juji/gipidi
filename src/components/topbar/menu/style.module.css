@@ -1,4 +1,22 @@
 
+.embedding{
+  .nothing, .loading{
+    font-size: 0.9em;
+    margin: 1em 0;
+  }
+
+  .nothing {
+    & > p {
+      margin-bottom: 0.5em;
+      color: #999;
+    }
+
+    & > a {
+      text-decoration: dotted underline;
+    }
+  }
+}
+
 .menuContainer{
   position: relative;
   display: flex;
@@ -37,6 +55,11 @@
       color: #999;
       font-size: smaller;
       margin-bottom: 0.4em;
+      margin-top: 1em;
+
+      &:first-child{
+        margin-top: 0em;
+      }
     }
 
     .input{
@@ -96,13 +119,8 @@
       }
     }
 
-    .systemPromptDisabled{
-      color: #999;
-      margin-top: 1em;
-    }
-
     .noedit{
-      margin-bottom: 1em;
+      margin-top: 1em;
       text-align: center;
       border: 1px solid #444;
       padding: 0.2em;

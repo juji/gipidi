@@ -20,14 +20,18 @@ import { search } from './search'
 import { loadAll } from './loadAll'
 import { setAttachmentReady } from './setAttachmentReady'
 
+import { updateEmbedding } from './updateEmbedding'
+
 import { WritableDraft } from 'immer'
 
 export type ChatCreationData = {
-  provider: GPTProvider['id'] 
-  providerIcon: string
-  model: string 
-  systemPrompt: string
+  provider: GPTProvider['id']
+  icon: string
+  model: string
+  modelName: string
   title: string
+  systemPrompt: string
+  embeddingId?: string
 }
 
 export type ConvoStore = {
@@ -50,6 +54,7 @@ export type ConvoStore = {
   createConvo: ( initialContent: string, files: ConvoAttachment[] ) => void
   addUserMessage: ( str: string, files: ConvoAttachment[] ) => void
   addGPTText: ( str: string ) => void
+  updateEmbedding: ( id?: string ) => void
 
   createChatListener: null | (() => ChatCreationData)
   onCreateChat: (fn: () => ChatCreationData) => void
@@ -106,6 +111,7 @@ export function createConvoStore(){
           createConvo: createConvo(set, get),
           addUserMessage: addUserMessage(set, get),
           addGPTText: addGPTText(set, get),
+          updateEmbedding: updateEmbedding(set, get),
 
           createChatListener: null,
           onCreateChat: onCreateChat(set),

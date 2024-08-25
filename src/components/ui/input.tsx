@@ -46,7 +46,6 @@ export const Select = forwardRef(function Select(
   { 
     label,
     children,
-    className, 
     ...rest 
   }:{ 
     label: ReactNode 
@@ -54,12 +53,13 @@ export const Select = forwardRef(function Select(
   ref: ForwardedRef<HTMLSelectElement>
 ){
 
+  
   const id = useId()
 
   return <label htmlFor={id} className={styles.label}>
     <span className={styles.info}>{label}</span>
     <div className={styles.selectWrapper}>
-      <select {...rest} ref={ref} id={id} className={cx(styles.select, className)}>{children}</select>
+      <NakedSelect {...rest} id={id} ref={ref}>{children}</NakedSelect>
       <svg
         className={styles.chevron}
         width="24"
@@ -75,6 +75,31 @@ export const Select = forwardRef(function Select(
       </svg>
     </div>
   </label>
+
+})
+
+export const NakedSelect = forwardRef(function NakedSelect(
+  { 
+    children,
+    className, 
+    full,
+    ...rest
+  }:{ 
+    full?: boolean 
+    dark?: boolean
+  } & TextareaHTMLAttributes<HTMLSelectElement>,
+  ref: ForwardedRef<HTMLSelectElement>
+){
+
+  return <select {...rest} 
+    ref={ref} 
+    className={cx(
+      styles.select, 
+      full && styles.full, 
+      className
+    )}>
+    {children}
+  </select>
 
 })
 

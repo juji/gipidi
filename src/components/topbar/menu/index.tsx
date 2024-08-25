@@ -7,6 +7,7 @@ import { useGPT } from '@/lib/gptStore'
 import { type GPTModel } from '@/lib/vendor/types'
 import { getDefaultProvider, getDefaultModel } from '@/lib/local-storage'
 import useOnClickOutside from 'use-onclickoutside'
+import { EmbeddingSelect } from './embedding-select'
 
 export type ProviderData = {
   provider: GPTProvider['id']
@@ -16,7 +17,8 @@ export type ProviderData = {
 }
 
 export type MenuData = ProviderData & {
-  systemPrompt: string 
+  systemPrompt: string
+  embeddingId?: string
 }
 
 export function Menu({
@@ -55,7 +57,19 @@ export function Menu({
 
   },[ loading ])
 
+  const [ embeddingId, setEmbeddingId ] = useState<string|undefined>(undefined)
+  useEffect(() => {
+    if(activeConvo?.embeddingId === embeddingId) return;
+    setEmbeddingId(activeConvo?.embeddingId)
+  },[ activeConvo?.embeddingId ])
+  
+  // report to parent about current state
   const [ providerData, setProviderData ] = useState<ProviderData|null>(null)
+  useEffect(() => {
+    if(providerData)
+    setMenuData({ systemPrompt, embeddingId, ...providerData })
+  },[ providerData, systemPrompt, embeddingId ])
+
   const modelSelId = useId()
   function onChangeModel(e: ChangeEvent){
     const target = e.target as HTMLSelectElement
@@ -76,16 +90,12 @@ export function Menu({
     document.getElementById(modelSelId)?.blur()
   }
 
-  // report to parent about current state
-  useEffect(() => {
-    if(providerData)
-    setMenuData({ systemPrompt, ...providerData })
-  },[ providerData, systemPrompt ])
 
-  // when convo becomes active
   useEffect(() => {
     if(!modelSelection) return () => {}
+
     if(activeConvo) {
+      // when convo becomes active
 
       activeConvo.systemPrompt && setSystemPrompt(activeConvo.systemPrompt)
       const modelSel = modelSelection[activeConvo.provider]
@@ -97,6 +107,8 @@ export function Menu({
       })
       
     }else{
+
+      // initial
       setSystemPrompt('')
 
       const defaultProvider = getDefaultProvider()
@@ -120,8 +132,13 @@ export function Menu({
   </button>
   <div className={cx(styles.menuContent, menuOpen && styles.menuOpen)} ref={ref}>
     
+    { activeConvo?.id ? <EmbeddingSelect 
+      setEmbeddingId={setEmbeddingId}
+      embeddingId={embeddingId}
+    /> : null }
+
     {activeConvo?.id ? <p className={styles.noedit}>
-      Cannot edit settings on an active conversation
+      Can't edit the following on an active conversation
     </p> : null}
 
     <h4 className={styles.menuHeader}>Model</h4>
@@ -153,6 +170,12 @@ export function Menu({
       rows={5}
       onChange={e => setSystemPrompt(e.target.value)}
       className={styles.systemPrompt}></textarea>
+
+    { activeConvo?.id ? null : <EmbeddingSelect 
+      setEmbeddingId={setEmbeddingId}
+      embeddingId={embeddingId}
+    /> }
+    
     
   </div>
 </div>

@@ -12,9 +12,10 @@ export type ConvoDetail = {
   id: string
   data: ConvoData[]
   provider: GPTProvider['id'],
-  providerIcon: string
-  systemPrompt: string
+  icon: string
   model: string
+  systemPrompt: string
+  embeddingId?: string
   created: Date
   updated?: Date
   deleted: Date

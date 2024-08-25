@@ -13,7 +13,7 @@ export function createConvo(set: Set, get: Get){
       throw new Error('Cannot create convo without createChatListener')
 
     const {
-      title, provider, model, systemPrompt, providerIcon
+      title, provider, model, systemPrompt, icon, embeddingId
     } = createChatListener()
 
     if(!provider)
@@ -29,8 +29,9 @@ export function createConvo(set: Set, get: Get){
     } = await create(
       initialContent,
       provider,
-      providerIcon,
+      icon,
       model,
+      embeddingId,
       files.length ? files : undefined,
       systemPrompt || '',
       title || ''

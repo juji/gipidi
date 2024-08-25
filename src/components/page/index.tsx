@@ -1,6 +1,5 @@
 'use client'
 import styles from './style.module.css'
-import './style.css'
 import { PropsWithChildren, ReactNode } from 'react'
 
 export function Page({

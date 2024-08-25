@@ -30,13 +30,15 @@ function getDatabase(){
     name: TABLES.CONVO_DETAIL,
     columns: {
       id: { dataType: DATA_TYPE.String, primaryKey: true },
+      data: { dataType: DATA_TYPE.Array },
+      provider: { dataType: DATA_TYPE.String },
+      icon: { dataType: DATA_TYPE.String },
+      model: { dataType: DATA_TYPE.String },
+      systemPrompt: { dataType: DATA_TYPE.String },
+      embeddingId: { dataType: DATA_TYPE.String },
       created: { dataType: DATA_TYPE.DateTime },
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED },
-      data: { dataType: DATA_TYPE.Array },
-      provider: { dataType: DATA_TYPE.String },
-      model: { dataType: DATA_TYPE.String },
-      systemPrompt: { dataType: DATA_TYPE.String },
     }
   }
 
@@ -94,7 +96,7 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 16,
+    version: 18,
     tables: [
       convo,
       convoDetail,

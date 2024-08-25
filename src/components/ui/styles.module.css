@@ -71,9 +71,9 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  max-width: 400px;
   cursor: text;
-
+  
+  max-width: 400px;
   &.full{
     max-width: unset;
   }
@@ -98,8 +98,12 @@
     width: 100%;
     display: block;
     box-sizing: border-box;
-    max-width: 400px;
     cursor: pointer;
+    
+    max-width: 400px;
+    &.full{
+      max-width: unset;
+    }
 
     &:focus{
       outline: 2px solid rgb(from greenyellow r g b / 0.7 );

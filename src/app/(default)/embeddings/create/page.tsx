@@ -147,16 +147,16 @@ export default function Create(){
     
 
     <form className={cx(styles.form, formStyles.form, data && formStyles.hidden)} onSubmit={onSubmit}>
-      
-      <Input label="Name"
+
+      { database && database.length ? (<>
+        <Input label="Name"
         onChange={onChangeName}
         pattern={'^[a-z_]+$'} 
         disabled={!database || !database.length} 
         required type="text" name="name" />
 
-      <EmbeddingModels disabled={!database || !database.length} />
-
-      { database && database.length ? (<>
+        <EmbeddingModels disabled={!database || !database.length} />
+        
         <Select 
           onChange={onDbChange}
           required label="Database" name="database">

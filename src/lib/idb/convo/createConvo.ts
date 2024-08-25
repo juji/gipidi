@@ -7,8 +7,9 @@ import { Convo, ConvoDetail, GPTProvider, ConvoData, ConvoAttachment } from '../
 export async function createConvo(
   initialContent: string,
   provider: GPTProvider['id'],
-  providerIcon: string,
+  icon: string,
   model : string,
+  embeddingId?: string,
   files?: ConvoAttachment[],
   systemPrompt?: string,
   currentTitle?: string,
@@ -43,7 +44,8 @@ export async function createConvo(
       }
     ],
     provider,
-    providerIcon,
+    icon,
+    embeddingId,
     model,
     systemPrompt: systemPrompt || '',
     deleted: DEFAULT_DELETED
