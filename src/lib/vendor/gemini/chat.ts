@@ -24,14 +24,17 @@ embeddings?: string[]|null
       stopped = true
     })
 
-    const messages = getMessages(convoDetail, false)
+    const messages = getMessages(convoDetail)
+
     if(messages.at(0)?._getType() !== 'system') throw new Error('System message is gone')
 
     const systemInstruction = messages.at(0)?.content as string
+    const last = messages.findLast(v => v._getType() === 'human')
+    if(!last) throw new Error('User message is empty')
+    
+    // remove current gpt and human messages
     const history = messages.slice(1,-2).filter(v => v._getType() === 'human' || v._getType() === 'ai')
-    const last = messages.at(-1)
-    if(!last || last._getType() !== 'human') throw new Error('User message is empty')
-
+    
     const isGemini1 = 'gemini-1.0-pro' === convoDetail.model
 
     const convoDetailById = convoDetail.data.reduce((a,b) => {
@@ -72,7 +75,7 @@ embeddings?: string[]|null
           data: atta.data,
         },
       })) : []
-    
+
     const result = await chat.sendMessageStream(
       attachment && attachment.length ? [
         last.content as string,
