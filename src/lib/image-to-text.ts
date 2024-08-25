@@ -92,7 +92,6 @@ Reply with JSON, using the following JSON schema:
 
   let description = ''
   try{
-    console.log('ollama image response', resp.response)
     const r = JSON.parse(resp.response)
     description = r.description
   }catch(e){}

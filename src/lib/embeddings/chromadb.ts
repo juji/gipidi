@@ -211,8 +211,6 @@ export async function query({
     ... getHeaderWithAuth(auth?.type, auth?.token)
   })
 
-  console.log(res.body)
-
   const filtered = res.body.distances[0]?.map(
     (v:number, i:number) => v < distanceLimit ? i+1 : null
   ) || []

@@ -41,10 +41,6 @@ export function createHumanMessage(
   embeddings?: ConvoData['embeddings']
 ){
 
-  console.log('human message', 
-    attachments
-  )
-
   return (embeddings && embeddings.length ? `
 The following [database] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
 embeddings.map(v => `

@@ -38,8 +38,6 @@ export function useGptListener(){
 
     if(!activeConvo) return;
 
-    console.log('startChat', activeConvo)
-
     chat({
       provider, 
       convoDetail: activeConvo,
@@ -82,11 +80,6 @@ export function useGptListener(){
 
     
     if(activeConvo?.id && providers.length && isWaitingResponse){
-      
-      console.log('===========================')
-      console.log('isWaitingResponse', isWaitingResponse)
-      console.log('embeddingsReady', embeddingsReady)
-      console.log('attachmentReady', attachmentReady)
 
       currentProvider.current = null 
       const provider = providers.find(v => v.id === activeConvo.provider)

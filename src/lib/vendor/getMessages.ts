@@ -16,10 +16,10 @@ export function getMessages(convoDetail: ConvoDetail){
 
   const messages = mssg.map((v: ConvoData) => {
 
-    if(v.role === 'user'){
-      console.log('user message object', v)
-      console.log('user message', createHumanMessage(v.content, v.attachments, v.embeddings))
-    }
+    // if(v.role === 'user'){
+    //   console.log('user message object', v)
+    //   console.log('user message', createHumanMessage(v.content, v.attachments, v.embeddings))
+    // }
 
     return v.role === 'system' ? 
       new SystemMessage({ 

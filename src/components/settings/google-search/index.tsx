@@ -15,7 +15,6 @@ export function GoogleSearch(){
 
   useEffect(() => {
     if(loading) return () => {}
-    console.log('data', data)
     data?.apiKey && setApiKey(data?.apiKey)
     data?.id && setId(data?.id)
   },[ loading ])
@@ -25,10 +24,9 @@ export function GoogleSearch(){
 
     searchGoogle('awesome', id, apiKey)
       .then(res => {
-        console.log('google saerch result', res)
         set(id, apiKey)
       }).catch(e => {
-        console.log('google saerch error', e)
+        console.error('google search error', e)
       })
 
   },[ id, apiKey ])

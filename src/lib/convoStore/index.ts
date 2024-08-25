@@ -157,14 +157,12 @@ export function createConvoStore(){
                 fn()
                 set(ss => {
                   if(ss.activeConvo){
-                    console.log(ss.activeConvo.data[ss.activeConvo.data.length -1])
                     ss.activeConvo.data[ss.activeConvo.data.length -1].stopped = true
                   }
                 })
               } : () => {
                 set(ss => {
                   if(ss.activeConvo){
-                    console.log(ss.activeConvo.data[ss.activeConvo.data.length -1])
                     ss.activeConvo.data[ss.activeConvo.data.length -1].stopped = true
                   }
                 })

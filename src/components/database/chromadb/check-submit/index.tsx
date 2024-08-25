@@ -76,7 +76,7 @@ export function CheckSubmitChroma({
     createDatabase( data )
     .then(() => { setSave(true) })
     .catch((e) => { 
-      console.log(e)
+      console.error(e)
       setSave(false); 
       setSaveError(e.message) 
     })

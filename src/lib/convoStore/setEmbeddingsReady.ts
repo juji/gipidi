@@ -8,9 +8,6 @@ export function setEmbeddingsReady(set: Set){
 
     set(s => {
 
-      console.log('setting embeddings', embeddings)
-      console.log('setting embeddings on', JSON.parse(JSON.stringify(s.activeConvo)))
-
       const userData = s.activeConvo?.data.findLast(v => v.role === 'user')
       const userDataIndex = s.activeConvo ? s.activeConvo.data.findLastIndex(v => v.role === 'user') : -1
       
@@ -19,7 +16,6 @@ export function setEmbeddingsReady(set: Set){
         s.activeConvo && userData && userDataIndex >= 0 && 
         typeof embeddings !== 'boolean' && embeddings
       ){
-        console.log('setEmbeddingsReady: setting embeddings')
         s.activeConvo.data[userDataIndex].embeddings = embeddings
       }
       

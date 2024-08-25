@@ -8,8 +8,6 @@ export function setAttachmentReady(set: Set){
 
     set(s => {
 
-      console.log('setting attachments', attachments)
-
       const userData = s.activeConvo?.data.findLast(v => v.role === 'user')
       const userDataIndex = s.activeConvo ? s.activeConvo.data.findLastIndex(v => v.role === 'user') : -1
       
@@ -18,7 +16,6 @@ export function setAttachmentReady(set: Set){
         s.activeConvo && userData && userDataIndex >= 0 && 
         typeof attachments !== 'boolean' && attachments
       ){
-        console.log('setAttachmentReady: setting attachment')
         const att = userData.attachments
         s.activeConvo.data[userDataIndex].attachments = att ? 
         att.map(v =>  attachments[v.id]) : 
