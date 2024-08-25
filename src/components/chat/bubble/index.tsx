@@ -11,7 +11,6 @@ import { ChatAttachment } from '@/components/chat-attachment';
 import { useTextStream } from './useTextStream';
 import { markedToReact } from './marked-to-react';
 import { useConvo } from '@/lib/convoStore';
-import { useGPT } from '@/lib/gptStore';
 
 
 function Bubble({ 
