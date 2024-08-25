@@ -24,10 +24,7 @@ export function addUserMessage(set: Set, get: Get){
     })
 
     set(state => { 
-      if(state.activeConvo)
-        state.activeConvo.data = data
-
-      state.allReady = false
+      if(state.activeConvo) state.activeConvo.data = data
       state.isWaitingResponse = true
     })
 

@@ -44,7 +44,6 @@ export function createConvo(set: Set, get: Get){
       state.convos.unshift(convo)
       state.activeConvo = convoDetail
       state.isWaitingResponse = true
-      state.allReady = false
     })
 
   }

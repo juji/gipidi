@@ -54,7 +54,7 @@ export type ConvoStore = {
 
   createConvo: ( initialContent: string, files: ConvoAttachment[] ) => void
   addUserMessage: ( str: string, files: ConvoAttachment[] ) => void
-  addGPTText: ( str: string ) => void
+  addGPTText: ( str: string, setWaitingResponse?: boolean ) => void
   updateEmbedding: ( id?: string ) => void
 
   createChatListener: null | (() => ChatCreationData)
@@ -76,8 +76,6 @@ export type ConvoStore = {
 
   embeddingsReady: boolean
   setEmbeddingsReady: (embeddings: boolean|string[]) => void
-
-  allReady: boolean
 
   stopSignal: () => void
   setStopSignal: (fn: null | (() => void)) => void
@@ -150,8 +148,6 @@ export function createConvoStore(){
 
           embeddingsReady: false,
           setEmbeddingsReady: setEmbeddingsReady(set),
-
-          allReady: false,
 
           stopSignal: () => {},
           setStopSignal: (fn: null | (() => void)) => {

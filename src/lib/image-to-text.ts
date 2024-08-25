@@ -6,13 +6,14 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function imageToText(file: ConvoAttachment){
   
-  return await imageToTextGemini(file).then(async g => {
-    if(!g) throw new Error('gemini returns empty')
+  return await imageToTextOllama(file).then(async g => {
+    if(!g) throw new Error('ollama returns empty')
     return g
   }).catch(e => {
-    return imageToTextOllama(file)
+    console.error(e)
+    return imageToTextGemini(file)
   }).then(o => {
-    if(!o) throw new Error('ollama returns empty')
+    if(!o) throw new Error('gemini returns empty')
     return o
   }).catch(e => {
     console.error(e)
@@ -91,6 +92,7 @@ Reply with JSON, using the following JSON schema:
 
   let description = ''
   try{
+    console.log('ollama image response', resp.response)
     const r = JSON.parse(resp.response)
     description = r.description
   }catch(e){}

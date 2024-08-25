@@ -43,7 +43,6 @@ export function Files({
       }
 
       else {
-        console.log('provider.current', provider.current)
         addFileUpload({
           id: nanoid(),
           data: msg.data.data,

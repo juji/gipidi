@@ -1,5 +1,5 @@
 import { useConvo } from "@/lib/convoStore"
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useGPT } from "@/lib/gptStore"
 import { showError } from "../toast"
 
@@ -18,22 +18,27 @@ export function useGptListener(){
 
   // to wait for attachments
   // and embeddings
-  const allReady = useConvo(s => s.allReady)
+  const embeddingsReady = useConvo(s => s.embeddingsReady)
+  const attachmentReady = useConvo(s => s.attachmentReady)
   const currentProvider = useRef<GPTProvider|null>(null)
+  
+  // const allReady = useMemo(() => {
+  //   return embeddingsReady && attachmentReady
+  // },[ embeddingsReady, attachmentReady ])
 
   useEffect(() => {
-    if(allReady && currentProvider.current){
+    if(embeddingsReady && attachmentReady && currentProvider.current){
       const provider = currentProvider.current
       currentProvider.current = null
       startChat(provider)
     }
-  },[ allReady ])
+  },[ embeddingsReady, attachmentReady ])
 
   function startChat(provider: GPTProvider){
 
     if(!activeConvo) return;
 
-    console.log('activeConvo startChat', activeConvo)
+    console.log('startChat', activeConvo)
 
     chat({
       provider, 
@@ -75,7 +80,13 @@ export function useGptListener(){
 
   useEffect(() => {
 
+    
     if(activeConvo?.id && providers.length && isWaitingResponse){
+      
+      console.log('===========================')
+      console.log('isWaitingResponse', isWaitingResponse)
+      console.log('embeddingsReady', embeddingsReady)
+      console.log('attachmentReady', attachmentReady)
 
       currentProvider.current = null 
       const provider = providers.find(v => v.id === activeConvo.provider)
@@ -93,9 +104,9 @@ export function useGptListener(){
 
       // initial gpt text 
       // to show the gpt avatar with loader
-      addGPTText('') 
+      addGPTText('', false) 
 
-      if(allReady) startChat(provider)
+      if(embeddingsReady && attachmentReady) startChat(provider)
       else {
         currentProvider.current = provider
       }

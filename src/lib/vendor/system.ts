@@ -16,6 +16,11 @@ It may help you respond to the user.
 Use them as your source of information.
 The user does not have any information about it.
 When using the information in the [database] tag, you should mention that it was sourced from the system's database.
+
+In some cases, the user's message will contain [attachment] tag(s).
+Those tags contains information about the files uploaded by the user.
+Feel free to chat about it.
+If you want to refer to the [attachment] tag, just say attachment.
 [/default]`
 
 export function encloseWithDefaultRequrement( str: string ){
@@ -33,6 +38,10 @@ export function createHumanMessage(
   attachments?: ConvoAttachment[],
   embeddings?: ConvoData['embeddings']
 ){
+
+  console.log('human message', 
+    attachments
+  )
 
   return (embeddings && embeddings.length ? `
 The following [database] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
@@ -54,8 +63,7 @@ ${v.text}
 \`\`\`\`\`\`
 ${v.text}
 \`\`\`\`\`\`
-`}
-[/attachment]`).join('') + '\n\n' : '') + content
+`}[/attachment]`).join('') + '\n\n' : '') + content
 
 }
 

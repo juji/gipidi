@@ -77,10 +77,13 @@ export function Inputform(){
     convertAttachment(file).then(res => {
       if(!convertion.current) return;
 
+      // file converted
       if(convertion.current[file.id] && res){
         convertion.current[file.id] = res as ConvoAttachment
         setFileState(convertion.current[file.id])
       }
+
+      // could not convert file
       else if(convertion.current[file.id] && !res){
         delete convertion.current[file.id]
         removeByFile(file)
