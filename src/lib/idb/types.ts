@@ -37,6 +37,7 @@ export type ConvoData = {
   content: string
   stopped?: boolean
   attachments?: ConvoAttachment[]
+  embeddings?: string[]
 }
 
 export type OllamaSetting = { url: string }

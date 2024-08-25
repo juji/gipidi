@@ -1,8 +1,8 @@
 import { HumanMessage, SystemMessage, AIMessage } from "@langchain/core/messages";
-import { ConvoDetail, } from "../idb/types";
-import { createConvoWithAttachment, encloseWithDefaultRequrement } from "./system";
+import { ConvoData, ConvoDetail, } from "../idb/types";
+import { createHumanMessage, encloseWithDefaultRequrement } from "./system";
 
-export function getMessages(convoDetail: ConvoDetail, setAttachment = true){
+export function getMessages(convoDetail: ConvoDetail){
 
   let mssg = [ ...convoDetail.data ]
   if(mssg[0].role !== 'system'){
@@ -14,7 +14,11 @@ export function getMessages(convoDetail: ConvoDetail, setAttachment = true){
     })
   }
 
-  const messages = mssg.map(v => {
+  const messages = mssg.map((v: ConvoData) => {
+
+    // if(v.role === 'user'){
+    //   console.log(createHumanMessage(v.content, v.attachments, v.embeddings))
+    // }
 
     return v.role === 'system' ? 
       new SystemMessage({ 
@@ -23,7 +27,7 @@ export function getMessages(convoDetail: ConvoDetail, setAttachment = true){
       }) :
       v.role === 'user' ? 
       new HumanMessage({ 
-        content: setAttachment ? createConvoWithAttachment(v.content, v.attachments) : v.content,
+        content: createHumanMessage(v.content, v.attachments, v.embeddings),
         id: v.id,
       }) :
       v.role === 'assistant' ? 

@@ -14,6 +14,7 @@ export async function chat( params : ChatFnParams ) {
 
   const { provider } = params
   const { chat }: { chat: ChatFn } = await import(`./${provider.id}/chat`)
+
   return chat(params)
 
 }

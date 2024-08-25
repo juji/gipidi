@@ -13,7 +13,10 @@ export type ChatFnParams = {
   onStopSignal: (fn: () => void) => void
 }
 
-export type ChatFn = (params: ChatFnParams) => Promise<void>
+export type ChatFn = (
+  params: ChatFnParams, 
+  embeddings?: string[]|null
+) => Promise<void>
 
 export type CreateTitleParams = {
   provider: GPTProvider

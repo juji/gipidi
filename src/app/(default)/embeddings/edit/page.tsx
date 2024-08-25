@@ -12,6 +12,7 @@ import { Button, Checkbox, NakedInput, NakedTextarea } from '@/components/ui/inp
 import { add, get, query, remove } from '@/lib/embeddings/chromadb'
 import cx from 'classix'
 import { showError, showNote } from '@/lib/toast'
+import { getEmbeddingResults } from '@/lib/embeddings/getEmbeddingResults'
 
 async function splitPromise<T>(fns: (() => Promise<T>)[], num: number = 5){
   let ret: T[] = []
@@ -21,21 +22,6 @@ async function splitPromise<T>(fns: (() => Promise<T>)[], num: number = 5){
     ret.push(...res)
   }
   return ret
-}
-
-function getResults( result: any, embedding: Embeddings ){
-
-  let res;
-  if(embedding.dbVendor === 'chromadb'){
-    const docs = result.documents.flat()
-    const ids = result.ids.flat()
-    res = docs.map((v:any,i:number) => ({
-      id: ids[i],
-      doc: v
-    }))
-  }
-
-  return res || []
 }
 
 export default function Edit(){
@@ -65,7 +51,7 @@ export default function Edit(){
       vector: v
     }).then(v => {
       console.log(v)
-      setResult(getResults(v, data.embedding))
+      setResult(getEmbeddingResults(v, data.embedding))
     }).catch(e => {
       console.error(e)
       showError('Something wrong is happening')
@@ -81,7 +67,7 @@ export default function Edit(){
       database: data.database,
       offset: currentOffset
     }).then(v => {
-      setResult(getResults(v, data.embedding))
+      setResult(getEmbeddingResults(v, data.embedding))
     }).catch(e => {
       console.error(e)
       showError('Something wrong is happening')

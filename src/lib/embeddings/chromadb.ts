@@ -189,7 +189,7 @@ export async function query({
   database,
   vector,
   nResults = 10,
-  distanceLimit = 305
+  distanceLimit = 420 // lol
 }:{
   embedding: Embeddings
   database: EmbeddingsDb
@@ -210,6 +210,8 @@ export async function query({
     },
     ... getHeaderWithAuth(auth?.type, auth?.token)
   })
+
+  console.log(res.body)
 
   const filtered = res.body.distances[0]?.map(
     (v:number, i:number) => v < distanceLimit ? i+1 : null

@@ -10,6 +10,7 @@ export async function createConvo(
   icon: string,
   model : string,
   embeddingId?: string,
+  embeddings?: string[],
   files?: ConvoAttachment[],
   systemPrompt?: string,
   currentTitle?: string,
@@ -40,6 +41,7 @@ export async function createConvo(
         lastUpdate: new Date(),
         role: 'user' as ConvoData['role'],
         content: initialContent,
+        embeddings,
         ...files ? {attachments: files} : {}
       }
     ],

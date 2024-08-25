@@ -1,4 +1,4 @@
-import { ConvoAttachment } from "../idb/types"
+import { ConvoAttachment, ConvoData, ConvoDetail } from "../idb/types"
 
 
 export const defaultSysPrompt = `[default]
@@ -21,9 +21,21 @@ ${str}
 ` : defaultSysPrompt
 }
 
-export function createConvoWithAttachment(content: string, attachments?: ConvoAttachment[]){
+export function createHumanMessage(
+  content: string, 
+  attachments?: ConvoAttachment[],
+  embeddings?: ConvoData['embeddings']
+){
 
-  return attachments && attachments.length ? attachments.map(v => `
+  return (embeddings && embeddings.length ? `
+The following [info] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
+embeddings.map(v => `
+[info]
+${v}
+[/info]`).join('') + '\n\n' : '') +
+  (attachments && attachments.length ? `
+The following [attachment] tag${attachments.length>1?'s were files':' was a file'} uploaded by the user.` + 
+attachments.map(v => `
 [attachment]
 name: ${v.name}
 mime: ${v.mime}
@@ -36,7 +48,7 @@ ${v.text}
 ${v.text}
 \`\`\`\`\`\`
 `}
-[/attachment]`).join('') + '\n\n' + content : content
+[/attachment]`).join('') + '\n\n' : '') + content
 
 }
 
