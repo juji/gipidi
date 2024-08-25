@@ -14,8 +14,7 @@ export type ChatFnParams = {
 }
 
 export type ChatFn = (
-  params: ChatFnParams, 
-  embeddings?: string[]|null
+  params: ChatFnParams
 ) => Promise<void>
 
 export type CreateTitleParams = {

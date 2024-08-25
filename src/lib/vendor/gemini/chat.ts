@@ -9,9 +9,7 @@ export async function chat({
   onError,
   onStopSignal,
   provider
-}: ChatFnParams, 
-embeddings?: string[]|null
-){
+}: ChatFnParams){
 
   
   try{
