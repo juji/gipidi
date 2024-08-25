@@ -42,13 +42,13 @@ export function createHumanMessage(
 ){
 
   return (embeddings && embeddings.length ? `
-The following [database] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
+The following [database] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user:` + 
 embeddings.map(v => `
 [database]
 ${v}
 [/database]`).join('') + '\n\n' : '') +
   (attachments && attachments.length ? `
-The following [attachment] tag${attachments.length>1?'s were files':' was a file'} uploaded by the user.` + 
+The following [attachment] tag${attachments.length>1?'s were files':' was a file'} uploaded by the user:` + 
 attachments.map(v => `
 [attachment]
 name: ${v.name}

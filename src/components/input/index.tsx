@@ -105,18 +105,15 @@ export function Inputform(){
     if(filesInQueue) return;
     if(disableInput) return;
     
-    console.log('submit')
     setEmbeddingsReady(false)
     
     if(!activeConvo){
-      console.log('creating convo')
       createConvo( content,
         attachmentReady && typeof attachmentReady !== 'boolean' ?
         Object.keys(attachmentReady).map(v => attachmentReady[v]) :
         [...files] 
       )
     }else{
-      console.log('adding user message')
       addUserMessage( content,
         attachmentReady && typeof attachmentReady !== 'boolean' ?
         Object.keys(attachmentReady).map(v => attachmentReady[v]) :
@@ -125,7 +122,6 @@ export function Inputform(){
     }
     
     if(!convertion.current || !Object.keys(convertion.current).length){
-      console.log('setAttachmentReady true')
       setAttachmentReady(true)
     }
     
@@ -137,21 +133,17 @@ export function Inputform(){
   const embeddingsReady = useConvo(s => s.embeddingsReady)
   useEffect(() => {
     
-    console.log('activeConvo loadEmbeddings', activeConvo)
     if(!activeConvo) return;
     if(embeddingsReady) return;
 
     if(!activeConvo.embeddingId) {
-      console.log('not doing embeddings')
       setEmbeddingsReady(true)
       return;
     }
     
-    console.log('do embeddings')
     const data = activeConvo?.data.at(-1)
     if(data?.role !== 'user') return;
     
-    console.log('load embeddings')
     loadEmbeddings(
       activeConvo.embeddingId,
       data?.content
