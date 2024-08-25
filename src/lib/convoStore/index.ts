@@ -19,6 +19,7 @@ import { onCreateChat } from './onCreateChat'
 import { search } from './search'
 import { loadAll } from './loadAll'
 import { setAttachmentReady } from './setAttachmentReady'
+import { setEmbeddingsReady } from './setEmbeddingsReady'
 
 import { updateEmbedding } from './updateEmbedding'
 
@@ -72,6 +73,11 @@ export type ConvoStore = {
 
   attachmentReady: boolean
   setAttachmentReady: (attachments: boolean|{[key: string]: ConvoAttachment}) => void
+
+  embeddingsReady: boolean
+  setEmbeddingsReady: (embeddings: boolean|string[]) => void
+
+  allReady: boolean
 
   stopSignal: () => void
   setStopSignal: (fn: null | (() => void)) => void
@@ -141,6 +147,11 @@ export function createConvoStore(){
 
           attachmentReady: false,
           setAttachmentReady: setAttachmentReady(set),
+
+          embeddingsReady: false,
+          setEmbeddingsReady: setEmbeddingsReady(set),
+
+          allReady: false,
 
           stopSignal: () => {},
           setStopSignal: (fn: null | (() => void)) => {

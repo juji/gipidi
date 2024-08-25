@@ -7,8 +7,18 @@ export function setAttachmentReady(set: Set){
   return (attachments: boolean|{[key: string]: ConvoAttachment}) => {
 
     set(s => {
+
+      console.log('setting attachments', attachments)
+
       s.attachmentReady = !!attachments
       
+      if(
+        s.embeddingsReady && s.attachmentReady
+      ) {
+        console.log('setting allReady, true')
+        s.allReady = true
+      }
+
       if(!s.activeConvo) return;
       const userData = s.activeConvo.data.findLast(v => v.role === 'user')
       if(!userData) return;

@@ -2,7 +2,6 @@ import { nanoid } from "nanoid";
 import { Get, Set } from ".";
 import { updateConvoDetail } from "../idb/convo/updateConvoDetail";
 import { ConvoAttachment } from "../idb/types";
-import { loadEmbeddings } from '@/lib/embeddings/loadEmbeddings';
 
 export function addUserMessage(set: Set, get: Get){
   
@@ -13,14 +12,6 @@ export function addUserMessage(set: Set, get: Get){
     if(!activeConvo) throw new Error(
       'activeConvo is empty when adding userText'
     )
-    
-    let embeddings = undefined
-    if(activeConvo.embeddingId) {
-      embeddings = await loadEmbeddings(
-        activeConvo.embeddingId,
-        text 
-      )
-    }
 
     const data = [ ...activeConvo.data ]
     data.push({
@@ -28,14 +19,15 @@ export function addUserMessage(set: Set, get: Get){
       lastUpdate: new Date(),
       role: 'user',
       content: text,
-      embeddings,
+      embeddings: undefined,
       ...files && files.length ? {attachments: files} : {}
     })
 
     set(state => { 
       if(state.activeConvo)
         state.activeConvo.data = data
-      
+
+      state.allReady = false
       state.isWaitingResponse = true
     })
 

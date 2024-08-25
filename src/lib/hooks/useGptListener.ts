@@ -15,11 +15,25 @@ export function useGptListener(){
   const setStopSignal = useConvo(s => s.setStopSignal)
   const setInputAvailable = useConvo(s => s.setInputAvailable)
   const providers = useGPT(s => s.providers)
-  const attachmentReady = useConvo(s => s.attachmentReady)
+
+  // to wait for attachments
+  // and embeddings
+  const allReady = useConvo(s => s.allReady)
+  const currentProvider = useRef<GPTProvider|null>(null)
+
+  useEffect(() => {
+    if(allReady && currentProvider.current){
+      const provider = currentProvider.current
+      currentProvider.current = null
+      startChat(provider)
+    }
+  },[ allReady ])
 
   function startChat(provider: GPTProvider){
 
     if(!activeConvo) return;
+
+    console.log('activeConvo startChat', activeConvo)
 
     chat({
       provider, 
@@ -62,6 +76,8 @@ export function useGptListener(){
   useEffect(() => {
 
     if(activeConvo?.id && providers.length && isWaitingResponse){
+
+      currentProvider.current = null 
       const provider = providers.find(v => v.id === activeConvo.provider)
       if(!provider) {
         showError('Provider is undefined')
@@ -75,29 +91,17 @@ export function useGptListener(){
       setStreaming(true)
       setInputAvailable(false)
 
-      // initial gpt text to show the bot avatar
-      // with loader
+      // initial gpt text 
+      // to show the gpt avatar with loader
       addGPTText('') 
 
-      if(attachmentReady) startChat(provider)
-      else onAttachmentReady(() => {
-        startChat(provider)
-      })
+      if(allReady) startChat(provider)
+      else {
+        currentProvider.current = provider
+      }
     }
+
   },[activeConvo?.id, providers.length, isWaitingResponse])
-
-  const whenAttachmentReady = useRef<(() => void)|null>(null)
-  function onAttachmentReady(fn: () => void){
-    whenAttachmentReady.current = fn
-  }
-
-  useEffect(() => {
-    if(attachmentReady && whenAttachmentReady.current){
-      const fn = whenAttachmentReady.current
-      whenAttachmentReady.current = null
-      fn()
-    }
-  },[ attachmentReady ])
 
   return null
 

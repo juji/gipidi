@@ -9,16 +9,23 @@ The setting about using GFM, may be overriden by the user.
 
 Do not hallucinate.
 Do not make up factual information.
+
+In some cases, the user's message will contain [database] tag(s).
+Those are system's generated information, procured from the system's database. 
+It may help you respond to the user.
+Use them as your source of information.
+The user does not have any information about it.
+When using the information in the [database] tag, you should mention that it was sourced from the system's database.
 [/default]`
 
 export function encloseWithDefaultRequrement( str: string ){
-  return str ? `
+  return `
 ${defaultSysPrompt}
-
+${str && str.length ? `
 [user]
 ${str}
 [/user]
-` : defaultSysPrompt
+` : ''}`
 }
 
 export function createHumanMessage(
@@ -28,11 +35,11 @@ export function createHumanMessage(
 ){
 
   return (embeddings && embeddings.length ? `
-The following [info] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
+The following [database] tag${embeddings.length>1?'s were':' was'} created by the system to help you respond to the user.` + 
 embeddings.map(v => `
-[info]
+[database]
 ${v}
-[/info]`).join('') + '\n\n' : '') +
+[/database]`).join('') + '\n\n' : '') +
   (attachments && attachments.length ? `
 The following [attachment] tag${attachments.length>1?'s were files':' was a file'} uploaded by the user.` + 
 attachments.map(v => `

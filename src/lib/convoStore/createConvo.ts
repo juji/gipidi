@@ -1,5 +1,4 @@
 
-import { loadEmbeddings } from '../embeddings/loadEmbeddings'
 import { createConvo as create } from '../idb/convo/createConvo'
 import { ConvoAttachment } from '../idb/types'
 import type { Set, Get } from './'
@@ -25,12 +24,6 @@ export function createConvo(set: Set, get: Get){
       throw new Error('Cannot create convo with empty initialContent')
 
     let embeddings = undefined
-    if(embeddingId) {
-      embeddings = await loadEmbeddings(
-        embeddingId,
-        initialContent 
-      )
-    }
 
     const {
       convo,
@@ -51,6 +44,7 @@ export function createConvo(set: Set, get: Get){
       state.convos.unshift(convo)
       state.activeConvo = convoDetail
       state.isWaitingResponse = true
+      state.allReady = false
     })
 
   }

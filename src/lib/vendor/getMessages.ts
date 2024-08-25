@@ -11,14 +11,15 @@ export function getMessages(convoDetail: ConvoDetail){
       role: 'system',
       content: '',
       lastUpdate: new Date()
-    })
+    }) 
   }
 
   const messages = mssg.map((v: ConvoData) => {
 
-    // if(v.role === 'user'){
-    //   console.log(createHumanMessage(v.content, v.attachments, v.embeddings))
-    // }
+    if(v.role === 'user'){
+      console.log('user message object', v)
+      console.log('user message', createHumanMessage(v.content, v.attachments, v.embeddings))
+    }
 
     return v.role === 'system' ? 
       new SystemMessage({ 
@@ -36,7 +37,6 @@ export function getMessages(convoDetail: ConvoDetail){
         id: v.id,
       }) :
       null
-
   })
 
   return messages.filter(v => v) as (SystemMessage | HumanMessage | AIMessage)[]
