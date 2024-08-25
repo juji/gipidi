@@ -1,4 +1,4 @@
-import { ConvoAttachment, ConvoData, ConvoDetail } from "../idb/types"
+import { ConvoAttachment, ConvoData } from "../idb/types"
 
 
 export const defaultSysPrompt = `[default]
