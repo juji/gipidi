@@ -12,8 +12,7 @@ Do not make up factual information.
 
 In some cases, the user's message will contain [database] tag(s).
 Those are system's generated information, procured from the system's database. 
-It may help you respond to the user.
-Use them as your source of information.
+It may help you respond to the user. Use them as your source of information.
 The user does not have any information about it.
 When using the information in the [database] tag, you should mention that it was sourced from the system's database.
 
@@ -21,6 +20,9 @@ In some cases, the user's message will contain [attachment] tag(s).
 Those tags contains information about the files uploaded by the user.
 Feel free to chat about it.
 If you want to refer to the [attachment] tag, just say attachment.
+
+Never say [database] or [attachment].
+You should find other words to describe them when you are referring to them.
 [/default]`
 
 export function encloseWithDefaultRequrement( str: string ){
