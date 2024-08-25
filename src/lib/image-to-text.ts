@@ -6,14 +6,14 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function imageToText(file: ConvoAttachment){
   
-  return await imageToTextOllama(file).then(async g => {
-    if(!g) throw new Error('ollama returns empty')
+  return await imageToTextGemini(file).then(async g => {
+    if(!g) throw new Error('gemini returns empty')
     return g
   }).catch(e => {
     console.error(e)
-    return imageToTextGemini(file)
+    return imageToTextOllama(file)
   }).then(o => {
-    if(!o) throw new Error('gemini returns empty')
+    if(!o) throw new Error('ollama returns empty')
     return o
   }).catch(e => {
     console.error(e)
