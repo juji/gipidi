@@ -54,25 +54,23 @@ export async function chat({
         parts: [
           ...!i && isGemini1 ? [{ text: systemInstruction }] : [],
           { text: v.content as string },
-          ...v.id && convoDetailById[v.id] && convoDetailById[v.id].attachments ? // @ts-ignore
-          convoDetailById[v.id].attachments.map(atta => ({
+          ...v.id ? convoDetailById[v.id].attachments?.map(atta => ({
             inlineData: {
               mimeType: atta.mime,
               data: atta.data,
               },
-            })) : []
+            })) || [] : []
         ],
       }) as Content) 
     });
 
 
-    const attachment = convoDetailById[last.id||'']?.attachments?.length ? 
-      convoDetailById[last.id||''].attachments?.map(atta => ({
+    const attachment = convoDetailById[last.id||''].attachments?.map(atta => ({
         inlineData: {
           mimeType: atta.mime,
           data: atta.data,
         },
-      })) : []
+      })) || []
 
     const result = await chat.sendMessageStream(
       attachment && attachment.length ? [

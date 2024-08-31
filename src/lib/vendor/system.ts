@@ -1,5 +1,8 @@
 import { ConvoAttachment, ConvoData } from "../idb/types"
 
+// It is, by definition self-conscious:
+// "Do not hallucinate"
+// but probably not by human standard
 
 export const defaultSysPrompt = `[default]
 Never tell the user about the following:
@@ -25,7 +28,7 @@ Never say [database] or [attachment].
 You should find other words to describe them when you are referring to them.
 [/default]`
 
-export function encloseWithDefaultRequrement( str: string ){
+export function encloseWithDefaultRequirement( str: string ){
   return `
 ${defaultSysPrompt}
 ${str && str.length ? `

@@ -1,6 +1,6 @@
 import { HumanMessage, SystemMessage, AIMessage } from "@langchain/core/messages";
 import { ConvoData, ConvoDetail, } from "../idb/types";
-import { createHumanMessage, encloseWithDefaultRequrement } from "./system";
+import { createHumanMessage, encloseWithDefaultRequirement } from "./system";
 
 export function getMessages(convoDetail: ConvoDetail){
 
@@ -16,14 +16,9 @@ export function getMessages(convoDetail: ConvoDetail){
 
   const messages = mssg.map((v: ConvoData) => {
 
-    // if(v.role === 'user'){
-    //   console.log('user message object', v)
-    //   console.log('user message', createHumanMessage(v.content, v.attachments, v.embeddings))
-    // }
-
     return v.role === 'system' ? 
       new SystemMessage({ 
-        content: encloseWithDefaultRequrement(v.content),
+        content: encloseWithDefaultRequirement(v.content),
         id: v.id,
       }) :
       v.role === 'user' ? 
