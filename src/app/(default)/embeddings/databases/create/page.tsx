@@ -1,6 +1,9 @@
 'use client'
 import { Page } from "@/components/page"
-import { Select, Input, Button, Checkbox } from "@/components/ui/input"
+import { 
+  Input, Button, 
+  // Select, Checkbox 
+} from "@/components/ui/input"
 import { EmbeddingsDb } from "@/lib/idb/types"
 
 import { FormEvent, useMemo, useState } from "react"
@@ -13,7 +16,8 @@ import { CheckSubmitChroma } from "@/components/database/chromadb/check-submit"
 
 export default function CreateDb(){
 
-  const [ type, setType ] = useState<EmbeddingsDb['type']|"">("")
+  // const [ type, setType ] = useState<EmbeddingsDb['type']|"">("chromadb")
+  const type = "chromadb"
   const VendorInput = useMemo(() => {
     if(!type) return () => null
     return type === 'chromadb' ? ChromaDb : () => null
@@ -28,7 +32,8 @@ export default function CreateDb(){
     const db = {
       id: nanoid(),
       name: data.name,
-      type: data.vendor,
+      // type: data.vendor,
+      type: type,
       url: data.url,
       settings: {
         tenant: data.tenant,
@@ -39,8 +44,7 @@ export default function CreateDb(){
             token: data['auth.token']
           }
         } : {}
-      },
-      isDefault: data.isDefault === 'on'
+      }
     } as EmbeddingsDb
 
     setDbSetting(db)
@@ -56,7 +60,7 @@ export default function CreateDb(){
     /> : null }
     <form onSubmit={onSubmit} className={cx(formStyles.form, dbSetting && formStyles.hidden)}>
       <Input label="Name" required type="text" name="name" />
-      <Select label="Vendor"
+      {/* <Select label="Vendor"
         value={type || ''}
         required
         name="vendor"
@@ -66,9 +70,7 @@ export default function CreateDb(){
         <option value="chromadb">ChromaDb</option>
         <option value="postgres">PostgreSQL</option>
         <option value="redis">Redis</option>
-      </Select>
-
-      <Checkbox label="Set as default" name="isDefault" />
+      </Select> */}
 
       <VendorInput />
 

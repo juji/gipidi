@@ -87,7 +87,6 @@ function getDatabase(){
       type: { dataType: DATA_TYPE.String },
       url: { dataType: DATA_TYPE.String },
       settings: { dataType: DATA_TYPE.Object },
-      isDefault: { dataType: DATA_TYPE.Boolean },
       created: { dataType: DATA_TYPE.DateTime },
       updated: { dataType: DATA_TYPE.DateTime },
       deleted: { dataType: DATA_TYPE.DateTime, default: DEFAULT_DELETED }
@@ -96,7 +95,7 @@ function getDatabase(){
 
   const database: IDataBase = {
     name: 'gipidi',
-    version: 18,
+    version: 19,
     tables: [
       convo,
       convoDetail,

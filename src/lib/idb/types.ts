@@ -66,10 +66,10 @@ export type ChromaDBSetting = {
 export type EmbeddingsDb = {
   id: string
   name: string
-  type: 'chromadb' | 'postgres' | 'redis'
+  // type: 'chromadb' | 'postgres' | 'redis'
+  type: 'chromadb'
   url: string
   settings: ChromaDBSetting | object
-  isDefault: boolean
   created?: Date
   updated?: Date
   deleted?: Date
